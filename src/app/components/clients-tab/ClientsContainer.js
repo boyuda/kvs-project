@@ -6,6 +6,10 @@ import ClientsFilterBar from './ClientsFilterBar';
 import ClientsTable from './ClientsTable';
 import ClientModal from '../clients-tab/ClientModal';
 import Pagination from './Pagination'; // Create this component
+//Client component
+import { addClient } from '@/src/services/supabase/client/clients';
+import { getClientsAndServicesForUserClient } from '@/src/services/supabase/client/clients';
+import toast from 'react-hot-toast';
 
 export default function ClientsContainer({
   initialClientsData,
@@ -54,22 +58,30 @@ export default function ClientsContainer({
     setIsModalOpen(true);
   };
 
-  const handleSaveClient = (clientData, mode) => {
+  // Handle client save + toast test
+  const handleSaveClient = async (clientData, mode) => {
     if (mode === 'create') {
-      // Add a new client ID for new clients - in real app this would come from the backend
-      const newClient = {
-        ...clientData,
-        clientID: Math.floor(Math.random() * 100000),
-      };
+      try {
+        const { data, error } = await addClient(clientData);
+        if (error) throw error;
 
-      setFilteredClients((prev) => [newClient, ...prev]);
-    } else {
-      // Update existing client
-      setFilteredClients((prev) =>
-        prev.map((client) =>
-          client.clientID === clientData.clientID ? clientData : client
-        )
-      );
+        // 🔁 Re-fetch all clients from Supabase after adding
+        const updated = await getClientsAndServicesForUserClient(
+          false,
+          pagination.page,
+          pagination.pageSize
+        );
+        setFilteredClients(updated.clients);
+        setPagination((prev) => ({
+          ...prev,
+          totalCount: updated.totalCount,
+        }));
+
+        toast.success('Naujas klientas sukurtas!');
+      } catch (err) {
+        console.error('Error adding client:', err);
+        toast.error('Nepavyko pridėti kliento.');
+      }
     }
   };
 

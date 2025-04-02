@@ -78,14 +78,14 @@ export default function ClientModal({
 
   const handleServiceChange = (index, field, value) => {
     setFormData((prev) => {
-      const updatedServices = [...prev.services];
+      const updatedServices = [...(prev.client_services || [])];
       updatedServices[index] = {
         ...updatedServices[index],
         [field]: value,
       };
       return {
         ...prev,
-        services: updatedServices,
+        client_services: updatedServices,
       };
     });
   };
@@ -93,8 +93,8 @@ export default function ClientModal({
   const addService = () => {
     setFormData((prev) => ({
       ...prev,
-      services: [
-        ...prev.services,
+      client_services: [
+        ...(prev.client_services || []),
         {
           type: 'Internetas',
           startDate: '',
@@ -107,7 +107,7 @@ export default function ClientModal({
   const removeService = (index) => {
     setFormData((prev) => ({
       ...prev,
-      services: prev.services.filter((_, i) => i !== index),
+      client_services: prev.client_services.filter((_, i) => i !== index),
     }));
   };
 
