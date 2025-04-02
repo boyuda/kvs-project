@@ -1,0 +1,180 @@
+[
+  {
+    "id": 1,
+    "task_name": "Sutarties atnaujinimas",
+    "type": "Sutarties atnaujinimas",
+    "status": "vykdoma",
+    "assigned_user": "Jonas Petrauskas",
+    "created_at": "2025-03-15",
+    "due_date": "2025-03-22",
+    "comments": [
+      {
+        "id": 1,
+        "author": "Jonas Petrauskas",
+        "timestamp": "2025-03-16 10:30",
+        "content": "Pasikonsultuoti su teisine komanda dėl atnaujinimo sąlygų."
+      },
+      {
+        "id": 2,
+        "author": "Laura Kazlauskaitė",
+        "timestamp": "2025-03-17 14:15",
+        "content": "Klientas pageidauja 5% nuolaidos pratęsiant sutartį."
+      }
+    ],
+    "client_id": 101
+  },
+  {
+    "id": 2,
+    "task_name": "Naujos paslaugos įjungimas",
+    "type": "nauja paslauga",
+    "status": "atviras",
+    "assigned_user": "Povilas Jankauskas",
+    "created_at": "2025-03-18",
+    "due_date": "2025-03-25",
+    "comments": [
+      {
+        "id": 1,
+        "author": "Povilas Jankauskas",
+        "timestamp": "2025-03-18 11:45",
+        "content": "Užregistruota paslaugos užklausa, laukiame technikų patvirtinimo."
+      }
+    ],
+    "client_id": 102
+  },
+  {
+    "id": 3,
+    "task_name": "Kliento skundas dėl interneto trikdžių",
+    "type": "problema",
+    "status": "vykdoma",
+    "assigned_user": "Laura Kazlauskaitė",
+    "created_at": "2025-03-10",
+    "due_date": "2025-03-20",
+    "comments": [
+      {
+        "id": 1,
+        "author": "Laura Kazlauskaitė",
+        "timestamp": "2025-03-10 09:20",
+        "content": "Techninis skyrius analizuoja problemą."
+      },
+      {
+        "id": 2,
+        "author": "Techninis skyrius",
+        "timestamp": "2025-03-11 16:00",
+        "content": "Problema aptikta - kliento maršrutizatorius sugedęs, reikia pakeisti."
+      }
+    ],
+    "client_id": 103
+  },
+  {
+    "id": 4,
+    "task_name": "Sutarties nutraukimas",
+    "type": "sutarties nutraukimas",
+    "status": "atviras",
+    "assigned_user": "Tomas Vilčinskas",
+    "created_at": "2025-03-05",
+    "due_date": "2025-03-12",
+    "comments": [
+      {
+        "id": 1,
+        "author": "Tomas Vilčinskas",
+        "timestamp": "2025-03-06 08:50",
+        "content": "Klientas pranešė apie sprendimą nutraukti sutartį. Išsiųsti oficialų patvirtinimą."
+      }
+    ],
+    "client_id": 104
+  },
+  {
+    "id": 5,
+    "task_name": "Perskambinti dėl sąskaitos neatitikimo",
+    "type": "skambutis",
+    "status": "uzdaryta",
+    "assigned_user": "Austėja Mažeikaitė",
+    "created_at": "2025-03-09",
+    "due_date": "2025-03-10",
+    "comments": [
+      {
+        "id": 1,
+        "author": "Austėja Mažeikaitė",
+        "timestamp": "2025-03-09 12:10",
+        "content": "Skambutis atliktas, išspręsta su buhalterija."
+      }
+    ],
+    "client_id": 105
+  },
+  {
+    "id": 6,
+    "task_name": "Sutarties atnaujinimas",
+    "type": "Sutarties atnaujinimas",
+    "status": "vykdoma",
+    "assigned_user": "Dainius Žukauskas",
+    "created_at": "2025-03-08",
+    "due_date": "2025-03-18",
+    "comments": [
+      {
+        "id": 1,
+        "author": "Dainius Žukauskas",
+        "timestamp": "2025-03-08 14:30",
+        "content": "Klientas domisi galimybėmis pridėti papildomą paslaugą."
+      }
+    ],
+    "client_id": 106
+  },
+  {
+    "id": 7,
+    "task_name": "Skambutis dėl neapmokėtos sąskaitos",
+    "type": "skambutis",
+    "status": "atviras",
+    "assigned_user": "Viktorija Gražulytė",
+    "created_at": "2025-03-11",
+    "due_date": "2025-03-15",
+    "comments": [],
+    "client_id": 107
+  },
+  {
+    "id": 8,
+    "task_name": "Naujos paslaugos įjungimas",
+    "type": "nauja paslauga",
+    "status": "vykdoma",
+    "assigned_user": "Arūnas Bendoraitis",
+    "created_at": "2025-03-14",
+    "due_date": "2025-03-22",
+    "comments": [
+      {
+        "id": 1,
+        "author": "Arūnas Bendoraitis",
+        "timestamp": "2025-03-15 13:10",
+        "content": "Laukiama technikų patvirtinimo."
+      }
+    ],
+    "client_id": 108
+  },
+  {
+    "id": 9,
+    "task_name": "Sutarties nutraukimas",
+    "type": "sutarties nutraukimas",
+    "status": "uzdaryta",
+    "assigned_user": "Rokas Vasiliauskas",
+    "created_at": "2025-03-07",
+    "due_date": "2025-03-14",
+    "comments": [
+      {
+        "id": 1,
+        "author": "Rokas Vasiliauskas",
+        "timestamp": "2025-03-07 17:40",
+        "content": "Klientas nutraukė sutartį dėl pasikeitusių verslo aplinkybių."
+      }
+    ],
+    "client_id": 109
+  },
+  {
+    "id": 10,
+    "task_name": "Skambutis - atnaujinta paslauga",
+    "type": "skambutis",
+    "status": "vykdoma",
+    "assigned_user": "Eglė Jurkutė",
+    "created_at": "2025-03-16",
+    "due_date": "2025-03-20",
+    "comments": [],
+    "client_id": 110
+  }
+]
