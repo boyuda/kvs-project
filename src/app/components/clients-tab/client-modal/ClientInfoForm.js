@@ -3,6 +3,7 @@ import {
   AtSymbolIcon,
   DevicePhoneMobileIcon,
   HomeIcon,
+  UserGroupIcon,
 } from '@heroicons/react/24/outline';
 
 export default function ClientInfoForm({
@@ -14,14 +15,14 @@ export default function ClientInfoForm({
   allUsers = [],
 }) {
   const fields = [
-    { label: 'Vardas:', name: 'first_name', type: 'text' },
-    { label: 'Pavardė:', name: 'last_name', type: 'text' },
-    { label: 'El. Paštas:', name: 'email', type: 'email' },
-    { label: 'Telefonas:', name: 'phone', type: 'text' },
-    { label: 'Gatvė', name: 'street', type: 'text' },
-    { label: 'Namo Nr.', name: 'house_number', type: 'text' },
-    { label: 'Buto Nr.', name: 'flat_number', type: 'text' },
-    { label: 'Miestas', name: 'city', type: 'text' },
+    { label: 'Vardas:', name: 'first_name', type: 'text', maxLength: 20 },
+    { label: 'Pavardė:', name: 'last_name', type: 'text', maxLength: 20 },
+    { label: 'El. Paštas:', name: 'email', type: 'email', maxLength: 20 },
+    { label: 'Telefonas:', name: 'phone', type: 'text', maxLength: 12 },
+    { label: 'Gatvė', name: 'street', type: 'text', maxLength: 20 },
+    { label: 'Namo Nr.', name: 'house_number', type: 'text', maxLength: 4 },
+    { label: 'Buto Nr.', name: 'flat_number', type: 'text', maxLength: 4 },
+    { label: 'Miestas', name: 'city', type: 'text', maxLength: 20 },
   ];
 
   return isViewMode ? (
@@ -55,13 +56,13 @@ export default function ClientInfoForm({
       </div>
       {/* Assigned User */}
       <div className="flex items-center gap-3">
-        <HomeIcon className="h-5 w-5" />
+        <UserGroupIcon className="h-5 w-5" />
         <p>Vadybininkas: {assignedUserName || 'Įkeliama..'}</p>
       </div>
     </div>
   ) : (
     <div className="">
-      {fields.map(({ label, name, type }) => {
+      {fields.map(({ label, name, type, maxLength }) => {
         const nameParts = name.split('.');
         const fieldValue = nameParts.reduce(
           (acc, part) => acc && acc[part],
@@ -80,8 +81,9 @@ export default function ClientInfoForm({
               value={fieldValue || ''}
               onChange={onChange}
               disabled={isViewMode}
+              maxLength={maxLength}
               className={'flex-1 border rounded-lg p-2 text-sm border-gray-300'}
-              required={type !== 'text' || name !== 'address.flatNumber'}
+              required={type !== 'text'}
             />
           </div>
         );

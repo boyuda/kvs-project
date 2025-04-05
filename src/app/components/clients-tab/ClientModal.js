@@ -10,6 +10,7 @@ import {
   getAssignedUserName,
   getAllUsers,
 } from '@/src/services/supabase/client/users';
+import toast from 'react-hot-toast';
 
 const MODAL_MODES = {
   VIEW: 'view',
@@ -170,6 +171,43 @@ export default function ClientModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const phoneRegex = /^\+370(5|6)\d{7}$/;
+
+    if (!formData.first_name.trim()) {
+      toast.error('Vardas yra privalomas.');
+      return;
+    }
+
+    if (!formData.last_name.trim()) {
+      toast.error('Pavardė yra privaloma.');
+      return;
+    }
+
+    if (!formData.email.trim()) {
+      toast.error('El. paštas yra privalomas.');
+      return;
+    }
+
+    if (!formData.phone.trim() || !phoneRegex.test(formData.phone)) {
+      toast.error('Įveskite teisingą telefono numerį, kuris prasideda +370.');
+      return;
+    }
+
+    if (!formData.street.trim()) {
+      toast.error('Gatvė yra privaloma.');
+      return;
+    }
+
+    if (!formData.house_number.trim()) {
+      toast.error('Namo numeris yra privalomas.');
+      return;
+    }
+
+    if (!formData.city.trim()) {
+      toast.error('Miestas yra privalomas.');
+      return;
+    }
+
     if (onSave) {
       onSave(formData, mode);
     }
