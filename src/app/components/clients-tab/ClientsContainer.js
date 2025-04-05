@@ -75,105 +75,126 @@ export default function ClientsContainer({
 
   // Handle client save + toast
   const handleSaveClient = async (clientData, mode) => {
+    // Refresh list
+    const refreshClients = async () => {
+      const updated = await getClientsAndServicesForUserClient(
+        true,
+        pagination.page,
+        pagination.pageSize
+      );
+      setFilteredClients(updated.clients);
+      setPagination((prev) => ({
+        ...prev,
+        totalCount: updated.totalCount,
+      }));
+    };
+
     // New client client creation mode
     if (mode === 'create') {
       try {
         //Addind the client to the database
-        const { data, error } = await addClient(clientData);
+        const { error } = await addClient(clientData);
         if (error) throw error;
-
-        // refetch all clients from Supabase after adding
-        const updated = await getClientsAndServicesForUserClient(
-          true,
-          pagination.page,
-          pagination.pageSize
-        );
-        setFilteredClients(updated.clients);
-        setPagination((prev) => ({
-          ...prev,
-          totalCount: updated.totalCount,
-        }));
+        //Refreshing the clients list
+        await refreshClients();
         //Displaying success/error message
         toast.success('Naujas klientas sukurtas!');
       } catch (err) {
-        console.error('Error adding client:', err);
+        console.error('Failed to create client:', err);
         toast.error('Nepavyko pridėti kliento.');
       }
     }
+
+    //Edit of ClientInfoForm
     if (mode === 'edit') {
       const { id, client_services, ...restOfForm } = clientData;
 
-      // Compare with original objerct
+      // Compare with original object
       const clientChanges = getChangedFields(selectedClient, restOfForm);
 
       if (Object.keys(clientChanges).length > 0) {
         try {
           const { error } = await updateClient(id, clientChanges);
           if (error) throw error;
-          // refetch all clients from Supabase after adding
-          const updated = await getClientsAndServicesForUserClient(
-            true,
-            pagination.page,
-            pagination.pageSize
-          );
-          setFilteredClients(updated.clients);
-          setPagination((prev) => ({
-            ...prev,
-            totalCount: updated.totalCount,
-          }));
+          //Refreshing the clients list
+          await refreshClients();
           toast.success('Kliento informacija atnaujinta!');
         } catch (err) {
           console.error('Failed to update client:', err);
           toast.error('Nepavyko atnaujinti kliento.');
         }
       }
-      // TODO: delete once full functionality is implemented
-      const { data, error } = await updateClient(id, clientChanges);
-      console.log('Updated data:', data); // debug
     }
-    // 🔜 handle client_services changes here (add/edit/delete)
-    // Services sync
+
+    //Edit of ClientServicesForm
     if (mode === 'edit') {
       const originalServices = selectedClient.client_services || [];
       const updatedServices = clientData.client_services || [];
 
-      const servicesToAdd = updatedServices.filter((s) => !s.id); // No ID = new
-      console.log('Updated data:', servicesToAdd);
+      const servicesToAdd = updatedServices.filter((s) => !s.id);
       const servicesToUpdate = updatedServices.filter((s) =>
         originalServices.find(
           (o) =>
             o.id === s.id &&
             (o.start_date !== s.start_date ||
               o.end_date !== s.end_date ||
-              o.services?.name !== s.services?.name)
+              o.services?.name !== s.services?.type)
         )
       );
       const servicesToDelete = originalServices.filter(
         (o) => !updatedServices.find((u) => u.id === o.id)
       );
 
-      // ADD
+      // Add new service
       for (const newService of servicesToAdd) {
-        await addService({
-          client_id: clientData.id,
-          service_id: getServiceIdFromName(newService.type), // you'll need this mapping
-          start_date: newService.start_date,
-          end_date: newService.end_date,
-        });
+        try {
+          const { error } = await addService({
+            client_id: clientData.id,
+            service_id: getServiceIdFromName(newService.type),
+            start_date: newService.start_date,
+            end_date: newService.end_date,
+          });
+          if (error) throw error;
+          //Refreshing the clients list
+          await refreshClients();
+          toast.success('Paslauga pridėta!');
+        } catch (err) {
+          console.error('Failed to add service:', err);
+          toast.error('Nepavyko pridėti paslaugos.');
+        }
       }
 
-      // UPDATE
+      // Update existing services
       for (const updated of servicesToUpdate) {
-        await updateService(updated.id, {
-          service_id: getServiceIdFromName(updated.type),
-          start_date: updated.start_date,
-          end_date: updated.end_date,
-        });
+        console.log(updatedServices);
+        try {
+          const { error } = await updateService(updated.id, {
+            service_id: getServiceIdFromName(updated.type),
+            start_date: updated.start_date,
+            end_date: updated.end_date,
+          });
+          if (error) throw error;
+          //Refreshing the clients list
+          await refreshClients();
+          toast.success('Paslaugos informacija atnaujinta!');
+        } catch (error) {
+          console.error('Failed to add service:', err);
+          toast.error('Nepavyko atnaujinti paslaugos.');
+        }
       }
 
-      // DELETE
+      // Delete service
       for (const deleted of servicesToDelete) {
-        await deleteService(deleted.id);
+        try {
+          const { error } = await deleteService(deleted.id);
+          if (error) throw error;
+          //Refreshing the clients list
+          await refreshClients();
+          toast.success('Paslauga ištrinta!');
+        } catch (error) {
+          console.error('Failed to add service:', err);
+          toast.error('Nepavyko ištrinti paslaugos.');
+        }
       }
     }
   };
