@@ -71,6 +71,7 @@ export default function ClientsContainer({
 
   // Handle client save + toast
   const handleSaveClient = async (clientData, mode) => {
+    // New client client creation mode
     if (mode === 'create') {
       try {
         //Addind the client to the database
@@ -88,7 +89,7 @@ export default function ClientsContainer({
           ...prev,
           totalCount: updated.totalCount,
         }));
-
+        //Displaying success/error message
         toast.success('Naujas klientas sukurtas!');
       } catch (err) {
         console.error('Error adding client:', err);
@@ -98,14 +99,13 @@ export default function ClientsContainer({
     if (mode === 'edit') {
       const { id, client_services, ...restOfForm } = clientData;
 
-      // Compare with originalClient, which you can pass as an additional prop later
+      // Compare with original objerct
       const clientChanges = getChangedFields(selectedClient, restOfForm);
 
       if (Object.keys(clientChanges).length > 0) {
         try {
           const { error } = await updateClient(id, clientChanges);
           if (error) throw error;
-          // ✅ Re-fetch updated list of clients
           // refetch all clients from Supabase after adding
           const updated = await getClientsAndServicesForUserClient(
             true,

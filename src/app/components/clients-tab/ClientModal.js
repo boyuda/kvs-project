@@ -66,17 +66,20 @@ export default function ClientModal({
     setMode(initialMode);
   }, [client, initialMode, isOpen]);
 
-  // Set assigned user name when client data is loaded
-
   useEffect(() => {
+    setAssignedUserName('');
+
     const fetchAssignedUser = async () => {
       if (client?.assigned_user_id) {
         const name = await getAssignedUserName(client.assigned_user_id);
         setAssignedUserName(name);
       }
     };
-    fetchAssignedUser();
-  }, [client]);
+
+    if (client && formData?.assigned_user_id) {
+      fetchAssignedUser();
+    }
+  }, [client?.assigned_user_id, formData?.assigned_user_id]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -187,9 +190,9 @@ export default function ClientModal({
 
   return (
     <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-30 flex items-center justify-center">
-      {/* Pagrindinis langas issokantis ir jo dizainas / dydis */}
+      {/* Main modal window size */}
       <div className="bg-white rounded-lg p-6 w-full sm:max-w-2xl md:max-w-4xl 2xl:max-w-5xl mx-auto flex flex-col">
-        {/* Redaguoti klienta ir X mygtukas */}
+        {/* Edit client and X buttons */}
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">{getModalTitle()}</h2>
           <button

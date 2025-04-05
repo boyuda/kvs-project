@@ -53,9 +53,10 @@ export default function ClientInfoForm({
           {formData.city}
         </p>
       </div>
+      {/* Assigned User */}
       <div className="flex items-center gap-3">
         <HomeIcon className="h-5 w-5" />
-        <p>Vadybininkas: {assignedUserName}</p>
+        <p>Vadybininkas: {assignedUserName || 'Įkeliama..'}</p>
       </div>
     </div>
   ) : (
