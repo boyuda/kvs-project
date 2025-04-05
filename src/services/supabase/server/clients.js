@@ -40,7 +40,7 @@ export async function getClientsAndServicesForUser(
     .from('clients')
     .select(
       `
-      id, first_name, last_name, email, phone, street, house_number, flat_number, city, assigned_user_id,
+      id, first_name, last_name, email, phone, street, house_number, flat_number, city, notes, assigned_user_id,
       client_services (
         id, start_date, end_date, service_id,
         services ( id, name )

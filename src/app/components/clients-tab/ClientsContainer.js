@@ -5,8 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import ClientsFilterBar from './ClientsFilterBar';
 import ClientsTable from './ClientsTable';
 import ClientModal from '../clients-tab/ClientModal';
-import Pagination from './Pagination'; // Create this component
-//Client component
+import Pagination from './Pagination';
 import { addClient } from '@/src/services/supabase/client/clients';
 import { getClientsAndServicesForUserClient } from '@/src/services/supabase/client/clients';
 import toast from 'react-hot-toast';
@@ -58,14 +57,15 @@ export default function ClientsContainer({
     setIsModalOpen(true);
   };
 
-  // Handle client save + toast test
+  // Handle client save + toast
   const handleSaveClient = async (clientData, mode) => {
     if (mode === 'create') {
       try {
+        //Addind the client to the database
         const { data, error } = await addClient(clientData);
         if (error) throw error;
 
-        // 🔁 Re-fetch all clients from Supabase after adding
+        // refetch all clients from Supabase after adding
         const updated = await getClientsAndServicesForUserClient(
           false,
           pagination.page,

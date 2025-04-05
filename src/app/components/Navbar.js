@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon, BellIcon } from '@heroicons/react/24/outline';
-import { getUserById } from '@/src/services/supabase/users';
+import { getUserById } from '@/src/services/supabase/server/users';
 
 // TODO: SIGN OUT BUTTON
 export default async function Navbar({ user }) {

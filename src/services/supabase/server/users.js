@@ -7,6 +7,5 @@ export async function getUserById(userId) {
     .from('users')
     .select('*')
     .eq('id', userId);
-
   return profile;
 }

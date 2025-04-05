@@ -1,5 +1,5 @@
 import ClientsContainer from '@/src/app/components/clients-tab/ClientsContainer';
-import { getClientsAndServicesForUser } from '@/src/services/supabase/clients';
+import { getClientsAndServicesForUser } from '@/src/services/supabase/server/clients';
 
 export const metadata = {
   title: 'Klientai',

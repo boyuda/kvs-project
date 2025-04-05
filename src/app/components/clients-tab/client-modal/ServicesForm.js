@@ -7,6 +7,7 @@ export default function ServicesForm({
   onRemoveService,
   isViewMode,
 }) {
+  services = services || [];
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
@@ -61,7 +62,7 @@ export default function ServicesForm({
                   <div className="flex-1">
                     <select
                       id={`service-type-${index}`}
-                      value={service.type}
+                      value={service.services?.name || 'Internetas'}
                       onChange={(e) =>
                         onServiceChange(index, 'type', e.target.value)
                       }
@@ -77,7 +78,7 @@ export default function ServicesForm({
                     <input
                       type="date"
                       id={`start-date-${index}`}
-                      value={service.startDate}
+                      value={service.start_date}
                       onChange={(e) =>
                         onServiceChange(index, 'startDate', e.target.value)
                       }
@@ -91,7 +92,7 @@ export default function ServicesForm({
                     <input
                       type="date"
                       id={`end-date-${index}`}
-                      value={service.endDate}
+                      value={service.end_date}
                       onChange={(e) =>
                         onServiceChange(index, 'endDate', e.target.value)
                       }
@@ -122,8 +123,7 @@ export default function ServicesForm({
             return (
               <div key={index} className="text-sm">
                 <div className="flex items-center gap-3">
-                  {service.service_id ===
-                  '532f4c0e-99cd-4c25-a78e-991dc19870eb' ? (
+                  {service.services?.name === 'Internetas' ? (
                     <WifiIcon
                       className={`w-5 h-5 ${
                         isExpired ? 'stroke-danger' : 'stroke-secondary'

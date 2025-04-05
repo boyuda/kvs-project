@@ -6,8 +6,8 @@ import {
 import {
   getTotalAssignedClientsToUser,
   getExpiringContractsCount,
-} from '@/src/services/supabase/clients';
-import { getUserById } from '@/src/services/supabase/users';
+} from '@/src/services/supabase/server/clients';
+import { getUserById } from '@/src/services/supabase/server/users';
 
 const ICONS = {
   tasks: ClipboardDocumentListIcon,

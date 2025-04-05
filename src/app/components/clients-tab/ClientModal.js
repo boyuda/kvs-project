@@ -6,6 +6,10 @@ import ServicesForm from './client-modal/ServicesForm';
 import ClientInfoForm from './client-modal/ClientInfoForm';
 import Notes from './client-modal/Notes';
 import TasksList from './client-modal/TasksList';
+import {
+  getAssignedUserName,
+  getAllUsers,
+} from '@/src/services/supabase/client/users';
 
 const MODAL_MODES = {
   VIEW: 'view',
@@ -21,6 +25,8 @@ export default function ClientModal({
   onSave,
 }) {
   const [mode, setMode] = useState(initialMode);
+  const [assignedUserName, setAssignedUserName] = useState('');
+  const [allUsers, setAllUsers] = useState([]);
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -31,7 +37,28 @@ export default function ClientModal({
     flat_number: null,
     city: '',
     client_services: [],
+    notes: '',
   });
+
+  // Set assigned user name when client data is loaded
+
+  useEffect(() => {
+    const fetchAssignedUser = async () => {
+      if (client?.assigned_user_id) {
+        const name = await getAssignedUserName(client.assigned_user_id);
+        setAssignedUserName(name);
+      }
+    };
+    fetchAssignedUser();
+  }, [client]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const users = await getAllUsers();
+      setAllUsers(users);
+    };
+    fetchUsers();
+  }, []);
 
   // Reset form or load client data when the modal opens
   useEffect(() => {
@@ -48,6 +75,7 @@ export default function ClientModal({
         flat_number: null,
         city: '',
         client_services: [],
+        notes: '',
       });
     }
     setMode(initialMode);
@@ -150,12 +178,13 @@ export default function ClientModal({
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* If in view model, display all components */}
           {mode === MODAL_MODES.VIEW ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               <div className="flex flex-col gap-10">
                 <ClientInfoForm
                   formData={formData}
                   onChange={handleInputChange}
                   isViewMode={mode === MODAL_MODES.VIEW}
+                  assignedUserName={assignedUserName}
                 />
                 <ServicesForm
                   services={formData.client_services}
@@ -168,7 +197,10 @@ export default function ClientModal({
 
               <div className="flex flex-col gap-10">
                 <TasksList />
-                <Notes />
+                <Notes
+                  notes={formData.notes}
+                  isViewMode={mode === MODAL_MODES.VIEW}
+                />
               </div>
             </div>
           ) : (
@@ -178,6 +210,8 @@ export default function ClientModal({
                 formData={formData}
                 onChange={handleInputChange}
                 isViewMode={false}
+                assignedUserName={assignedUserName}
+                allUsers={allUsers}
               />
               <ServicesForm
                 services={formData.client_services}
@@ -185,6 +219,11 @@ export default function ClientModal({
                 onAddService={addService}
                 onRemoveService={removeService}
                 isViewMode={false}
+              />
+              <Notes
+                notes={formData.notes}
+                isViewMode={mode === MODAL_MODES.VIEW}
+                onChange={handleInputChange}
               />
             </div>
           )}
