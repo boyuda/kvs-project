@@ -1,4 +1,5 @@
 import { WifiIcon, TvIcon } from '@heroicons/react/24/outline';
+import { SERVICE_TYPES } from '@/src/utils/serviceHelpers';
 
 export default function ServicesForm({
   services,
@@ -62,15 +63,19 @@ export default function ServicesForm({
                   <div className="flex-1">
                     <select
                       id={`service-type-${index}`}
-                      value={service.services?.name || 'Internetas'}
+                      value={
+                        service.type || service.services?.name || 'Internetas'
+                      }
                       onChange={(e) =>
                         onServiceChange(index, 'type', e.target.value)
                       }
-                      disabled={isViewMode}
                       className="w-full border rounded-lg p-2 text-sm"
                     >
-                      <option value="Internetas">Internetas</option>
-                      <option value="IPTV">IPTV</option>
+                      {SERVICE_TYPES.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -80,10 +85,9 @@ export default function ServicesForm({
                       id={`start-date-${index}`}
                       value={service.start_date}
                       onChange={(e) =>
-                        onServiceChange(index, 'startDate', e.target.value)
+                        onServiceChange(index, 'start_date', e.target.value)
                       }
-                      disabled={isViewMode}
-                      className={`w-full rounded-lg p-2 text-sm `}
+                      className="w-full border rounded-lg p-2 text-sm"
                       required
                     />
                   </div>
@@ -94,9 +98,8 @@ export default function ServicesForm({
                       id={`end-date-${index}`}
                       value={service.end_date}
                       onChange={(e) =>
-                        onServiceChange(index, 'endDate', e.target.value)
+                        onServiceChange(index, 'end_date', e.target.value)
                       }
-                      disabled={isViewMode}
                       className="w-full border rounded-lg p-2 text-sm"
                       required
                     />

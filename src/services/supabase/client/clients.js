@@ -15,7 +15,7 @@ export const addClient = async (clientData) => {
     console.error('User not authenticated:', userError);
     return { data: null, error: userError || new Error('Not authenticated') };
   }
-
+  console.log('Updated data:', data);
   // 2. Extract and clean client data
   const { client_services, ...cleanData } = clientData;
   const clientToInsert = {
@@ -55,8 +55,8 @@ export const addClient = async (clientData) => {
         return {
           client_id: insertedClient.id,
           service_id: matched.id,
-          start_date: service.startDate,
-          end_date: service.endDate,
+          start_date: service.start_date,
+          end_date: service.end_date,
         };
       })
       .filter(Boolean); // Remove nulls
@@ -145,3 +145,25 @@ export const updateClient = async (clientId, changes) => {
 
   return { data, error };
 };
+
+// CREATE
+export async function addService(service) {
+  const supabase = createClient();
+  return await supabase.from('client_services').insert(service).select();
+}
+
+// UPDATE
+export async function updateService(serviceId, updates) {
+  const supabase = createClient();
+  return await supabase
+    .from('client_services')
+    .update(updates)
+    .eq('id', serviceId)
+    .select();
+}
+
+// DELETE
+export async function deleteService(serviceId) {
+  const supabase = createClient();
+  return await supabase.from('client_services').delete().eq('id', serviceId);
+}

@@ -155,8 +155,8 @@ export default function ClientModal({
         ...(prev.client_services || []),
         {
           type: 'Internetas',
-          startDate: '',
-          endDate: '',
+          start_date: '',
+          end_date: '',
         },
       ],
     }));

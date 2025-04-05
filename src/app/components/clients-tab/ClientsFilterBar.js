@@ -38,15 +38,17 @@ export default function ClientsFilterBar({
       );
     }
 
-    if (state.startDate) {
+    if (state.start_date) {
       filtered = filtered.filter((client) =>
-        client.services.some((service) => service.startDate >= state.startDate)
+        client.services.some(
+          (service) => service.start_date >= state.start_date
+        )
       );
     }
 
-    if (state.endDate) {
+    if (state.end_date) {
       filtered = filtered.filter((client) =>
-        client.services.some((service) => service.endDate <= state.endDate)
+        client.services.some((service) => service.end_date <= state.end_date)
       );
     }
 
@@ -115,7 +117,7 @@ export default function ClientsFilterBar({
         {/* Start Date Filter */}
         <input
           type="date"
-          value={state.startDate}
+          value={state.start_date}
           onChange={(e) =>
             dispatch({ type: 'SET_START_DATE', payload: e.target.value })
           }
@@ -125,7 +127,7 @@ export default function ClientsFilterBar({
         {/* End Date Filter */}
         <input
           type="date"
-          value={state.endDate}
+          value={state.end_date}
           onChange={(e) =>
             dispatch({ type: 'SET_END_DATE', payload: e.target.value })
           }

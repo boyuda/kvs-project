@@ -9,9 +9,13 @@ import Pagination from './Pagination';
 import {
   addClient,
   updateClient,
+  addService,
+  updateService,
+  deleteService,
 } from '@/src/services/supabase/client/clients';
 import { getClientsAndServicesForUserClient } from '@/src/services/supabase/client/clients';
 import toast from 'react-hot-toast';
+import { getServiceIdFromName } from '@/src/utils/serviceHelpers';
 
 export default function ClientsContainer({
   initialClientsData,
@@ -123,10 +127,55 @@ export default function ClientsContainer({
           toast.error('Nepavyko atnaujinti kliento.');
         }
       }
+      // TODO: delete once full functionality is implemented
       const { data, error } = await updateClient(id, clientChanges);
       console.log('Updated data:', data); // debug
     }
     // 🔜 handle client_services changes here (add/edit/delete)
+    // Services sync
+    if (mode === 'edit') {
+      const originalServices = selectedClient.client_services || [];
+      const updatedServices = clientData.client_services || [];
+
+      const servicesToAdd = updatedServices.filter((s) => !s.id); // No ID = new
+      console.log('Updated data:', servicesToAdd);
+      const servicesToUpdate = updatedServices.filter((s) =>
+        originalServices.find(
+          (o) =>
+            o.id === s.id &&
+            (o.start_date !== s.start_date ||
+              o.end_date !== s.end_date ||
+              o.services?.name !== s.services?.name)
+        )
+      );
+      const servicesToDelete = originalServices.filter(
+        (o) => !updatedServices.find((u) => u.id === o.id)
+      );
+
+      // ADD
+      for (const newService of servicesToAdd) {
+        await addService({
+          client_id: clientData.id,
+          service_id: getServiceIdFromName(newService.type), // you'll need this mapping
+          start_date: newService.start_date,
+          end_date: newService.end_date,
+        });
+      }
+
+      // UPDATE
+      for (const updated of servicesToUpdate) {
+        await updateService(updated.id, {
+          service_id: getServiceIdFromName(updated.type),
+          start_date: updated.start_date,
+          end_date: updated.end_date,
+        });
+      }
+
+      // DELETE
+      for (const deleted of servicesToDelete) {
+        await deleteService(deleted.id);
+      }
+    }
   };
 
   return (

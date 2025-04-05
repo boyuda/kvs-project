@@ -2,8 +2,8 @@
 export const initialState = {
   searchName: '',
   selectedService: '',
-  startDate: '',
-  endDate: '',
+  start_date: '',
+  end_date: '',
   selectedCity: '',
 };
 
@@ -14,9 +14,9 @@ export function clientsReducer(state, action) {
     case 'SET_SELECTED_SERVICE':
       return { ...state, selectedService: action.payload };
     case 'SET_START_DATE':
-      return { ...state, startDate: action.payload };
+      return { ...state, start_date: action.payload };
     case 'SET_END_DATE':
-      return { ...state, endDate: action.payload };
+      return { ...state, end_date: action.payload };
     case 'SET_SELECTED_CITY':
       return { ...state, selectedCity: action.payload };
     case 'RESET_FILTERS':
