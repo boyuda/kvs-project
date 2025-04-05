@@ -132,3 +132,16 @@ export async function getClientsAndServicesForUserClient(
 
   return { clients, totalCount: count };
 }
+
+export const updateClient = async (clientId, changes) => {
+  console.log(changes);
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('clients')
+    .update(changes)
+    .eq('id', clientId)
+    .select(); // <- make sure you have .select() if you want to return data
+
+  return { data, error };
+};

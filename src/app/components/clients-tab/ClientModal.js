@@ -39,6 +39,32 @@ export default function ClientModal({
     client_services: [],
     notes: '',
   });
+  const [originalClient, setOriginalClient] = useState(null);
+
+  useEffect(() => {
+    if (client) {
+      setFormData(client);
+      setOriginalClient(client); // Save a snapshot for comparison
+    } else {
+      const emptyForm = {
+        first_name: '',
+        last_name: '',
+        email: '',
+        phone: '',
+        street: '',
+        house_number: '',
+        flat_number: null,
+        city: '',
+        client_services: [],
+        notes: '',
+        assigned_user_id: '',
+      };
+      setFormData(emptyForm);
+      setOriginalClient(null);
+    }
+
+    setMode(initialMode);
+  }, [client, initialMode, isOpen]);
 
   // Set assigned user name when client data is loaded
 
@@ -210,6 +236,7 @@ export default function ClientModal({
                 formData={formData}
                 onChange={handleInputChange}
                 isViewMode={false}
+                isCreateMode={mode === MODAL_MODES.CREATE}
                 assignedUserName={assignedUserName}
                 allUsers={allUsers}
               />
@@ -222,7 +249,7 @@ export default function ClientModal({
               />
               <Notes
                 notes={formData.notes}
-                isViewMode={mode === MODAL_MODES.VIEW}
+                isViewMode={false}
                 onChange={handleInputChange}
               />
             </div>
