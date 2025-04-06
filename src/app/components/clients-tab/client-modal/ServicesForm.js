@@ -7,8 +7,10 @@ export default function ServicesForm({
   onAddService,
   onRemoveService,
   isViewMode,
+  isAdmin,
 }) {
   services = services || [];
+  console.log(isAdmin);
 
   function renderEditView() {
     return (
@@ -85,14 +87,15 @@ export default function ServicesForm({
                 </div>
               </div>
             </div>
-
-            <button
-              type="button"
-              onClick={() => onRemoveService(index)}
-              className="text-red-500 ml-4"
-            >
-              ✕
-            </button>
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={() => onRemoveService(index)}
+                className="text-red-500 ml-4"
+              >
+                ✕
+              </button>
+            )}
           </div>
         ))}
       </div>

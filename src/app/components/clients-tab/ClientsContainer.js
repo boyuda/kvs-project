@@ -22,6 +22,7 @@ export default function ClientsContainer({
   currentPage = 1,
   pageSize = 10,
   totalCount = 0,
+  isAdmin,
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -229,6 +230,7 @@ export default function ClientsContainer({
         client={selectedClient}
         initialMode={modalMode}
         onSave={handleSaveClient}
+        isAdmin={isAdmin}
       />
     </>
   );

@@ -24,6 +24,7 @@ export default function ClientModal({
   client = null,
   initialMode = MODAL_MODES.CREATE,
   onSave,
+  isAdmin,
 }) {
   const [mode, setMode] = useState(initialMode);
   const [assignedUserName, setAssignedUserName] = useState('');
@@ -287,6 +288,7 @@ export default function ClientModal({
                 onAddService={addService}
                 onRemoveService={removeService}
                 isViewMode={false}
+                isAdmin={isAdmin}
               />
               <Notes
                 notes={formData.notes}
