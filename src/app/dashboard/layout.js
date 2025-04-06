@@ -26,7 +26,7 @@ export default async function DashboardLayout({ children }) {
       {/* LEFT */}
       <div className="w-[14%] md:w-[8%] lg:w-[16%] xl:w-[14%]  border-r-2 outline-cards">
         <Link href="/dashboard" className="justify-center flex p-4">
-          <span className=" hidden lg:block text-primary font-medium text-">
+          <span className=" hidden lg:block text-primary font-semibold text-">
             Klientų valdymo sistema
           </span>
         </Link>

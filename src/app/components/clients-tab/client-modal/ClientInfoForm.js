@@ -27,7 +27,7 @@ export default function ClientInfoForm({
 
   return isViewMode ? (
     <div className="text-sm flex flex-col gap-2">
-      <h3 className="font-medium">Kontaktai</h3>
+      <h3 className="font-semibold">Kontaktai</h3>
       {/* Name */}
       <div className="flex items-center gap-3">
         <UserCircleIcon className="h-5 w-5" />
@@ -71,7 +71,7 @@ export default function ClientInfoForm({
 
         return (
           <div key={name} className="flex items-center gap-1 mb-1">
-            <label htmlFor={name} className="text-sm font-medium w-[80px]">
+            <label htmlFor={name} className="text-sm font-semibold w-[80px]">
               {label}
             </label>
             <input
@@ -92,7 +92,7 @@ export default function ClientInfoForm({
         <div className="flex items-center gap-1">
           <label
             htmlFor="assigned_user_id"
-            className="text-sm font-medium w-[80px]"
+            className="text-sm font-semibold w-[80px]"
           >
             Vadybininkas
           </label>

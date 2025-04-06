@@ -16,15 +16,15 @@ export default function TasksList() {
   return (
     <div className="text-sm flex flex-col gap-2 text-texts">
       <div className=" flex justify-between items-center">
-        <h3 className="font-medium">Užduotys</h3>
-        <button className="font-medium text-xl">+</button>
+        <h3 className="font-semibold">Užduotys</h3>
+        <button className="font-semibold text-xl">+</button>
       </div>
       <div className="border rounded-lg p-2 overflow-y-auto max-h-40">
         <ul className="divide-y">
           {/* Task 1 */}
           <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
             <div className="flex flex-col">
-              <span className="font-medium truncate">Paskambinti ryte</span>
+              <span className="font-semibold truncate">Paskambinti ryte</span>
               <span className="text-gray-500 text-xs">Nauja paslauga</span>
             </div>
             <div className="">
@@ -44,7 +44,7 @@ export default function TasksList() {
           {/* Task 2 */}
           <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
             <div className="flex flex-col">
-              <span className="font-medium truncate">Kalbėt su Tadu</span>
+              <span className="font-semibold truncate">Kalbėt su Tadu</span>
               <span className="text-gray-500 text-xs">
                 Sutarties pratęsimas
               </span>
@@ -65,7 +65,9 @@ export default function TasksList() {
           {/* Task 3 */}
           <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
             <div className="flex flex-col">
-              <span className="font-medium truncate">Neveikia internetas</span>
+              <span className="font-semibold truncate">
+                Neveikia internetas
+              </span>
               <span className="text-gray-500 text-xs">Problema</span>
             </div>
             <div className="">
@@ -86,7 +88,9 @@ export default function TasksList() {
           {/* Task 3 */}
           <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
             <div className="flex flex-col">
-              <span className="font-medium truncate">Neveikia internetas</span>
+              <span className="font-semibold truncate">
+                Neveikia internetas
+              </span>
               <span className="text-gray-500 text-xs">Peoblema</span>
             </div>
             <div className="">
@@ -104,7 +108,9 @@ export default function TasksList() {
           </li>
           <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
             <div className="flex flex-col">
-              <span className="font-medium truncate">Neveikia internetas</span>
+              <span className="font-semibold truncate">
+                Neveikia internetas
+              </span>
               <span className="text-gray-500 text-xs">Peoblema</span>
             </div>
             <div className="">
@@ -122,7 +128,9 @@ export default function TasksList() {
           </li>
           <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
             <div className="flex flex-col">
-              <span className="font-medium truncate">Neveikia internetas</span>
+              <span className="font-semibold truncate">
+                Neveikia internetas
+              </span>
               <span className="text-gray-500 text-xs">Peoblema</span>
             </div>
             <div className="">
@@ -140,7 +148,9 @@ export default function TasksList() {
           </li>
           <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
             <div className="flex flex-col">
-              <span className="font-medium truncate">Neveikia internetas</span>
+              <span className="font-semibold truncate">
+                Neveikia internetas
+              </span>
               <span className="text-gray-500 text-xs">Peoblema</span>
             </div>
             <div className="">
@@ -158,7 +168,9 @@ export default function TasksList() {
           </li>
           <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
             <div className="flex flex-col">
-              <span className="font-medium truncate">Neveikia internetas</span>
+              <span className="font-semibold truncate">
+                Neveikia internetas
+              </span>
               <span className="text-gray-500 text-xs">Peoblema</span>
             </div>
             <div className="">
@@ -176,7 +188,9 @@ export default function TasksList() {
           </li>
           <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
             <div className="flex flex-col">
-              <span className="font-medium truncate">Neveikia internetas</span>
+              <span className="font-semibold truncate">
+                Neveikia internetas
+              </span>
               <span className="text-gray-500 text-xs">Peoblema</span>
             </div>
             <div className="">
@@ -194,7 +208,9 @@ export default function TasksList() {
           </li>
           <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
             <div className="flex flex-col">
-              <span className="font-medium truncate">Neveikia internetas</span>
+              <span className="font-semibold truncate">
+                Neveikia internetas
+              </span>
               <span className="text-gray-500 text-xs">Peoblema</span>
             </div>
             <div className="">

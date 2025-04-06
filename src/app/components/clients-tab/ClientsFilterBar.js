@@ -132,7 +132,7 @@ export default function ClientsFilterBar({
       <select
         value={selectedService}
         onChange={(e) => setSelectedService(e.target.value)}
-        className="border p-2 rounded-lg shadow-md text-sm"
+        className="border p-2 rounded-lg shadow-md text-sm bg-white"
       >
         <option value="">Turima paslauga</option>
         <option value="Internetas">Internetas</option>
@@ -159,7 +159,7 @@ export default function ClientsFilterBar({
       <select
         value={selectedCity}
         onChange={(e) => setSelectedCity(e.target.value)}
-        className="border p-2 rounded-lg shadow-md text-sm"
+        className="border p-2 rounded-lg shadow-md text-sm bg-white"
       >
         <option value="">Miestas</option>
         {getUniqueCities().map((city) => (
@@ -173,7 +173,7 @@ export default function ClientsFilterBar({
       <select
         value={currentPageSize}
         onChange={handlePageSizeChange}
-        className="border p-2 rounded-lg shadow-md text-sm"
+        className="border p-2 rounded-lg shadow-md text-sm bg-white"
       >
         <option value="5">5 klientai</option>
         <option value="10">10 klientų</option>
@@ -187,7 +187,7 @@ export default function ClientsFilterBar({
       <select
         value={showAll.toString()}
         onChange={handleShowAllChange}
-        className="border p-2 rounded-lg shadow-md text-sm"
+        className="border p-2 rounded-lg shadow-md text-sm bg-white"
       >
         <option value="false">Mano klientai</option>
         <option value="true">Visi klientai</option>

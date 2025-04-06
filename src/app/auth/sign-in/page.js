@@ -15,7 +15,7 @@ export default function SignIn() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-900"
+              className="block text-sm font-semibold text-gray-900"
             >
               Elektroninis Paštas
             </label>
@@ -33,7 +33,7 @@ export default function SignIn() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-900"
+              className="block text-sm font-semibold text-gray-900"
             >
               Slaptažodis
             </label>

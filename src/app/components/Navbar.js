@@ -22,7 +22,7 @@ export default async function Navbar({ user }) {
           <BellIcon className="h-5 w-5" />
         </div>
         <div className="flex flex-col">
-          <span className="text-xs leading-3 text-texts font-medium">
+          <span className="text-xs leading-3 text-texts font-semibold">
             {name} {last_name}
           </span>
           <span className="text-[10px] text-texts text-right">

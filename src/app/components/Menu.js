@@ -15,7 +15,7 @@ export default function Menu({ isAdmin }) {
       <div className="flex flex-col gap-2">
         <Link
           href="/dashboard/overview"
-          className="flex items-center justify-center lg:justify-start gap-4 py-2 text-texts font-medium hover:bg-cards rounded-lg pl-0 lg:px-4"
+          className="flex items-center justify-center lg:justify-start gap-4 py-2 text-texts font-semibold hover:bg-cards rounded-lg pl-0 lg:px-4"
         >
           <HomeIcon className="h-5 w-5" />
           <span className="hidden lg:block">Apžvalga</span>
@@ -23,7 +23,7 @@ export default function Menu({ isAdmin }) {
 
         <Link
           href="/dashboard/tasks"
-          className="flex items-center justify-center lg:justify-start gap-4 py-2 text-texts font-medium hover:bg-cards rounded-lg pl-0 lg:px-4"
+          className="flex items-center justify-center lg:justify-start gap-4 py-2 text-texts font-semibold hover:bg-cards rounded-lg pl-0 lg:px-4"
         >
           <ClipboardDocumentListIcon className="h-5 w-5" />
           <span className="hidden lg:block">Užduotys</span>
@@ -31,7 +31,7 @@ export default function Menu({ isAdmin }) {
 
         <Link
           href="/dashboard/clients"
-          className="flex items-center justify-center lg:justify-start gap-4 py-2 text-texts font-medium hover:bg-cards rounded-lg pl-0 lg:px-4"
+          className="flex items-center justify-center lg:justify-start gap-4 py-2 text-texts font-semibold hover:bg-cards rounded-lg pl-0 lg:px-4"
         >
           <UsersIcon className="h-5 w-5" />
           <span className="hidden lg:block">Klientai</span>
@@ -40,7 +40,7 @@ export default function Menu({ isAdmin }) {
         {isAdmin && (
           <Link
             href="/dashboard/reports"
-            className="flex items-center justify-center lg:justify-start gap-4 py-2 text-texts font-medium hover:bg-cards rounded-lg pl-0 lg:px-4"
+            className="flex items-center justify-center lg:justify-start gap-4 py-2 text-texts font-semibold hover:bg-cards rounded-lg pl-0 lg:px-4"
           >
             <ChartBarIcon className="h-5 w-5" />
             <span className="hidden lg:block">Ataskaitos</span>
@@ -49,7 +49,7 @@ export default function Menu({ isAdmin }) {
         <form action={logout}>
           <button
             type="submit"
-            className="w-full flex items-center justify-center lg:justify-start gap-4 py-2 text-texts font-medium hover:bg-cards rounded-lg pl-0 lg:px-4"
+            className="w-full flex items-center justify-center lg:justify-start gap-4 py-2 text-texts font-semibold hover:bg-cards rounded-lg pl-0 lg:px-4"
           >
             <ArrowLeftStartOnRectangleIcon className="h-5 w-5" />
             <span className="hidden lg:block">Atsijungti</span>

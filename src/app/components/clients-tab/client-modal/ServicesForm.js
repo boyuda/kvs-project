@@ -141,7 +141,7 @@ export default function ServicesForm({
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
-        <h3 className="font-medium text-sm">Turimos Paslaugos</h3>
+        <h3 className="font-semibold text-sm">Turimos Paslaugos</h3>
         {!isViewMode && (
           <button
             type="button"
@@ -156,7 +156,7 @@ export default function ServicesForm({
       </div>
 
       {services.length === 0 ? (
-        <div className="text-center py-4 border border-dashed rounded-lg text-texts text-sm font-medium">
+        <div className="text-center py-4 border border-dashed rounded-lg text-texts text-sm font-semibold">
           Klientas neturi jokių paslaugų.{' '}
           {!isViewMode && 'Pridėkite paslaugą paspaudę mygtuką aukščiau.'}
         </div>
