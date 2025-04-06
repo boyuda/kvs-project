@@ -186,7 +186,7 @@ export default function ClientsContainer({
             o.id === s.id &&
             (o.start_date !== s.start_date ||
               o.end_date !== s.end_date ||
-              o.service_id !== getServiceIdFromName(s.type))
+              o.services?.name !== s.services?.name)
         )
       );
       const servicesToDelete = originalServices.filter(

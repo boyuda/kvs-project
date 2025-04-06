@@ -1,11 +1,9 @@
-//
-// Supabase calls for client rendering
 import { createClient } from '@/utils/supabase/client';
 
 export const addClient = async (clientData) => {
   const supabase = createClient();
 
-  // 1. Get logged-in user
+  //Get logged-in user
   const {
     data: { user },
     error: userError,
@@ -15,14 +13,14 @@ export const addClient = async (clientData) => {
     console.error('User not authenticated:', userError);
     return { data: null, error: userError || new Error('Not authenticated') };
   }
-  // 2. Extract and clean client data
+  //Extract and clean client data
   const { client_services, ...cleanData } = clientData;
   const clientToInsert = {
     ...cleanData,
     assigned_user_id: user.id,
   };
 
-  // 3. Insert the client
+  // Insert the client
   const { data: insertedClient, error: insertClientError } = await supabase
     .from('clients')
     .insert([clientToInsert])
@@ -34,7 +32,7 @@ export const addClient = async (clientData) => {
     return { data: null, error: insertClientError };
   }
 
-  // 4. Fetch all service IDs from Supabase
+  //Fetch all service IDs from Supabase
   const { data: availableServices, error: serviceFetchError } = await supabase
     .from('services')
     .select('id, name');
@@ -44,7 +42,7 @@ export const addClient = async (clientData) => {
     return { data: insertedClient, error: serviceFetchError };
   }
 
-  // 5. Map user-provided service types to actual UUIDs
+  //Map user-provided service types to actual UUIDs
   if (Array.isArray(client_services) && client_services.length > 0) {
     const servicesToInsert = client_services
       .map((service) => {
@@ -58,7 +56,7 @@ export const addClient = async (clientData) => {
           end_date: service.end_date,
         };
       })
-      .filter(Boolean); // Remove nulls
+      .filter(Boolean);
 
     const { error: serviceInsertError } = await supabase
       .from('client_services')
@@ -132,26 +130,26 @@ export async function getClientsAndServicesForUserClient(
   return { clients, totalCount: count };
 }
 
+// Update client data
 export const updateClient = async (clientId, changes) => {
-  console.log(changes);
   const supabase = createClient();
 
   const { data, error } = await supabase
     .from('clients')
     .update(changes)
     .eq('id', clientId)
-    .select(); // <- make sure you have .select() if you want to return data
+    .select();
 
   return { data, error };
 };
 
-// CREATE
+// Add new service for the client
 export async function addService(service) {
   const supabase = createClient();
   return await supabase.from('client_services').insert(service).select();
 }
 
-// UPDATE
+// Update current service for the client
 export async function updateService(serviceId, updates) {
   const supabase = createClient();
   return await supabase
@@ -161,7 +159,7 @@ export async function updateService(serviceId, updates) {
     .select();
 }
 
-// DELETE
+// Delete service for the client
 export async function deleteService(serviceId) {
   const supabase = createClient();
   return await supabase.from('client_services').delete().eq('id', serviceId);
