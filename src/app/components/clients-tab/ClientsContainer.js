@@ -73,7 +73,7 @@ export default function ClientsContainer({
     return changes;
   }
 
-  // Handle client save + toast
+  // Handle client modal save
   const handleSaveClient = async (clientData, mode) => {
     // Refresh list
     const refreshClients = async () => {
@@ -89,18 +89,20 @@ export default function ClientsContainer({
       }));
     };
 
+    let didUpdate = false;
+
     // New client client creation mode
     if (mode === 'create') {
       try {
         //Addind the client to the database
         const { error } = await addClient(clientData);
         if (error) throw error;
-        //Refreshing the clients list
-        await refreshClients();
+        //Flag change for refreshing at the end
+        didUpdate = true;
         //Displaying success/error message
         toast.success('Naujas klientas sukurtas!');
-      } catch (err) {
-        console.error('Failed to create client:', err);
+      } catch (error) {
+        console.error('Failed to create client:', error);
         toast.error('Nepavyko pridėti kliento.');
       }
     }
@@ -119,8 +121,8 @@ export default function ClientsContainer({
           //Refreshing the clients list
           await refreshClients();
           toast.success('Kliento informacija atnaujinta!');
-        } catch (err) {
-          console.error('Failed to update client:', err);
+        } catch (error) {
+          console.error('Failed to update client:', error);
           toast.error('Nepavyko atnaujinti kliento.');
         }
       }
@@ -128,8 +130,8 @@ export default function ClientsContainer({
 
     //Edit of ClientServicesForm
     if (mode === 'edit') {
-      const originalServices = selectedClient.client_services || [];
-      const updatedServices = clientData.client_services || [];
+      const originalServices = selectedClient.client_services;
+      const updatedServices = clientData.client_services;
 
       const servicesToAdd = updatedServices.filter((s) => !s.id);
       const servicesToUpdate = updatedServices.filter((s) =>
@@ -138,9 +140,10 @@ export default function ClientsContainer({
             o.id === s.id &&
             (o.start_date !== s.start_date ||
               o.end_date !== s.end_date ||
-              o.services?.name !== s.services?.type)
+              o.service_id !== s.service_id)
         )
       );
+
       const servicesToDelete = originalServices.filter(
         (o) => !updatedServices.find((u) => u.id === o.id)
       );
@@ -155,18 +158,17 @@ export default function ClientsContainer({
             end_date: newService.end_date,
           });
           if (error) throw error;
-          //Refreshing the clients list
-          await refreshClients();
+          //Flag change for refreshing at the end
+          didUpdate = true;
           toast.success('Paslauga pridėta!');
-        } catch (err) {
-          console.error('Failed to add service:', err);
+        } catch (error) {
+          console.error('Failed to add service:', error);
           toast.error('Nepavyko pridėti paslaugos.');
         }
       }
 
       // Update existing services
       for (const updated of servicesToUpdate) {
-        console.log(updatedServices);
         try {
           const { error } = await updateService(updated.id, {
             service_id: getServiceIdFromName(updated.type),
@@ -174,11 +176,11 @@ export default function ClientsContainer({
             end_date: updated.end_date,
           });
           if (error) throw error;
-          //Refreshing the clients list
-          await refreshClients();
+          //Flag change for refreshing at the end
+          didUpdate = true;
           toast.success('Paslaugos informacija atnaujinta!');
         } catch (error) {
-          console.error('Failed to add service:', err);
+          console.error('Failed to add service:', error);
           toast.error('Nepavyko atnaujinti paslaugos.');
         }
       }
@@ -188,15 +190,17 @@ export default function ClientsContainer({
         try {
           const { error } = await deleteService(deleted.id);
           if (error) throw error;
-          //Refreshing the clients list
-          await refreshClients();
+          //Flag change for refreshing at the end
+          didUpdate = true;
           toast.success('Paslauga ištrinta!');
         } catch (error) {
-          console.error('Failed to add service:', err);
+          console.error('Failed to add service:', error);
           toast.error('Nepavyko ištrinti paslaugos.');
         }
       }
     }
+
+    if (didUpdate) await refreshClients();
   };
 
   return (

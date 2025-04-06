@@ -123,8 +123,8 @@ export default function ServicesForm({
                 )}
                 <p>
                   {isExpired
-                    ? 'Sutartis pasibaigė'
-                    : 'Galiojanti sutartis iki '}{' '}
+                    ? 'Sutartis pasibaigė '
+                    : 'Galiojanti sutartis iki '}
                   {service.end_date}
                 </p>
               </div>
