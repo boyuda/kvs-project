@@ -15,7 +15,6 @@ export const addClient = async (clientData) => {
     console.error('User not authenticated:', userError);
     return { data: null, error: userError || new Error('Not authenticated') };
   }
-  console.log('Updated data:', data);
   // 2. Extract and clean client data
   const { client_services, ...cleanData } = clientData;
   const clientToInsert = {

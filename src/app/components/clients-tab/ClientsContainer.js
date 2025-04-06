@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ClientsFilterBar from './ClientsFilterBar';
 import ClientsTable from './ClientsTable';
@@ -37,9 +37,14 @@ export default function ClientsContainer({
 
   const [pagination, setPagination] = useState({
     page: currentPageFromParams,
-    pageSize: pageSize,
+    pageSize: parseInt(searchParams.get('pageSize')) || pageSize,
     totalCount: initialClientsData?.totalCount || 0,
   });
+
+  const [showAll, setShowAll] = useState(
+    searchParams.get('showAll') === 'true' || false
+  );
+
   // Handle page change
   const handlePageChange = (newPage) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -53,6 +58,59 @@ export default function ClientsContainer({
     }));
   };
 
+  // Handle page size change
+  const handlePageSizeChange = (newSize) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('pageSize', newSize.toString());
+    params.set('page', '1'); // Reset to first page when changing page size
+    router.push(`?${params.toString()}`);
+
+    setPagination((prev) => ({
+      ...prev,
+      pageSize: newSize,
+      page: 1,
+    }));
+
+    // Refresh data with new page size
+    refreshClients(1, newSize, showAll);
+  };
+
+  // Handle show all clients change
+  const handleShowAllChange = (showAllClients) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('showAll', showAllClients.toString());
+    params.set('page', '1'); // Reset to first page when changing filter
+    router.push(`?${params.toString()}`);
+
+    setShowAll(showAllClients);
+
+    // Refresh data with new filter
+    refreshClients(1, pagination.pageSize, showAllClients);
+  };
+
+  // Refresh list - extracted to a separate function to reuse
+  const refreshClients = async (
+    page = pagination.page,
+    size = pagination.pageSize,
+    all = showAll
+  ) => {
+    try {
+      const updated = await getClientsAndServicesForUserClient(all, page, size);
+
+      setFilteredClients(updated.clients);
+      setPagination((prev) => ({
+        ...prev,
+        totalCount: updated.totalCount,
+      }));
+
+      return updated;
+    } catch (error) {
+      console.error('Error refreshing clients:', error);
+      toast.error('Nepavyko atnaujinti klientų sąrašo');
+      return null;
+    }
+  };
+
   const handleNewClient = () => {
     setSelectedClient(null);
     setModalMode('create');
@@ -64,6 +122,7 @@ export default function ClientsContainer({
     setModalMode('view');
     setIsModalOpen(true);
   };
+
   function getChangedFields(original, updated) {
     const changes = {};
     for (const key in updated) {
@@ -76,26 +135,12 @@ export default function ClientsContainer({
 
   // Handle client modal save
   const handleSaveClient = async (clientData, mode) => {
-    // Refresh list
-    const refreshClients = async () => {
-      const updated = await getClientsAndServicesForUserClient(
-        true,
-        pagination.page,
-        pagination.pageSize
-      );
-      setFilteredClients(updated.clients);
-      setPagination((prev) => ({
-        ...prev,
-        totalCount: updated.totalCount,
-      }));
-    };
-
     let didUpdate = false;
 
     // New client client creation mode
     if (mode === 'create') {
       try {
-        //Addind the client to the database
+        //Adding the client to the database
         const { error } = await addClient(clientData);
         if (error) throw error;
         //Flag change for refreshing at the end
@@ -107,32 +152,32 @@ export default function ClientsContainer({
         toast.error('Nepavyko pridėti kliento.');
       }
     }
-
-    //Edit of ClientInfoForm
-    if (mode === 'edit') {
+    // Edit mode - handle both client info and services
+    else if (mode === 'edit') {
+      // Handle client info updates
       const { id, client_services, ...restOfForm } = clientData;
 
       // Compare with original object
       const clientChanges = getChangedFields(selectedClient, restOfForm);
 
+      // Only update client info if there are changes
+      let clientInfoUpdated = false;
       if (Object.keys(clientChanges).length > 0) {
         try {
           const { error } = await updateClient(id, clientChanges);
           if (error) throw error;
-          //Refreshing the clients list
-          await refreshClients();
+          clientInfoUpdated = true;
+          didUpdate = true;
           toast.success('Kliento informacija atnaujinta!');
         } catch (error) {
           console.error('Failed to update client:', error);
           toast.error('Nepavyko atnaujinti kliento.');
         }
       }
-    }
 
-    //Edit of ClientServicesForm
-    if (mode === 'edit') {
-      const originalServices = selectedClient.client_services;
-      const updatedServices = clientData.client_services;
+      // Handle service updates
+      const originalServices = selectedClient.client_services || [];
+      const updatedServices = clientData.client_services || [];
 
       const servicesToAdd = updatedServices.filter((s) => !s.id);
       const servicesToUpdate = updatedServices.filter((s) =>
@@ -141,62 +186,73 @@ export default function ClientsContainer({
             o.id === s.id &&
             (o.start_date !== s.start_date ||
               o.end_date !== s.end_date ||
-              o.service_id !== s.service_id)
+              o.service_id !== getServiceIdFromName(s.type))
         )
       );
-
       const servicesToDelete = originalServices.filter(
         (o) => !updatedServices.find((u) => u.id === o.id)
       );
 
-      // Add new service
-      for (const newService of servicesToAdd) {
-        try {
-          const { error } = await addService({
-            client_id: clientData.id,
-            service_id: getServiceIdFromName(newService.type),
-            start_date: newService.start_date,
-            end_date: newService.end_date,
-          });
-          if (error) throw error;
-          //Flag change for refreshing at the end
-          didUpdate = true;
-          toast.success('Paslauga pridėta!');
-        } catch (error) {
-          console.error('Failed to add service:', error);
-          toast.error('Nepavyko pridėti paslaugos.');
-        }
-      }
+      // Only proceed with service operations if there are any changes
+      const hasServiceChanges =
+        servicesToAdd.length > 0 ||
+        servicesToUpdate.length > 0 ||
+        servicesToDelete.length > 0;
 
-      // Update existing services
-      for (const updated of servicesToUpdate) {
-        try {
-          const { error } = await updateService(updated.id, {
-            service_id: getServiceIdFromName(updated.type),
-            start_date: updated.start_date,
-            end_date: updated.end_date,
-          });
-          if (error) throw error;
-          //Flag change for refreshing at the end
-          didUpdate = true;
-          toast.success('Paslaugos informacija atnaujinta!');
-        } catch (error) {
-          console.error('Failed to add service:', error);
-          toast.error('Nepavyko atnaujinti paslaugos.');
-        }
-      }
+      if (hasServiceChanges) {
+        let serviceUpdateSuccess = false;
 
-      // Delete service
-      for (const deleted of servicesToDelete) {
-        try {
-          const { error } = await deleteService(deleted.id);
-          if (error) throw error;
-          //Flag change for refreshing at the end
-          didUpdate = true;
-          toast.success('Paslauga ištrinta!');
-        } catch (error) {
-          console.error('Failed to add service:', error);
-          toast.error('Nepavyko ištrinti paslaugos.');
+        // Add new services
+        for (const newService of servicesToAdd) {
+          try {
+            const { error } = await addService({
+              client_id: clientData.id,
+              service_id: getServiceIdFromName(newService.type),
+              start_date: newService.start_date,
+              end_date: newService.end_date,
+            });
+            if (error) throw error;
+            serviceUpdateSuccess = true;
+            didUpdate = true;
+          } catch (error) {
+            console.error('Failed to add service:', error);
+            toast.error('Nepavyko pridėti paslaugos.');
+          }
+        }
+
+        // Update existing services
+        for (const updated of servicesToUpdate) {
+          try {
+            const { error } = await updateService(updated.id, {
+              service_id: getServiceIdFromName(updated.type),
+              start_date: updated.start_date,
+              end_date: updated.end_date,
+            });
+            if (error) throw error;
+            serviceUpdateSuccess = true;
+            didUpdate = true;
+          } catch (error) {
+            console.error('Failed to update service:', error);
+            toast.error('Nepavyko atnaujinti paslaugos.');
+          }
+        }
+
+        // Delete services
+        for (const deleted of servicesToDelete) {
+          try {
+            const { error } = await deleteService(deleted.id);
+            if (error) throw error;
+            serviceUpdateSuccess = true;
+            didUpdate = true;
+          } catch (error) {
+            console.error('Failed to delete service:', error);
+            toast.error('Nepavyko ištrinti paslaugos.');
+          }
+        }
+
+        // Show a single toast for all service operations
+        if (serviceUpdateSuccess) {
+          toast.success('Paslaugų informacija atnaujinta!');
         }
       }
     }
@@ -210,6 +266,10 @@ export default function ClientsContainer({
         clientsData={initialClientsData?.clients || []}
         setFilteredClients={setFilteredClients}
         onNewClient={handleNewClient}
+        pageSize={pagination.pageSize}
+        onPageSizeChange={handlePageSizeChange}
+        showAllClients={showAll}
+        onShowAllChange={handleShowAllChange}
       />
 
       <ClientsTable
