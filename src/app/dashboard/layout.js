@@ -3,8 +3,10 @@ import Menu from '../components/Menu';
 import Navbar from '../components/Navbar';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import { getUserById } from '@/src/services/supabase/server/users';
 
 export default async function DashboardLayout({ children }) {
+  // Supabase to get the authenticated user
   const supabase = await createClient();
 
   // Get the authenticated user
@@ -16,6 +18,9 @@ export default async function DashboardLayout({ children }) {
     redirect('/auth/sign-in');
   }
 
+  // Get user data
+  const [userProfile] = await getUserById(user.id);
+
   return (
     <div className="h-screen flex">
       {/* LEFT */}
@@ -25,7 +30,7 @@ export default async function DashboardLayout({ children }) {
             Klientų valdymo sistema
           </span>
         </Link>
-        <Menu />
+        <Menu isAdmin={userProfile.is_admin || false} />
       </div>
       {/* RIGHT*/}
       <div className="w-[86%] md:w-[92%] lg:w-[84%] xl:w-[86%] overflow-scroll no-scrollbar ">
