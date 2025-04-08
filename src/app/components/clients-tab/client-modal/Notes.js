@@ -1,5 +1,4 @@
 function Notes({ notes, isViewMode, onChange }) {
-  //TODO: Implement notes functionality
   return isViewMode ? (
     <div>
       <div className="text-sm flex flex-col gap-2">

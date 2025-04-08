@@ -1,3 +1,5 @@
+// TODO: Implement functionality to get the list of tasks from the server for the client
+
 export default function TasksList() {
   // Helper function for status colors
   const getStatusColor = (status) => {
