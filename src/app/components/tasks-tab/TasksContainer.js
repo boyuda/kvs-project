@@ -6,6 +6,7 @@ import TasksTable from './TasksTable';
 import TasksFilterBar from './TasksFilterBar';
 import toast from 'react-hot-toast';
 import { getTasksForUserClient } from '@/src/services/supabase/client/tasks';
+import TaskModal from './TaskModal';
 
 export default function TasksContainer({
   initialTasksData,
@@ -115,7 +116,7 @@ export default function TasksContainer({
 
   return (
     <div>
-      <TasksFilterBar
+      {/* <TasksFilterBar
         tasksData={initialTasksData?.tasks || []}
         setFilteredTasks={setFilteredTasks}
         onNewTask={handleNewTask}
@@ -130,7 +131,8 @@ export default function TasksContainer({
         pageSize={pagination.pageSize}
         totalCount={pagination.totalCount}
         onPageChange={handlePageChange}
-      />
+      /> */}
+      <TaskModal />
     </div>
   );
 }
