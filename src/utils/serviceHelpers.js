@@ -8,3 +8,14 @@ export function getServiceIdFromName(name) {
 }
 
 export const SERVICE_TYPES = ['Internetas', 'IPTV'];
+
+export const TASK_TYPES = [
+  'Skambutis',
+  'Problema',
+  'Nauja Paslauga',
+  'Sutarties Atnaujinimas',
+  'Kita',
+  'Sutarties Nutraukimas',
+];
+
+export const TASK_STATUSES = ['Uždaryta', 'Atviras', 'Atšaukta', 'Vykdomas'];

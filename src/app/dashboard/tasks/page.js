@@ -34,7 +34,7 @@ export default async function TasksPage({ searchParams }) {
   // Get user data
   const [userProfile] = await getUserById(user.id);
   return (
-    <div>
+    <div className="p-4">
       <TasksContainer
         initialTasksData={tasks}
         currentPage={page}

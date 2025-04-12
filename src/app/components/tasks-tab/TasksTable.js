@@ -11,7 +11,7 @@ export default function TasksTable({ tasksData, onTaskClick }) {
             <th className="py-3 px-6 border-b text-center">Statusas</th>
             <th className="py-3 px-6 border-b text-center">Tipas</th>
             <th className="py-3 px-6 border-b text-center">
-              Priskitas Vadybininkas
+              Priskirtas Vadybininkas
             </th>
             <th className="py-3 px-6 border-b text-center">Užduotis Sukurta</th>
             <th className="py-3 px-6 border-b text-center">

@@ -122,7 +122,7 @@ export default function ClientsFilterBar({
       {/* Filter by name */}
       <input
         type="text"
-        placeholder="Filtruoti pagal vardą"
+        placeholder="Kliento Vardas"
         value={searchName}
         onChange={(e) => setSearchName(e.target.value)}
         className="border p-2 rounded-lg shadow-md text-sm"
