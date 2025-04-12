@@ -31,6 +31,9 @@ export default function TasksContainer({
   const [showAll, setShowAll] = useState(
     searchParams.get('showAll') === 'true' || false
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [modalMode, setModalMode] = useState('create');
 
   // Handle page change
   const handlePageChange = (newPage) => {
@@ -46,17 +49,17 @@ export default function TasksContainer({
   };
 
   const handleViewTask = (task) => {
-    console.log('clicked');
-    // setSelectedTask(task);
-    // setModalMode('view');
-    // setIsModalOpen(true);
+    console.log('view task');
+    setSelectedTask(task);
+    setModalMode('view');
+    setIsModalOpen(true);
   };
 
   const handleNewTask = () => {
     console.log('new task');
-    // setSelectedClient(null);
-    // setModalMode('create');
-    // setIsModalOpen(true);
+    setSelectedTask(null);
+    setModalMode('create');
+    setIsModalOpen(true);
   };
 
   // Handle page size change
@@ -114,9 +117,14 @@ export default function TasksContainer({
     }
   };
 
+  // Handle client modal save
+  const handleSaveTask = async (clientData, mode) => {
+    console.log('task saved');
+  };
+
   return (
     <div>
-      {/* <TasksFilterBar
+      <TasksFilterBar
         tasksData={initialTasksData?.tasks || []}
         setFilteredTasks={setFilteredTasks}
         onNewTask={handleNewTask}
@@ -125,14 +133,22 @@ export default function TasksContainer({
         showAllTasks={showAll}
         onShowAllChange={handleShowAllChange}
       />
+
       <TasksTable tasksData={filteredTasks} onTaskClick={handleViewTask} />
       <Pagination
         currentPage={pagination.page}
         pageSize={pagination.pageSize}
         totalCount={pagination.totalCount}
         onPageChange={handlePageChange}
-      /> */}
-      <TaskModal />
+      />
+      <TaskModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        client={selectedTask}
+        initialMode={modalMode}
+        onSave={handleSaveTask}
+        isAdmin={isAdmin}
+      />
     </div>
   );
 }

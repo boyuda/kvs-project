@@ -10,7 +10,6 @@ function TasksFilterBar({
   showAllTasks = true,
   onShowAllChange,
 }) {
-  console.log(tasksData);
   const [searchName, setSearchName] = useState('');
   const [searchTitle, setSearchTitle] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');

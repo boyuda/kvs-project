@@ -1,5 +1,4 @@
 export default function TasksTable({ tasksData, onTaskClick }) {
-  console.log(tasksData[0]);
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full border-2 text-xs">

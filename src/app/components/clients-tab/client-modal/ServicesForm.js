@@ -10,7 +10,6 @@ export default function ServicesForm({
   isAdmin,
 }) {
   services = services || [];
-  console.log(isAdmin);
 
   function renderEditView() {
     return (

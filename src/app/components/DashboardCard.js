@@ -21,7 +21,6 @@ export default async function DashboardCard({ title, data, type, user }) {
   const totalAssignedClients = await getTotalAssignedClientsToUser(user);
   const expiringContracts = await getExpiringContractsCount(user);
   const [{ name }] = await getUserById(user);
-  // console.log(expiringContracts);
 
   return (
     <div className="rounded-2xl p-4 flex-1 min-w-[130px] shadow-md border-2">
