@@ -107,8 +107,7 @@ export default function TaskModal({
           {mode === MODAL_MODES.VIEW ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               <div className="flex flex-col gap-10">
-                <h1>View Mode</h1>
-                <TaskInfoForm />
+                <TaskInfoForm isViewMode={mode === MODAL_MODES.VIEW} />
                 {/* <ClientInfoForm
                   formData={formData}
                   onChange={handleInputChange}

@@ -25,29 +25,31 @@ export default function ClientInfoForm({
     { label: 'Miestas', name: 'city', type: 'text', maxLength: 20 },
   ];
 
+  const iconStyle = 'h-5 w-5 text-gray-500';
+
   return isViewMode ? (
     <div className="text-sm flex flex-col gap-2">
       <h3 className="font-semibold">Kontaktai</h3>
       {/* Name */}
       <div className="flex items-center gap-3">
-        <UserCircleIcon className="h-5 w-5" />
-        <p>
+        <UserCircleIcon className={iconStyle} />
+        <p className="font-semibold">
           {formData.first_name} {formData.last_name}
         </p>
       </div>
       {/* Email */}
       <div className="flex items-center gap-3">
-        <AtSymbolIcon className="h-5 w-5" />
+        <AtSymbolIcon className={iconStyle} />
         <p>{formData.email}</p>
       </div>
       {/* Phone */}
       <div className="flex items-center gap-3">
-        <DevicePhoneMobileIcon className="h-5 w-5" />
+        <DevicePhoneMobileIcon className={iconStyle} />
         <p>{formData.phone}</p>
       </div>
       {/* Address */}
       <div className="flex items-center gap-3">
-        <HomeIcon className="h-5 w-5" />
+        <HomeIcon className={iconStyle} />
         <p>
           {formData.street} {formData.house_number}
           {formData.flat_number ? `-${formData.flat_number}` : ''},{' '}
@@ -56,7 +58,7 @@ export default function ClientInfoForm({
       </div>
       {/* Assigned User */}
       <div className="flex items-center gap-3">
-        <UserGroupIcon className="h-5 w-5" />
+        <UserGroupIcon className={iconStyle} />
         <p>Vadybininkas: {assignedUserName || 'Įkeliama..'}</p>
       </div>
     </div>
