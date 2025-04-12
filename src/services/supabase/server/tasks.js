@@ -58,14 +58,11 @@ export async function getTasksForUser(
     .select(
       `
       id, title, description, due_date, created_at,
-      client_id,
-      clients ( first_name, last_name ),
-      assigned_user_id,
-      users ( name, last_name ),
+      client_id(id, first_name, last_name),
+      assigned_user_id (id, name, last_name ),
       status_id,
-      task_statuses ( name, slug ),
-      type_id,
-      task_types ( name, slug )
+      task_statuses (id, name, slug ),
+      task_types (id, name, slug )
     `
     )
     .range(offset, offset + pageSize - 1)

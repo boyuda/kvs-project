@@ -4,18 +4,22 @@ export default function ClientsTable({ clientsData, onClientClick }) {
       <table className="min-w-full border-2 text-xs">
         <thead>
           <tr className="bg-cards text-texts text-left">
-            <th className="py-3 px-6 border-b">Kliento ID</th>
-            <th className="py-3 px-6 border-b">Vardas Pavardė</th>
-            <th className="py-3 px-6 border-b">El. Paštas</th>
-            <th className="py-3 px-6 border-b">Telefonas</th>
-            <th className="py-3 px-6 border-b">Adresas</th>
-            <th className="py-3 px-6 border-b">Miestas</th>
-            <th className="py-3 px-6 border-b">Paslaugos</th>
-            <th className="py-3 px-6 border-b">Sutarties Pradžia</th>
-            <th className="py-3 px-6 border-b">Sutarties Pabaiga</th>
+            <th className="py-3 px-6 border-b text-center">Kliento ID</th>
+            <th className="py-3 px-6 border-b text-center">Vardas Pavardė</th>
+            <th className="py-3 px-6 border-b text-center">El. Paštas</th>
+            <th className="py-3 px-6 border-b text-center">Telefonas</th>
+            <th className="py-3 px-6 border-b text-center">Adresas</th>
+            <th className="py-3 px-6 border-b text-center">Miestas</th>
+            <th className="py-3 px-6 border-b text-center">Paslaugos</th>
+            <th className="py-3 px-6 border-b text-center">
+              Sutarties Pradžia
+            </th>
+            <th className="py-3 px-6 border-b text-center">
+              Sutarties Pabaiga
+            </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-center">
           {clientsData.map((client, index) => (
             <tr
               onClick={() => onClientClick(client)}

@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Pagination from '../clients-tab/Pagination';
+import TasksTable from './TasksTable';
 
 export default function TasksContainer({
   initialTasksData,
@@ -20,6 +21,10 @@ export default function TasksContainer({
     totalCount: initialTasksData?.totalCount || 0,
   });
 
+  const [filteredTasks, setFilteredTasks] = useState(
+    initialTasksData?.tasks || []
+  );
+
   // Handle page change
   const handlePageChange = (newPage) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -33,9 +38,17 @@ export default function TasksContainer({
     }));
   };
 
+  const handleViewTask = (task) => {
+    console.log('clicked');
+    // setSelectedTask(task);
+    // setModalMode('view');
+    // setIsModalOpen(true);
+  };
+
   return (
     <div>
       <h1>hello</h1>
+      <TasksTable tasksData={filteredTasks} onTaskClick={handleViewTask} />
       <Pagination
         currentPage={pagination.page}
         pageSize={pagination.pageSize}

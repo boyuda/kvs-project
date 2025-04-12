@@ -29,6 +29,7 @@ export default async function TasksPage({ searchParams }) {
   if (!user) {
     redirect('/auth/sign-in');
   }
+  console.log(tasks);
 
   // Get user data
   const [userProfile] = await getUserById(user.id);
