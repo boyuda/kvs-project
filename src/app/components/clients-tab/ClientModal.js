@@ -10,6 +10,7 @@ import {
   getAssignedUserName,
   getAllUsers,
 } from '@/src/services/supabase/client/users';
+import { getTasksForClient } from '@/src/services/supabase/client/tasks';
 import toast from 'react-hot-toast';
 
 const MODAL_MODES = {
@@ -42,6 +43,7 @@ export default function ClientModal({
     notes: '',
   });
   const [originalClient, setOriginalClient] = useState(null);
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     if (client) {
@@ -111,6 +113,13 @@ export default function ClientModal({
     }
     setMode(initialMode);
   }, [client, initialMode, isOpen]);
+
+  //fetch tasks
+  useEffect(() => {
+    if (isOpen && client) {
+      fetchClientTasks(client.id);
+    }
+  }, [isOpen, client]);
 
   // If modal is closed, don't render anything
   if (!isOpen) return null;
@@ -227,6 +236,16 @@ export default function ClientModal({
     }
   };
 
+  const fetchClientTasks = async (clientId) => {
+    console.log(clientId);
+    try {
+      const data = await getTasksForClient(clientId);
+      setTasks(data);
+    } catch (error) {
+      console.error('Klaida gaunant užduotis:', error);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-30 flex items-center justify-center">
       {/* Main modal window size */}
@@ -264,7 +283,7 @@ export default function ClientModal({
               </div>
 
               <div className="flex flex-col gap-10">
-                <TasksList />
+                <TasksList tasks={tasks} />
                 <Notes
                   notes={formData.notes}
                   isViewMode={mode === MODAL_MODES.VIEW}

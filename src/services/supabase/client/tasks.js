@@ -92,3 +92,30 @@ export async function addCommentToTask(taskId, userId, comment) {
   if (error) throw error;
   return data;
 }
+
+export async function getTasksForClient(clientId) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('tasks')
+    .select(
+      `
+      id,
+      title,
+      due_date,
+      created_at,
+      task_statuses(name, slug),
+      task_types(name),
+      assigned_user_id(name)
+    `
+    )
+    .eq('client_id', clientId)
+    .order('due_date', { ascending: true });
+
+  if (error) {
+    throw error;
+  }
+  console.log(data);
+
+  return data;
+}

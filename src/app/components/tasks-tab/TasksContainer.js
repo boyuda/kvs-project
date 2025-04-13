@@ -7,6 +7,7 @@ import TasksFilterBar from './TasksFilterBar';
 import toast from 'react-hot-toast';
 import { getTasksForUserClient } from '@/src/services/supabase/client/tasks';
 import TaskModal from './TaskModal';
+import { useTaskModalStore } from '@/src/store/taskModalStore';
 
 export default function TasksContainer({
   initialTasksData,
@@ -31,11 +32,7 @@ export default function TasksContainer({
   const [showAll, setShowAll] = useState(
     searchParams.get('showAll') === 'true' || false
   );
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [modalMode, setModalMode] = useState('create');
 
-  // Handle page change
   const handlePageChange = (newPage) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', newPage.toString());
@@ -48,20 +45,15 @@ export default function TasksContainer({
     }));
   };
 
+  const { openTaskModal } = useTaskModalStore();
+
   const handleViewTask = (task) => {
-    console.log('view task');
-    setSelectedTask(task);
-    setModalMode('view');
-    setIsModalOpen(true);
+    openTaskModal(task, 'view');
   };
 
   const handleNewTask = () => {
-    console.log('new task');
-    setSelectedTask(null);
-    setModalMode('create');
-    setIsModalOpen(true);
+    openTaskModal(null, 'create');
   };
-
   // Handle page size change
   const handlePageSizeChange = (newSize) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -142,11 +134,11 @@ export default function TasksContainer({
         onPageChange={handlePageChange}
       />
       <TaskModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        task={selectedTask}
-        initialMode={modalMode}
-        onSave={handleSaveTask}
+        // isOpen={isModalOpen}
+        // onClose={() => setIsModalOpen(false)}
+        // task={selectedTask}
+        // initialMode={modalMode}
+        // onSave={handleSaveTask}
         isAdmin={isAdmin}
       />
     </div>

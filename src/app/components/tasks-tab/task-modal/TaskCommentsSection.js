@@ -56,7 +56,7 @@ export default function TaskCommentsSection({
       </div>
 
       {/* Comments List */}
-      <div className="flex flex-col gap-3 max-h-64 overflow-y-auto pr-2 shadow-inner rounded-md bg-white">
+      <div className="flex flex-col gap-3 max-h-60 overflow-y-auto pr-2 shadow-inner rounded-md bg-white">
         {comments.length === 0 ? (
           <p className="text-gray-500 italic px-2">Komentarų nėra</p>
         ) : (
