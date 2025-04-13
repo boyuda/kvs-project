@@ -1,236 +1,56 @@
-// TODO: Implement functionality to get the list of tasks from the server for the client
+'use client';
+import { ClipboardDocumentListIcon } from '@heroicons/react/24/outline';
+
+const statusColors = {
+  atviras: 'bg-green-100 text-green-800',
+  vykdoma: 'bg-yellow-100 text-yellow-800',
+  uzdaryta: 'bg-red-100 text-red-800',
+  atsaukta: 'bg-gray-200 text-gray-800',
+};
 
 export default function TasksList() {
-  // Helper function for status colors
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'atviras':
-        return 'bg-green-100 text-green-600';
-      case 'vykdoma':
-        return 'bg-yellow-100 text-yellow-600';
-      case 'uzdaryta':
-        return 'bg-red-100 text-red-600';
-      default:
-        return 'bg-gray-100 text-gray-600';
-    }
-  };
-
   return (
-    <div className="text-sm flex flex-col gap-2 text-texts">
-      <div className=" flex justify-between items-center">
-        <h3 className="font-semibold">Užduotys</h3>
-        <button className="font-semibold text-xl">+</button>
+    <div className="text-sm flex flex-col gap-3 text-texts">
+      {/* Section Title with Icon */}
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <ClipboardDocumentListIcon className="h-4 w-4 text-gray-500" />
+          <h3 className="font-semibold text-gray-800">Užduotys</h3>
+        </div>
+        <button className="font-semibold text-xl leading-none text-gray-600 hover:text-blue-500 transition">
+          +
+        </button>
       </div>
-      <div className="border rounded-lg p-2 overflow-y-auto max-h-40">
-        <ul className="divide-y">
-          {/* Task 1 */}
-          <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
-            <div className="flex flex-col">
-              <span className="font-semibold truncate">Paskambinti ryte</span>
-              <span className="text-gray-500 text-xs">Nauja paslauga</span>
+
+      {/* Tasks List */}
+      <ul className="flex flex-col gap-2 max-h-60 overflow-y-auto pr-2">
+        {/* Generate 8 items */}
+        {[...Array(8)].map((_, i) => (
+          <li
+            key={i}
+            className="cursor-pointer hover:bg-gray-50 border border-gray-100 bg-white p-3 rounded-md shadow-sm grid grid-cols-[60%_20%_20%] "
+          >
+            <div className="flex flex-col overflow-hidden">
+              <span className="font-medium text-[13px] truncate">
+                Paskambinti ryte
+              </span>
+              <span className="text-gray-500 text-xs truncate">
+                Nauja paslauga
+              </span>
             </div>
-            <div className="">
+            <div className="flex items-center">
               <span
-                className={`px-2 py-1 text-xs rounded-md ${getStatusColor(
-                  'vykdoma'
-                )}`}
+                className={`px-2 py-0.5 text-xs font-medium rounded-full ${statusColors.vykdoma}`}
               >
                 Vykdoma
               </span>
             </div>
-            <div className="">
+            <div className="flex items-center justify-end">
               <span className="text-xs text-gray-500">2025-04-15</span>
             </div>
           </li>
-
-          {/* Task 2 */}
-          <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
-            <div className="flex flex-col">
-              <span className="font-semibold truncate">Kalbėt su Tadu</span>
-              <span className="text-gray-500 text-xs">
-                Sutarties pratęsimas
-              </span>
-            </div>
-            <div className="">
-              <span
-                className={`px-2 py-1 text-xs rounded-md ${getStatusColor(
-                  'atviras'
-                )}`}
-              >
-                Atviras
-              </span>
-            </div>
-            <div className="">
-              <span className="text-xs text-gray-500">2025-04-15</span>
-            </div>
-          </li>
-          {/* Task 3 */}
-          <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
-            <div className="flex flex-col">
-              <span className="font-semibold truncate">
-                Neveikia internetas
-              </span>
-              <span className="text-gray-500 text-xs">Problema</span>
-            </div>
-            <div className="">
-              <span
-                className={`px-2 py-1 text-xs rounded-md ${getStatusColor(
-                  'uzdaryta'
-                )}`}
-              >
-                Uždaryta
-              </span>
-            </div>
-            <div className="">
-              <span className="text-xs text-gray-500">2025-01-01</span>
-            </div>
-          </li>
-          {/*  */}
-          {/*  */}
-          {/* Task 3 */}
-          <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
-            <div className="flex flex-col">
-              <span className="font-semibold truncate">
-                Neveikia internetas
-              </span>
-              <span className="text-gray-500 text-xs">Peoblema</span>
-            </div>
-            <div className="">
-              <span
-                className={`px-2 py-1 text-xs rounded-md ${getStatusColor(
-                  'uzdaryta'
-                )}`}
-              >
-                Uždaryta
-              </span>
-            </div>
-            <div className="">
-              <span className="text-xs text-gray-500">2025-01-01</span>
-            </div>
-          </li>
-          <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
-            <div className="flex flex-col">
-              <span className="font-semibold truncate">
-                Neveikia internetas
-              </span>
-              <span className="text-gray-500 text-xs">Peoblema</span>
-            </div>
-            <div className="">
-              <span
-                className={`px-2 py-1 text-xs rounded-md ${getStatusColor(
-                  'uzdaryta'
-                )}`}
-              >
-                Uždaryta
-              </span>
-            </div>
-            <div className="">
-              <span className="text-xs text-gray-500">2025-01-01</span>
-            </div>
-          </li>
-          <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
-            <div className="flex flex-col">
-              <span className="font-semibold truncate">
-                Neveikia internetas
-              </span>
-              <span className="text-gray-500 text-xs">Peoblema</span>
-            </div>
-            <div className="">
-              <span
-                className={`px-2 py-1 text-xs rounded-md ${getStatusColor(
-                  'uzdaryta'
-                )}`}
-              >
-                Uždaryta
-              </span>
-            </div>
-            <div className="">
-              <span className="text-xs text-gray-500">2025-01-01</span>
-            </div>
-          </li>
-          <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
-            <div className="flex flex-col">
-              <span className="font-semibold truncate">
-                Neveikia internetas
-              </span>
-              <span className="text-gray-500 text-xs">Peoblema</span>
-            </div>
-            <div className="">
-              <span
-                className={`px-2 py-1 text-xs rounded-md ${getStatusColor(
-                  'uzdaryta'
-                )}`}
-              >
-                Uždaryta
-              </span>
-            </div>
-            <div className="">
-              <span className="text-xs text-gray-500">2025-01-01</span>
-            </div>
-          </li>
-          <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
-            <div className="flex flex-col">
-              <span className="font-semibold truncate">
-                Neveikia internetas
-              </span>
-              <span className="text-gray-500 text-xs">Peoblema</span>
-            </div>
-            <div className="">
-              <span
-                className={`px-2 py-1 text-xs rounded-md ${getStatusColor(
-                  'uzdaryta'
-                )}`}
-              >
-                Uždaryta
-              </span>
-            </div>
-            <div className="">
-              <span className="text-xs text-gray-500">2025-01-01</span>
-            </div>
-          </li>
-          <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
-            <div className="flex flex-col">
-              <span className="font-semibold truncate">
-                Neveikia internetas
-              </span>
-              <span className="text-gray-500 text-xs">Peoblema</span>
-            </div>
-            <div className="">
-              <span
-                className={`px-2 py-1 text-xs rounded-md ${getStatusColor(
-                  'uzdaryta'
-                )}`}
-              >
-                Uždaryta
-              </span>
-            </div>
-            <div className="">
-              <span className="text-xs text-gray-500">2025-01-01</span>
-            </div>
-          </li>
-          <li className="cursor-pointer hover:bg-gray-100 p-2 rounded-md grid grid-cols-[60%_20%_20%]">
-            <div className="flex flex-col">
-              <span className="font-semibold truncate">
-                Neveikia internetas
-              </span>
-              <span className="text-gray-500 text-xs">Peoblema</span>
-            </div>
-            <div className="">
-              <span
-                className={`px-2 py-1 text-xs rounded-md ${getStatusColor(
-                  'uzdaryta'
-                )}`}
-              >
-                Uždaryta
-              </span>
-            </div>
-            <div className="">
-              <span className="text-xs text-gray-500">2025-01-01</span>
-            </div>
-          </li>
-          {/*  */}
-        </ul>
-      </div>
+        ))}
+      </ul>
     </div>
   );
 }

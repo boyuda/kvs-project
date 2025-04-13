@@ -304,7 +304,7 @@ export default function ClientModal({
               <button
                 type="button"
                 onClick={() => setMode(MODAL_MODES.EDIT)}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm"
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
               >
                 Redaguoti
               </button>
@@ -322,7 +322,7 @@ export default function ClientModal({
             <button
               type="button"
               onClick={onClose}
-              className="border border-gray-300 px-4 py-2 rounded-lg text-sm"
+              className="border border-gray-300 px-4 py-2 rounded-lg text-sm hover:bg-gray-100 hover:text-gray-800 transition-colors"
             >
               Atšaukti
             </button>

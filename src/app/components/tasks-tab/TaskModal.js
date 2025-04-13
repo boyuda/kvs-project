@@ -1,6 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import TaskInfoForm from './task-modal/TaskInfoForm';
+import TaskCommentsSection from './task-modal/TaskCommentsSection';
+import TaskActivity from './task-modal/TaskActivity';
 
 const MODAL_MODES = {
   VIEW: 'view',
@@ -11,7 +13,7 @@ const MODAL_MODES = {
 export default function TaskModal({
   isOpen,
   onClose,
-  client = null,
+  task = null,
   initialMode = MODAL_MODES.CREATE,
   onSave,
   isAdmin,
@@ -107,29 +109,53 @@ export default function TaskModal({
           {mode === MODAL_MODES.VIEW ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               <div className="flex flex-col gap-10">
-                <TaskInfoForm isViewMode={mode === MODAL_MODES.VIEW} />
-                {/* <ClientInfoForm
-                  formData={formData}
-                  onChange={handleInputChange}
+                <TaskInfoForm
                   isViewMode={mode === MODAL_MODES.VIEW}
-                  assignedUserName={assignedUserName}
+                  task={task}
                 />
-                <ServicesForm
-                  services={formData.client_services}
-                  onServiceChange={handleServiceChange}
-                  onAddService={addService}
-                  onRemoveService={removeService}
-                  isViewMode={mode === MODAL_MODES.VIEW}
-                /> */}
+                {/* SUGGESTION: Add task activity section or any other component to fill in the gap */}
               </div>
 
               <div className="flex flex-col gap-10">
-                <h1>View Mode second part</h1>
-                {/* <TasksList />
-                <Notes
-                  notes={formData.notes}
-                  isViewMode={mode === MODAL_MODES.VIEW}
-                /> */}
+                <TaskCommentsSection
+                  comments={[
+                    {
+                      author: 'Andrius Berlinskas',
+                      date: '2025-04-12',
+                      text: 'Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo.Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo.',
+                    },
+                    {
+                      author: 'Jurgita Lasauskienė',
+                      date: '2025-04-10',
+                      text: 'ProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblema',
+                    },
+                    {
+                      author: 'Jurgita Lasauskienė',
+                      date: '2025-04-10',
+                      text: 'Problema sprendžiama. Patvirtinta užklausa.',
+                    },
+                    {
+                      author: 'Jurgita Lasauskienė',
+                      date: '2025-04-10',
+                      text: 'Problema sprendžiama. Patvirtinta užklausa.',
+                    },
+                    {
+                      author: 'Jurgita Lasauskienė',
+                      date: '2025-04-10',
+                      text: 'Problema sprendžiama. Patvirtinta užklausa.',
+                    },
+                    {
+                      author: 'Jurgita Lasauskienė',
+                      date: '2025-04-10',
+                      text: 'Problema sprendžiama. Patvirtinta užklausa.',
+                    },
+                    {
+                      author: 'Jurgita Lasauskienė',
+                      date: '2025-04-10',
+                      text: 'Problema sprendžiama. Patvirtinta užklausa.',
+                    },
+                  ]}
+                />
               </div>
             </div>
           ) : (
@@ -166,7 +192,7 @@ export default function TaskModal({
               <button
                 type="button"
                 onClick={() => setMode(MODAL_MODES.EDIT)}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm"
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
               >
                 Redaguoti
               </button>
@@ -184,7 +210,7 @@ export default function TaskModal({
             <button
               type="button"
               onClick={onClose}
-              className="border border-gray-300 px-4 py-2 rounded-lg text-sm"
+              className="border border-gray-300 px-4 py-2 rounded-lg text-sm hover:bg-gray-100 hover:text-gray-800 transition-colors"
             >
               Atšaukti
             </button>

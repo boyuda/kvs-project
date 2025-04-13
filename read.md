@@ -8,6 +8,7 @@ FIXME: Issue, when if modal window open and user clicks edit, after closing up t
 <!-- Clients Page -->
 
 On Client Table if contract expired, color it red
+FIXME: On client modal on notes section if text with no spaces it overflows the modal. (Marius Kazlauskas example)
 
 <!-- Reports Page -->
 

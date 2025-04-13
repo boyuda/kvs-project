@@ -144,7 +144,7 @@ export default function TasksContainer({
       <TaskModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        client={selectedTask}
+        task={selectedTask}
         initialMode={modalMode}
         onSave={handleSaveTask}
         isAdmin={isAdmin}
