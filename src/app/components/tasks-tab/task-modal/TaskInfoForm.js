@@ -24,7 +24,15 @@ const statusDotColors = {
 
 const iconStyle = 'h-5 w-5 text-gray-500';
 
-export default function TaskInfoForm({ isViewMode }) {
+export default function TaskInfoForm({ isViewMode, task }) {
+  console.log(task);
+  // Extracting slug for the coloring
+  const statusSlug = task.task_statuses.slug;
+  const statusColorClass =
+    statusColors[statusSlug] || 'bg-gray-100 text-gray-800';
+  const dotColorClass = statusDotColors[statusSlug] || 'bg-gray-400';
+
+  // Return
   return isViewMode ? (
     <div className="text-sm flex flex-col gap-2">
       <h3 className="font-semibold">Užduoties Informacija</h3>
@@ -32,13 +40,15 @@ export default function TaskInfoForm({ isViewMode }) {
       {/* Title */}
       <div className="flex items-center gap-3">
         <PencilSquareIcon className={iconStyle} />
-        <p className="font-semibold">Domina Paslaugos</p>
+        <p className="font-semibold">{task.title}</p>
       </div>
 
       {/* Client Name */}
       <div className="flex items-center gap-3">
         <UserIcon className={iconStyle} />
-        <p>Klientas - Agnė Rušinskienė</p>
+        <p>
+          Klientas - {task.client_id.first_name} {task.client_id.last_name}
+        </p>
       </div>
 
       {/* Created at */}
@@ -46,7 +56,7 @@ export default function TaskInfoForm({ isViewMode }) {
         <ClockIcon className={iconStyle} />
         <div className="flex gap-1">
           <p>Užduotis sukurta</p>
-          <p>2025-01-01</p>
+          <p>{task.created_at.split('T')[0]}</p>
         </div>
       </div>
 
@@ -56,7 +66,7 @@ export default function TaskInfoForm({ isViewMode }) {
         <div className="flex gap-1">
           <p>Užduotis galioja iki</p>
           <p className="px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-xs font-semibold">
-            2025-04-30
+            {task.due_date}
           </p>
         </div>
       </div>
@@ -66,7 +76,7 @@ export default function TaskInfoForm({ isViewMode }) {
         <ClipboardDocumentIcon className={iconStyle} />
         <div className="flex gap-1">
           <p>Užduoties Tipas:</p>
-          <p className="font-medium">Nauja Paslauga</p>
+          <p className="font-medium">{task.task_types.name}</p>
         </div>
       </div>
 
@@ -76,12 +86,10 @@ export default function TaskInfoForm({ isViewMode }) {
         <div className="flex gap-1 items-center">
           <p>Užduoties Statusas:</p>
           <span
-            className={`px-2 py-0.5 rounded-full text-xs font-semibold flex items-center gap-1 ${statusColors.in_progress}`}
+            className={`px-2 py-0.5 rounded-full text-xs font-semibold flex items-center gap-1 ${statusColorClass}`}
           >
-            <span
-              className={`w-2 h-2 rounded-full ${statusDotColors.in_progress}`}
-            ></span>
-            Vykdoma
+            <span className={`w-2 h-2 rounded-full ${dotColorClass}`}></span>
+            {task.task_statuses.name}
           </span>
         </div>
       </div>
@@ -89,7 +97,10 @@ export default function TaskInfoForm({ isViewMode }) {
       {/* Assigned User */}
       <div className="flex items-center gap-3">
         <UserGroupIcon className={iconStyle} />
-        <p>Užduotį sukūrė Andrius Berlinskas</p>
+        <p>
+          Užduotį sukūrė {task.assigned_user_id.name}{' '}
+          {task.assigned_user_id.last_name}
+        </p>
       </div>
     </div>
   ) : (

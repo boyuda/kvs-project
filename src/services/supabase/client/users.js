@@ -32,3 +32,20 @@ export async function getAllUsers() {
 
   return data;
 }
+
+// Get the logged in user id
+export async function getLoggedInUserId() {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error) {
+    console.error('Error fetching user:', error);
+    return null;
+  }
+
+  return user?.id || null;
+}

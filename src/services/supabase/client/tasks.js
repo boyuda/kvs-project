@@ -65,3 +65,30 @@ export async function getTasksForUserClient(
 
   return { tasks, totalCount: count };
 }
+
+export async function getCommentsForTask(taskId) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('task_comments')
+    .select('comment, created_at, users(name, last_name)')
+    .eq('task_id', taskId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+  console.log(data);
+  return data;
+}
+
+export async function addCommentToTask(taskId, userId, comment) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('task_comments')
+    .insert([{ task_id: taskId, user_id: userId, comment }]);
+
+  if (error) throw error;
+  return data;
+}

@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import TaskInfoForm from './task-modal/TaskInfoForm';
 import TaskCommentsSection from './task-modal/TaskCommentsSection';
 import TaskActivity from './task-modal/TaskActivity';
+import { getCommentsForTask } from '@/src/services/supabase/client/tasks';
+import { getLoggedInUserId } from '@/src/services/supabase/client/users';
 
 const MODAL_MODES = {
   VIEW: 'view',
@@ -20,11 +22,30 @@ export default function TaskModal({
 }) {
   // States
   const [mode, setMode] = useState(initialMode);
+  const [comments, setComments] = useState([]);
+  const [userId, setUserId] = useState(null);
 
   // Effects
   useEffect(() => {
     setMode(initialMode);
   }, [initialMode]);
+
+  // Fetch selected task comments
+  useEffect(() => {
+    if (task && mode === MODAL_MODES.VIEW) {
+      fetchComments();
+    }
+  }, [task, mode]);
+
+  // Fetch logged in user
+  useEffect(() => {
+    const fetchUser = async () => {
+      const id = await getLoggedInUserId();
+      setUserId(id);
+    };
+
+    fetchUser();
+  }, []);
 
   // Functions
   const getModalTitle = () => {
@@ -84,6 +105,28 @@ export default function TaskModal({
     // }
     // onClose();
   };
+  const fetchComments = async () => {
+    if (!task) return;
+
+    try {
+      const data = await getCommentsForTask(task.id);
+      const formatted = data.map((c) => ({
+        author: `${c.users?.name || ''} ${c.users?.last_name || ''}`,
+        date: new Date(c.created_at).toLocaleString('lt-LT', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+
+        text: c.comment,
+      }));
+      setComments(formatted);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -118,43 +161,10 @@ export default function TaskModal({
 
               <div className="flex flex-col gap-10">
                 <TaskCommentsSection
-                  comments={[
-                    {
-                      author: 'Andrius Berlinskas',
-                      date: '2025-04-12',
-                      text: 'Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo.Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo. Susisiekta su klientu. Laukiam atsakymo.',
-                    },
-                    {
-                      author: 'Jurgita Lasauskienė',
-                      date: '2025-04-10',
-                      text: 'ProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblemaProblema',
-                    },
-                    {
-                      author: 'Jurgita Lasauskienė',
-                      date: '2025-04-10',
-                      text: 'Problema sprendžiama. Patvirtinta užklausa.',
-                    },
-                    {
-                      author: 'Jurgita Lasauskienė',
-                      date: '2025-04-10',
-                      text: 'Problema sprendžiama. Patvirtinta užklausa.',
-                    },
-                    {
-                      author: 'Jurgita Lasauskienė',
-                      date: '2025-04-10',
-                      text: 'Problema sprendžiama. Patvirtinta užklausa.',
-                    },
-                    {
-                      author: 'Jurgita Lasauskienė',
-                      date: '2025-04-10',
-                      text: 'Problema sprendžiama. Patvirtinta užklausa.',
-                    },
-                    {
-                      author: 'Jurgita Lasauskienė',
-                      date: '2025-04-10',
-                      text: 'Problema sprendžiama. Patvirtinta užklausa.',
-                    },
-                  ]}
+                  comments={comments}
+                  onRefresh={fetchComments}
+                  taskId={task.id}
+                  userId={userId}
                 />
               </div>
             </div>

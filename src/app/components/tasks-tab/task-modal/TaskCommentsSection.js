@@ -1,9 +1,51 @@
 'use client';
 import { useState } from 'react';
 import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline';
+import { addCommentToTask } from '@/src/services/supabase/client/tasks';
+import toast from 'react-hot-toast';
 
-export default function TaskCommentsSection({ comments = [] }) {
+export default function TaskCommentsSection({
+  comments = [],
+  onRefresh,
+  taskId,
+  userId,
+}) {
   const [newComment, setNewComment] = useState('');
+  // Loading tates for the new comment to be added.
+  const [loading, setLoading] = useState(false);
+
+  const handleAddComment = async () => {
+    const trimmedComment = newComment.trim();
+
+    // If empty
+    if (!trimmedComment) {
+      toast.error('Komentaras negali būti tuščias.');
+      return;
+    }
+
+    // If less than 5 symbols
+    if (trimmedComment.length < 5) {
+      toast.error('Komentaras negali būti trumpesnis nei 5 simboliai.');
+      return;
+    }
+    if (trimmedComment.match(/^[0-9]+$/)) {
+      toast.error('Komentaras negali būti sudarytas tik iš skaičių.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await addCommentToTask(taskId, userId, newComment.trim());
+      toast.success('Komentaras pridėtas!');
+      setNewComment('');
+      onRefresh();
+    } catch (err) {
+      toast.error('Nepavyko pridėti komentaro.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4 text-sm">
@@ -39,11 +81,10 @@ export default function TaskCommentsSection({ comments = [] }) {
         )}
       </div>
 
-      {/* Divider above textarea */}
+      {/* Divider */}
       <div className="border-t border-gray-200 pt-3">
         {/* New Comment Input */}
         <textarea
-          rows={2}
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Įrašykite komentarą..."
@@ -51,12 +92,11 @@ export default function TaskCommentsSection({ comments = [] }) {
         />
         <div className="flex justify-end mt-2">
           <button
-            className="bg-blue-500 text-white text-sm px-4 py-1.5 rounded-lg shadow hover:bg-blue-600 transition"
-            onClick={() => {
-              setNewComment('');
-            }}
+            className="bg-blue-500 text-white text-sm px-4 py-1.5 rounded-lg shadow hover:bg-blue-600 transition disabled:opacity-50"
+            disabled={loading}
+            onClick={handleAddComment}
           >
-            Pridėti
+            {loading ? 'Pridedama...' : 'Pridėti'}
           </button>
         </div>
       </div>

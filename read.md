@@ -17,3 +17,7 @@ Figure out what exactly should be displayed and how
 <!-- Navigation -->
 
 If tab is selected, slightly move it right
+
+<!-- Overall suggestions -->
+
+Add convertion to locale of the dates
