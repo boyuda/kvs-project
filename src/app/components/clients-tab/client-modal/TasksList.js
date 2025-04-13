@@ -8,7 +8,8 @@ const statusColors = {
   cancelled: 'bg-gray-200 text-gray-800',
 };
 
-export default function TasksList({ tasks = [], onTaskClick }) {
+export default function TasksList({ tasks = [], onTaskClick = () => {} }) {
+  console.log(tasks);
   return (
     <div className="text-sm flex flex-col gap-3 text-texts">
       {/* Section Title with Icon */}

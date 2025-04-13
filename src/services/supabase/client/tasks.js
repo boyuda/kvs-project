@@ -78,7 +78,6 @@ export async function getCommentsForTask(taskId) {
   if (error) {
     throw error;
   }
-  console.log(data);
   return data;
 }
 
@@ -100,13 +99,12 @@ export async function getTasksForClient(clientId) {
     .from('tasks')
     .select(
       `
-      id,
-      title,
-      due_date,
-      created_at,
-      task_statuses(name, slug),
-      task_types(name),
-      assigned_user_id(name)
+      id, title, description, due_date, created_at,
+      client_id(id, first_name, last_name),
+      assigned_user_id(id, name, last_name),
+      status_id,
+      task_statuses(id, name, slug),
+      task_types(id, name, slug)
     `
     )
     .eq('client_id', clientId)
@@ -115,7 +113,6 @@ export async function getTasksForClient(clientId) {
   if (error) {
     throw error;
   }
-  console.log(data);
 
   return data;
 }

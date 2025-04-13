@@ -16,6 +16,7 @@ import {
 import { getClientsAndServicesForUserClient } from '@/src/services/supabase/client/clients';
 import toast from 'react-hot-toast';
 import { getServiceIdFromName } from '@/src/utils/serviceHelpers';
+import { useClientModalStore } from '@/src/store/clientModalStore';
 
 export default function ClientsContainer({
   initialClientsData,
@@ -26,13 +27,11 @@ export default function ClientsContainer({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { openClientModal, client } = useClientModalStore();
 
   const [filteredClients, setFilteredClients] = useState(
     initialClientsData?.clients || []
   );
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [modalMode, setModalMode] = useState('create');
   const currentPageFromParams = parseInt(searchParams.get('page')) || 1;
 
   const [pagination, setPagination] = useState({
@@ -112,15 +111,11 @@ export default function ClientsContainer({
   };
 
   const handleNewClient = () => {
-    setSelectedClient(null);
-    setModalMode('create');
-    setIsModalOpen(true);
+    openClientModal(null, 'create');
   };
 
   const handleViewClient = (client) => {
-    setSelectedClient(client);
-    setModalMode('view');
-    setIsModalOpen(true);
+    openClientModal(client, 'view');
   };
 
   function getChangedFields(original, updated) {
@@ -158,7 +153,7 @@ export default function ClientsContainer({
       const { id, client_services, ...restOfForm } = clientData;
 
       // Compare with original object
-      const clientChanges = getChangedFields(selectedClient, restOfForm);
+      const clientChanges = getChangedFields(client, restOfForm);
 
       // Only update client info if there are changes
       let clientInfoUpdated = false;
@@ -176,7 +171,7 @@ export default function ClientsContainer({
       }
 
       // Handle service updates
-      const originalServices = selectedClient.client_services || [];
+      const originalServices = client.client_services || [];
       const updatedServices = clientData.client_services || [];
 
       const servicesToAdd = updatedServices.filter((s) => !s.id);
@@ -284,14 +279,7 @@ export default function ClientsContainer({
         onPageChange={handlePageChange}
       />
 
-      <ClientModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        client={selectedClient}
-        initialMode={modalMode}
-        onSave={handleSaveClient}
-        isAdmin={isAdmin}
-      />
+      <ClientModal onSave={handleSaveClient} isAdmin={isAdmin} />
     </>
   );
 }

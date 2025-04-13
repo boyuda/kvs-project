@@ -13,6 +13,8 @@ export const useTaskModalStore = create((set) => ({
 
   openTaskModal: (task, mode = MODAL_MODES.VIEW) =>
     set({ isOpen: true, task, mode }),
+
   closeTaskModal: () => set({ isOpen: false, task: null }),
+
   setTaskModalMode: (mode) => set({ mode }),
 }));

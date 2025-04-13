@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { getUserById } from '@/src/services/supabase/server/users';
+import TaskModal from '../components/tasks-tab/TaskModal';
 
 export default async function DashboardLayout({ children }) {
   // Supabase to get the authenticated user
@@ -36,6 +37,8 @@ export default async function DashboardLayout({ children }) {
       <div className="w-[86%] md:w-[92%] lg:w-[84%] xl:w-[86%] overflow-scroll no-scrollbar ">
         <Navbar user={user.id} />
         {children}
+        {/* Adding it here so it could be accesable from client page as well */}
+        <TaskModal />
       </div>
     </div>
   );

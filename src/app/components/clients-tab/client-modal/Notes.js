@@ -16,7 +16,6 @@ function Notes({ notes, isViewMode, onChange }) {
         name="notes"
         value={notes || ''}
         onChange={onChange}
-        disabled={isViewMode}
         maxLength={150}
       />
       <p
