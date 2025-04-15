@@ -278,7 +278,13 @@ export default function ClientModal({ onSave, isAdmin }) {
 
             <button
               type="button"
-              onClick={closeClientModal}
+              onClick={() => {
+                if (mode === 'edit') {
+                  setClientModalMode('view');
+                } else {
+                  closeClientModal();
+                }
+              }}
               className="border border-gray-300 px-4 py-2 rounded-lg text-sm hover:bg-gray-100 hover:text-gray-800 transition-colors"
             >
               Atšaukti

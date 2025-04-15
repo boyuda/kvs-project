@@ -4,13 +4,11 @@
 
 On Task Table if task is due date, color it red
 FIXME: Issue, when if modal window open and user clicks edit, after closing up the window, mode stays on edit. Need to hard refresh to fully reset the modal viewing mode.
-SUGGESTION: On Edit Mode on clicking "Atsaukti" return to the modal instead of closing it.
 
 <!-- Clients Page -->
 
 On Client Table if contract expired, color it red
 FIXME: On client modal on notes section if text with no spaces it overflows the modal. (Marius Kazlauskas example)
-SUGGESTION: On Edit Mode on clicking "Atsaukti" return to the modal instead of closing it.
 
 <!-- Reports Page -->
 
@@ -25,3 +23,8 @@ If tab is selected, slightly move it right
 Add convertion to locale of the dates
 Make email field to be able accept longer emails
 Edit vadybinkas should be accessed only for the admin
+SUGGESTION: min={new Date().toISOString().split('T')[0]} apply to all the date pickers
+
+<!-- Done -->
+
+SUGGESTION: On Edit Mode on clicking "Atsaukti" return to the modal instead of closing it.

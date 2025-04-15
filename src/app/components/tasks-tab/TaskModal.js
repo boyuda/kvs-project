@@ -2,9 +2,14 @@
 import { useEffect, useState } from 'react';
 import TaskInfoForm from './task-modal/TaskInfoForm';
 import TaskCommentsSection from './task-modal/TaskCommentsSection';
-import { getCommentsForTask } from '@/src/services/supabase/client/tasks';
+import {
+  getCommentsForTask,
+  getTaskStatuses,
+  getTaskTypes,
+} from '@/src/services/supabase/client/tasks';
 import { getLoggedInUserId } from '@/src/services/supabase/client/users';
 import { useTaskModalStore } from '@/src/store/taskModalStore';
+import { getAllUsers } from '@/src/services/supabase/client/users';
 
 export default function TaskModal({ onSave, isAdmin }) {
   const { isOpen, task, mode, closeTaskModal, setTaskModalMode } =
@@ -12,6 +17,11 @@ export default function TaskModal({ onSave, isAdmin }) {
 
   const [comments, setComments] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [formData, setFormData] = useState(null);
+  const [originalTask, setOriginalTask] = useState(null);
+  const [allUsers, setAllUsers] = useState([]);
+  const [taskTypes, setTaskTypes] = useState([]);
+  const [taskStatuses, setTaskStatuses] = useState([]);
 
   useEffect(() => {
     if (task && mode === 'view') {
@@ -26,6 +36,20 @@ export default function TaskModal({ onSave, isAdmin }) {
     };
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    if (task && mode === 'edit') {
+      setFormData({
+        title: task.title,
+        due_date: task.due_date,
+        task_type_id: task.task_types?.id || '',
+        status_id: task.task_statuses?.id || '',
+        assigned_user_id: task.assigned_user_id?.id || '',
+        description: task.description || '',
+      });
+      setOriginalTask(task);
+    }
+  }, [task, mode]);
 
   const fetchComments = async () => {
     if (!task) return;
@@ -48,6 +72,22 @@ export default function TaskModal({ onSave, isAdmin }) {
       console.error('Error fetching comments:', error);
     }
   };
+
+  // Fetch users, types and statuses
+  useEffect(() => {
+    const fetchDropdownData = async () => {
+      const [users, types, statuses] = await Promise.all([
+        getAllUsers(),
+        getTaskTypes(),
+        getTaskStatuses(),
+      ]);
+      setAllUsers(users);
+      setTaskTypes(types);
+      setTaskStatuses(statuses);
+    };
+
+    fetchDropdownData();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -82,11 +122,12 @@ export default function TaskModal({ onSave, isAdmin }) {
           </button>
         </div>
 
+        {/* Handle View */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {mode === 'view' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               <div className="flex flex-col gap-10">
-                <TaskInfoForm isViewMode={true} task={task} />
+                <TaskInfoForm mode="view" task={task} />
               </div>
               <div className="flex flex-col gap-10">
                 <TaskCommentsSection
@@ -98,9 +139,24 @@ export default function TaskModal({ onSave, isAdmin }) {
               </div>
             </div>
           )}
+          {/* Handle Edit */}
           {mode === 'edit' && (
+            // TODO: Change sizing
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-              <h1>this is edit part</h1>
+              <TaskInfoForm
+                mode={mode}
+                task={task}
+                allUsers={allUsers}
+                taskTypes={taskTypes}
+                taskStatuses={taskStatuses}
+                formData={formData}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    [e.target.name]: e.target.value,
+                  }))
+                }
+              />
             </div>
           )}
 
@@ -139,7 +195,14 @@ export default function TaskModal({ onSave, isAdmin }) {
             )}
             <button
               type="button"
-              onClick={closeTaskModal}
+              // Go back to view mode if not saving anything
+              onClick={() => {
+                if (mode === 'edit') {
+                  setTaskModalMode('view');
+                } else {
+                  closeTaskModal();
+                }
+              }}
               className="border border-gray-300 px-4 py-2 rounded-lg text-sm hover:bg-gray-100 hover:text-gray-800 transition-colors"
             >
               Atšaukti

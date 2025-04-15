@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/client';
 
+// Get all the tasks
 export async function getTasksForUserClient(
   showAll = false,
   page = 1,
@@ -66,6 +67,7 @@ export async function getTasksForUserClient(
   return { tasks, totalCount: count };
 }
 
+// Fetch all the comments
 export async function getCommentsForTask(taskId) {
   const supabase = createClient();
 
@@ -81,6 +83,7 @@ export async function getCommentsForTask(taskId) {
   return data;
 }
 
+// Function to push new comment
 export async function addCommentToTask(taskId, userId, comment) {
   const supabase = createClient();
 
@@ -92,6 +95,7 @@ export async function addCommentToTask(taskId, userId, comment) {
   return data;
 }
 
+// Fetch all tasks for the particular client
 export async function getTasksForClient(clientId) {
   const supabase = createClient();
 
@@ -112,6 +116,36 @@ export async function getTasksForClient(clientId) {
 
   if (error) {
     throw error;
+  }
+
+  return data;
+}
+
+// Get all task types
+export async function getTaskTypes() {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('task_types')
+    .select('id, name, slug');
+
+  if (error) {
+    console.error('Error fetching task types:', error);
+    return [];
+  }
+
+  return data;
+}
+
+// Get all task statuses
+export async function getTaskStatuses() {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('task_statuses')
+    .select('id, name, slug');
+
+  if (error) {
+    console.error('Error fetching task statuses:', error);
+    return [];
   }
 
   return data;
