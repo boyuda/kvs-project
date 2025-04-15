@@ -192,9 +192,9 @@ export default function TaskInfoForm({
             Užduoties Tipas
           </label>
           <select
-            id="task_type_id"
-            name="task_type_id"
-            value={formData.task_type_id || ''}
+            id="type_id"
+            name="type_id"
+            value={formData.type_id || ''}
             onChange={onChange}
             className="flex-1 border rounded-lg p-2 text-sm border-gray-300"
             required

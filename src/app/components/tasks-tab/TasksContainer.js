@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { getTasksForUserClient } from '@/src/services/supabase/client/tasks';
 import TaskModal from './TaskModal';
 import { useTaskModalStore } from '@/src/store/taskModalStore';
+import { useEffect, useCallback } from 'react';
 
 export default function TasksContainer({
   initialTasksData,
@@ -17,7 +18,6 @@ export default function TasksContainer({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const currentPageFromParams = parseInt(searchParams.get('page')) || 1;
 
   const [pagination, setPagination] = useState({
@@ -25,7 +25,6 @@ export default function TasksContainer({
     pageSize: parseInt(searchParams.get('pageSize')) || pageSize,
     totalCount: initialTasksData?.totalCount || 0,
   });
-
   const [filteredTasks, setFilteredTasks] = useState(
     initialTasksData?.tasks || []
   );
@@ -58,7 +57,7 @@ export default function TasksContainer({
   const handlePageSizeChange = (newSize) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('pageSize', newSize.toString());
-    params.set('page', '1'); // Reset to first page when changing page size
+    params.set('page', '1');
     router.push(`?${params.toString()}`);
 
     setPagination((prev) => ({
@@ -67,8 +66,6 @@ export default function TasksContainer({
       page: 1,
     }));
 
-    // Refresh data with new page size
-    // TODO:
     refreshTasks(1, newSize, showAll);
   };
 
@@ -76,43 +73,47 @@ export default function TasksContainer({
   const handleShowAllChange = (showAllTasks) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('showAll', showAllTasks.toString());
-    params.set('page', '1'); // Reset to first page when changing filter
+    params.set('page', '1');
     router.push(`?${params.toString()}`);
 
     setShowAll(showAllTasks);
 
     // Refresh data with new filter
-    // TODO:
     refreshTasks(1, pagination.pageSize, showAllTasks);
   };
 
   // Refresh list - extracted to a separate function to reuse
-  const refreshTasks = async (
-    page = pagination.page,
-    size = pagination.pageSize,
-    all = showAll
-  ) => {
-    try {
-      const updated = await getTasksForUserClient(all, page, size);
+  const refreshTasks = useCallback(
+    async (
+      page = pagination.page,
+      size = pagination.pageSize,
+      all = showAll
+    ) => {
+      try {
+        const updated = await getTasksForUserClient(all, page, size);
+        console.log(updated);
 
-      setFilteredTasks(updated.tasks);
-      setPagination((prev) => ({
-        ...prev,
-        totalCount: updated.totalCount,
-      }));
+        setFilteredTasks(updated.tasks);
+        setPagination((prev) => ({
+          ...prev,
+          totalCount: updated.totalCount,
+        }));
 
-      return updated;
-    } catch (error) {
-      console.error('Error refreshing tasks:', error);
-      toast.error('Nepavyko atnaujinti užduočių sąrašo');
-      return null;
-    }
-  };
+        return updated;
+      } catch (error) {
+        console.error('Error refreshing tasks:', error);
+        toast.error('Nepavyko atnaujinti užduočių sąrašo');
+        return null;
+      }
+    },
+    [pagination.page, pagination.pageSize, showAll]
+  );
 
-  // Handle client modal save
-  const handleSaveTask = async (clientData, mode) => {
-    console.log('task saved');
-  };
+  useEffect(() => {
+    useTaskModalStore.getState().setAfterSaveCallback(() => {
+      refreshTasks();
+    });
+  }, [refreshTasks]);
 
   return (
     <div>
@@ -133,14 +134,7 @@ export default function TasksContainer({
         totalCount={pagination.totalCount}
         onPageChange={handlePageChange}
       />
-      <TaskModal
-        // isOpen={isModalOpen}
-        // onClose={() => setIsModalOpen(false)}
-        // task={selectedTask}
-        // initialMode={modalMode}
-        // onSave={handleSaveTask}
-        isAdmin={isAdmin}
-      />
+      <TaskModal isAdmin={isAdmin} />
     </div>
   );
 }

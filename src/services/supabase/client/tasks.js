@@ -150,3 +150,40 @@ export async function getTaskStatuses() {
 
   return data;
 }
+
+// Update task
+export async function updateTask(taskId, updates) {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from('tasks')
+    .update(updates)
+    .eq('id', taskId);
+
+  return { error };
+}
+
+// Fetch particular task for rendering after the task gets updated.
+export async function getTaskById(id) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('tasks')
+    .select(
+      `
+      *,
+      assigned_user_id:users ( id, name, last_name ),
+      task_statuses ( id, name, slug ),
+      task_types ( id, name, slug ),
+      client_id:clients ( id, first_name, last_name )
+    `
+    )
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.error('Error fetching task:', error);
+    return null;
+  }
+
+  return data;
+}

@@ -17,4 +17,8 @@ export const useTaskModalStore = create((set) => ({
   closeTaskModal: () => set({ isOpen: false, task: null }),
 
   setTaskModalMode: (mode) => set({ mode }),
+
+  // Callback after data is saved.
+  afterSaveCallback: null,
+  setAfterSaveCallback: (callback) => set({ afterSaveCallback: callback }),
 }));

@@ -4,12 +4,15 @@ import TaskInfoForm from './task-modal/TaskInfoForm';
 import TaskCommentsSection from './task-modal/TaskCommentsSection';
 import {
   getCommentsForTask,
+  getTaskById,
   getTaskStatuses,
   getTaskTypes,
 } from '@/src/services/supabase/client/tasks';
 import { getLoggedInUserId } from '@/src/services/supabase/client/users';
 import { useTaskModalStore } from '@/src/store/taskModalStore';
 import { getAllUsers } from '@/src/services/supabase/client/users';
+import { updateTask } from '@/src/services/supabase/client/tasks';
+import toast from 'react-hot-toast';
 
 export default function TaskModal({ onSave, isAdmin }) {
   const { isOpen, task, mode, closeTaskModal, setTaskModalMode } =
@@ -23,12 +26,24 @@ export default function TaskModal({ onSave, isAdmin }) {
   const [taskTypes, setTaskTypes] = useState([]);
   const [taskStatuses, setTaskStatuses] = useState([]);
 
+  function getChangedFields(original, updated) {
+    const changes = {};
+    for (const key in updated) {
+      if (updated[key] !== original[key]) {
+        changes[key] = updated[key];
+      }
+    }
+    return changes;
+  }
+
+  // Fetch comments of the task
   useEffect(() => {
     if (task && mode === 'view') {
       fetchComments();
     }
   }, [task, mode]);
 
+  // Fetch logged in user
   useEffect(() => {
     const fetchUser = async () => {
       const id = await getLoggedInUserId();
@@ -37,17 +52,20 @@ export default function TaskModal({ onSave, isAdmin }) {
     fetchUser();
   }, []);
 
+  // Fetch details for the modal edit view
   useEffect(() => {
     if (task && mode === 'edit') {
-      setFormData({
+      const flatTask = {
+        id: task.id,
         title: task.title,
         due_date: task.due_date,
-        task_type_id: task.task_types?.id || '',
+        type_id: task.task_types?.id || '',
         status_id: task.task_statuses?.id || '',
         assigned_user_id: task.assigned_user_id?.id || '',
         description: task.description || '',
-      });
-      setOriginalTask(task);
+      };
+      setFormData(flatTask);
+      setOriginalTask(flatTask);
     }
   }, [task, mode]);
 
@@ -89,11 +107,6 @@ export default function TaskModal({ onSave, isAdmin }) {
     fetchDropdownData();
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('submitted');
-  };
-
   // If modal is closed, don't render anything
   if (!isOpen) return null;
 
@@ -106,6 +119,38 @@ export default function TaskModal({ onSave, isAdmin }) {
       case 'create':
       default:
         return 'Nauja Užduotis';
+    }
+  };
+
+  const handleSaveTask = async (e) => {
+    e.preventDefault();
+    if (!originalTask || !formData) return;
+
+    const changes = getChangedFields(originalTask, formData);
+
+    if (Object.keys(changes).length === 0) {
+      toast('Nėra jokių pakeitimų.');
+      setTaskModalMode('view');
+      return;
+    }
+
+    try {
+      const { error } = await updateTask(originalTask.id, changes);
+      if (error) throw error;
+
+      const updatedTask = await getTaskById(task.id);
+      if (updatedTask) {
+        useTaskModalStore.getState().openTaskModal(updatedTask, 'view');
+      }
+      // Trigger refresh in TaskContainer.
+      const callback = useTaskModalStore.getState().afterSaveCallback;
+      if (callback) callback();
+
+      toast.success('Užduotis sėkmingai atnaujinta!');
+      setTaskModalMode('view');
+    } catch (error) {
+      console.error('Error updating task:', error);
+      toast.error('Nepavyko atnaujinti užduoties.');
     }
   };
 
@@ -123,7 +168,7 @@ export default function TaskModal({ onSave, isAdmin }) {
         </div>
 
         {/* Handle View */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSaveTask} className="space-y-6">
           {mode === 'view' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               <div className="flex flex-col gap-10">
