@@ -54,7 +54,8 @@ export default function TaskModal({ onSave, isAdmin }) {
     console.log('submitted');
   };
 
-  if (!isOpen || !task?.id) return null;
+  // If modal is closed, don't render anything
+  if (!isOpen) return null;
 
   const getModalTitle = () => {
     switch (mode) {
@@ -82,7 +83,7 @@ export default function TaskModal({ onSave, isAdmin }) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {mode === 'view' ? (
+          {mode === 'view' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               <div className="flex flex-col gap-10">
                 <TaskInfoForm isViewMode={true} task={task} />
@@ -96,7 +97,14 @@ export default function TaskModal({ onSave, isAdmin }) {
                 />
               </div>
             </div>
-          ) : (
+          )}
+          {mode === 'edit' && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+              <h1>this is edit part</h1>
+            </div>
+          )}
+
+          {mode === 'create' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               <h1>this is create part</h1>
             </div>
@@ -104,13 +112,22 @@ export default function TaskModal({ onSave, isAdmin }) {
 
           <div className="flex justify-end space-x-3">
             {mode === 'view' && (
-              <button
-                type="button"
-                onClick={() => setTaskModalMode('edit')}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
-              >
-                Redaguoti
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={() => console.log('Įvykdyta')}
+                  className="bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition"
+                >
+                  Uždaryti užduotį
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTaskModalMode('edit')}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
+                >
+                  Redaguoti
+                </button>{' '}
+              </>
             )}
             {mode !== 'view' && (
               <button
