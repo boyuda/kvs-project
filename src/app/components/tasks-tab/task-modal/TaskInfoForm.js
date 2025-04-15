@@ -6,6 +6,7 @@ import {
   ClipboardDocumentIcon,
   ArrowPathIcon,
   UserIcon,
+  DocumentTextIcon,
 } from '@heroicons/react/24/outline';
 
 const statusColors = {
@@ -21,6 +22,24 @@ const statusDotColors = {
   closed: 'bg-red-500',
   cancelled: 'bg-gray-400',
 };
+
+// Edit Mode --------- Title, due date, type, status, assigned employee, aprašymas
+
+const fields = [
+  {
+    label: 'Užduoties Pavadinimas:',
+    name: 'title',
+    type: 'text',
+    maxLength: 20,
+  },
+  { label: 'Pavardė:', name: 'last_name', type: 'text', maxLength: 20 },
+  { label: 'El. Paštas:', name: 'email', type: 'email', maxLength: 20 },
+  { label: 'Telefonas:', name: 'phone', type: 'text', maxLength: 12 },
+  { label: 'Gatvė', name: 'street', type: 'text', maxLength: 20 },
+  { label: 'Namo Nr.', name: 'house_number', type: 'text', maxLength: 4 },
+  { label: 'Buto Nr.', name: 'flat_number', type: 'text', maxLength: 4 },
+  { label: 'Miestas', name: 'city', type: 'text', maxLength: 20 },
+];
 
 const iconStyle = 'h-5 w-5 text-gray-500';
 
@@ -98,12 +117,24 @@ export default function TaskInfoForm({ isViewMode, task }) {
       <div className="flex items-center gap-3">
         <UserGroupIcon className={iconStyle} />
         <p>
-          Užduotį sukūrė {task.assigned_user_id.name}{' '}
+          Užduotes vadybininkas {task.assigned_user_id.name}{' '}
           {task.assigned_user_id.last_name}
         </p>
       </div>
+
+      {/* Task Description */}
+      <div className="mt-4">
+        <div className="flex items-center gap-2 mb-1">
+          <DocumentTextIcon className={iconStyle} />
+          <h4 className="text-sm font-semibold">Užduoties aprašymas</h4>
+        </div>
+        <div className="text-sm italic border border-gray-200 p-2 rounded-md bg-gray-50 whitespace-pre-wrap">
+          {task.description || 'Nėra užduoties aprašymo'}
+        </div>
+      </div>
     </div>
   ) : (
+    // Edit Mode --------- Title, due date, type, status, assigned employee, aprašymas
     <div>
       <h1>hi</h1>
     </div>

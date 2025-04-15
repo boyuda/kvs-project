@@ -54,7 +54,7 @@ export default function TaskModal({ onSave, isAdmin }) {
     console.log('submitted');
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !task?.id) return null;
 
   const getModalTitle = () => {
     switch (mode) {
