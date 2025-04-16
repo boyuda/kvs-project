@@ -11,7 +11,7 @@ export default function TaskCommentsSection({
   userId,
 }) {
   const [newComment, setNewComment] = useState('');
-  // Loading tates for the new comment to be added.
+  // Loading state for the new comment to be added.
   const [loading, setLoading] = useState(false);
 
   const handleAddComment = async () => {

@@ -129,7 +129,7 @@ function TasksFilterBar({
         onClick={onNewTask}
         className="bg-blue-500 hover:bg-primaryhover text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md"
       >
-        Nauja užduotis
+        Nauja Užduotis
       </button>
 
       {/* Filter by name */}

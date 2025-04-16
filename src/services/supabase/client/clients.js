@@ -164,3 +164,15 @@ export async function deleteService(serviceId) {
   const supabase = createClient();
   return await supabase.from('client_services').delete().eq('id', serviceId);
 }
+
+// search client by name
+export const searchClientsByName = async (query) => {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('clients')
+    .select('id, first_name, last_name')
+    .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%`);
+
+  if (error) throw error;
+  return data;
+};

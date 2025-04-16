@@ -3,7 +3,7 @@ function Notes({ notes, isViewMode, onChange }) {
     <div>
       <div className="text-sm flex flex-col gap-2">
         <h3 className="font-semibold">Komentarai</h3>
-        <div className="text-xs p-2 border rounded-md whitespace-pre-wrap">
+        <div className="text-xs p-2 border rounded-md whitespace-pre-wrap break-words">
           {notes?.trim() || 'Nėra komentarų'}
         </div>
       </div>
@@ -12,7 +12,7 @@ function Notes({ notes, isViewMode, onChange }) {
     <div className="text-sm flex flex-col gap-2">
       <h3 className="font-semibold">Komentarai</h3>
       <textarea
-        className="w-full h-24 border shadow-sm border-gray-300 rounded-md p-2 max-h-24 overflow-y-auto resize-none text-xs"
+        className="w-full h-24 border shadow-sm border-gray-300 rounded-md p-2 max-h-24 overflow-y-auto resize-none text-xs "
         name="notes"
         value={notes || ''}
         onChange={onChange}

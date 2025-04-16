@@ -47,7 +47,7 @@ export default function TaskInfoForm({
   if (mode === 'view') {
     return (
       <div className="text-sm flex flex-col gap-2">
-        <h3 className="font-semibold">Užduoties Informacija</h3>
+        <h3 className="font-semibold text-gray-800">Užduoties Informacija</h3>
 
         {/* Title */}
         <div className="flex items-center gap-3">
@@ -87,7 +87,7 @@ export default function TaskInfoForm({
         <div className="flex items-center gap-3">
           <ClipboardDocumentIcon className={iconStyle} />
           <div className="flex gap-1">
-            <p>Užduoties Tipas:</p>
+            <p>Tipas:</p>
             <p className="font-medium">{task.task_types.name}</p>
           </div>
         </div>
@@ -96,7 +96,7 @@ export default function TaskInfoForm({
         <div className="flex items-center gap-3">
           <ArrowPathIcon className={iconStyle} />
           <div className="flex gap-1 items-center">
-            <p>Užduoties Statusas:</p>
+            <p>Statusas:</p>
             <span
               className={`px-2 py-0.5 rounded-full text-xs font-semibold flex items-center gap-1 ${statusColorClass}`}
             >
@@ -110,19 +110,19 @@ export default function TaskInfoForm({
         <div className="flex items-center gap-3">
           <UserGroupIcon className={iconStyle} />
           <p>
-            Užduotes vadybininkas {task.assigned_user_id.name}{' '}
+            Vadybininkas {task.assigned_user_id.name}{' '}
             {task.assigned_user_id.last_name}
           </p>
         </div>
 
         {/* Task Description */}
-        <div className="mt-4">
+        <div className="text-sm flex flex-col gap-2 mt-4">
           <div className="flex items-center gap-2 mb-1">
             <DocumentTextIcon className={iconStyle} />
-            <h4 className="text-sm font-semibold">Užduoties Aprašymas</h4>
+            <h3 className="text-sm font-semibold">Užduoties Aprašymas</h3>
           </div>
-          <div className="text-sm italic border border-gray-200 p-2 rounded-md bg-gray-50 whitespace-pre-wrap">
-            {task.description || 'Nėra užduoties aprašymo'}
+          <div className="text-xs p-2 border rounded-md whitespace-pre-wrap break-words">
+            {task.description?.trim() || 'Nėra užduoties aprašymo'}
           </div>
         </div>
       </div>
@@ -135,8 +135,8 @@ export default function TaskInfoForm({
       <div className="flex flex-col gap-2 text-sm">
         {/* Title */}
         <div className="flex items-center gap-1 mb-1">
-          <label htmlFor="title" className="text-sm font-semibold">
-            Užduoties Pavadinimas
+          <label htmlFor="title" className="text-sm font-semibold w-[100px]">
+            Pavadinimas:
           </label>
           <input
             type="text"
@@ -147,10 +147,14 @@ export default function TaskInfoForm({
             className={'flex-1 border rounded-lg p-2 text-sm border-gray-300'}
           />
         </div>
+
         {/* Due Date */}
         <div className="flex items-center gap-1 mb-1">
-          <label htmlFor="due_date " className="text-sm font-semibold">
-            Užduoties Atlikimo Terminas
+          <label
+            htmlFor="due_date "
+            className="text-sm font-semibold w-[100px]"
+          >
+            Terminas:
           </label>
           <input
             type="date"
@@ -164,8 +168,11 @@ export default function TaskInfoForm({
 
         {/* Assigned User */}
         <div className="flex items-center gap-1 mb-1">
-          <label htmlFor="assigned_user_id" className="text-sm font-semibold">
-            Vadybininkas
+          <label
+            htmlFor="assigned_user_id"
+            className="text-sm font-semibold w-[100px]"
+          >
+            Vadybininkas:
           </label>
           <select
             id="assigned_user_id"
@@ -188,8 +195,11 @@ export default function TaskInfoForm({
 
         {/* Type */}
         <div className="flex items-center gap-1 mb-1">
-          <label htmlFor="task_type_id" className="text-sm font-semibold">
-            Užduoties Tipas
+          <label
+            htmlFor="task_type_id"
+            className="text-sm font-semibold w-[100px]"
+          >
+            Tipas:
           </label>
           <select
             id="type_id"
@@ -212,15 +222,18 @@ export default function TaskInfoForm({
 
         {/* Status */}
         <div className="flex items-center gap-1 mb-1">
-          <label htmlFor="status_id" className="text-sm font-semibold">
-            Užduoties Statusas
+          <label
+            htmlFor="status_id"
+            className="text-sm font-semibold w-[100px]"
+          >
+            Statusas:
           </label>
           <select
             id="status_id"
             name="status_id"
             value={formData.status_id || ''}
             onChange={onChange}
-            className="flex-1 border rounded-lg p-2 text-sm border-gray-300"
+            className="flex-1 border rounded-lg p-2 text-sm border-gray-300 "
             required
           >
             <option value="" disabled>
@@ -235,18 +248,166 @@ export default function TaskInfoForm({
         </div>
 
         {/* Description */}
+        <div className="text-sm flex flex-col gap-2 mt-4">
+          <h3 className="font-semibold">Užduoties Aprašymas</h3>
+          <textarea
+            className="w-full h-24 border shadow-sm border-gray-300 rounded-md p-2 max-h-24 overflow-y-auto resize-none text-xs"
+            name="description"
+            value={formData.description || ''}
+            onChange={onChange}
+            maxLength={150}
+          />
+          <p
+            className={`text-xs text-right ${
+              formData.description?.length > 130
+                ? 'text-danger'
+                : 'text-foreground'
+            }`}
+          >
+            {formData.description?.length || 0}/150 simbolių
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // If Create
+  if (mode === 'create') {
+    return (
+      <div className="flex flex-col gap-2 text-sm">
+        {/* Title */}
         <div className="flex items-center gap-1 mb-1">
-          <label htmlFor="description" className="text-sm font-semibold">
-            Užduoties Aprašymas
+          <label htmlFor="title" className="text-sm font-semibold w-[100px]">
+            Pavadinimas:
           </label>
           <input
             type="text"
-            name="description"
-            value={formData.description}
+            name="title"
+            value={formData.title}
             onChange={onChange}
-            maxLength={60}
+            maxLength={40}
             className={'flex-1 border rounded-lg p-2 text-sm border-gray-300'}
           />
+        </div>
+
+        {/* Client */}
+        <div className="flex items-center gap-1 mb-1">
+          <label
+            htmlFor="task_type_id"
+            className="text-sm font-semibold w-[100px]"
+          >
+            Klientas:
+          </label>
+          <select
+            id="type_id"
+            name="type_id"
+            value={formData.type_id || ''}
+            onChange={onChange}
+            className="flex-1 border rounded-lg p-2 text-sm border-gray-300"
+            required
+          >
+            <option value="" disabled>
+              Pasirinkite
+            </option>
+            {taskTypes.map((type) => (
+              <option key={type.id} value={type.id}>
+                {type.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Due Date */}
+        <div className="flex items-center gap-1 mb-1">
+          <label
+            htmlFor="due_date "
+            className="text-sm font-semibold w-[100px]"
+          >
+            Terminas:
+          </label>
+          <input
+            type="date"
+            name="due_date"
+            value={formData.due_date}
+            onChange={onChange}
+            min={new Date().toISOString().split('T')[0]}
+            className={'flex-1 border rounded-lg p-2 text-sm border-gray-300'}
+          />
+        </div>
+
+        {/* Type */}
+        <div className="flex items-center gap-1 mb-1">
+          <label
+            htmlFor="task_type_id"
+            className="text-sm font-semibold w-[100px]"
+          >
+            Tipas:
+          </label>
+          <select
+            id="type_id"
+            name="type_id"
+            value={formData.type_id || ''}
+            onChange={onChange}
+            className="flex-1 border rounded-lg p-2 text-sm border-gray-300"
+            required
+          >
+            <option value="" disabled>
+              Pasirinkite
+            </option>
+            {taskTypes.map((type) => (
+              <option key={type.id} value={type.id}>
+                {type.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Status */}
+        <div className="flex items-center gap-1 mb-1">
+          <label
+            htmlFor="status_id"
+            className="text-sm font-semibold w-[100px]"
+          >
+            Statusas:
+          </label>
+          <select
+            id="status_id"
+            name="status_id"
+            value={formData.status_id || ''}
+            onChange={onChange}
+            className="flex-1 border rounded-lg p-2 text-sm border-gray-300 "
+            required
+          >
+            <option value="" disabled>
+              Pasirinkite
+            </option>
+            {taskStatuses.map((status) => (
+              <option key={status.id} value={status.id}>
+                {status.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Description */}
+        <div className="text-sm flex flex-col gap-2 mt-4">
+          <h3 className="font-semibold">Užduoties Aprašymas</h3>
+          <textarea
+            className="w-full h-24 border shadow-sm border-gray-300 rounded-md p-2 max-h-24 overflow-y-auto resize-none text-xs"
+            name="description"
+            value={formData.description || ''}
+            onChange={onChange}
+            maxLength={150}
+          />
+          <p
+            className={`text-xs text-right ${
+              formData.description?.length > 130
+                ? 'text-danger'
+                : 'text-foreground'
+            }`}
+          >
+            {formData.description?.length || 0}/150 simbolių
+          </p>
         </div>
       </div>
     );

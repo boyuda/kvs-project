@@ -14,6 +14,8 @@ import { getAllUsers } from '@/src/services/supabase/client/users';
 import { updateTask } from '@/src/services/supabase/client/tasks';
 import toast from 'react-hot-toast';
 
+import { searchClientsByName } from '@/src/services/supabase/client/clients';
+
 export default function TaskModal({ onSave, isAdmin }) {
   const { isOpen, task, mode, closeTaskModal, setTaskModalMode } =
     useTaskModalStore();
@@ -52,7 +54,7 @@ export default function TaskModal({ onSave, isAdmin }) {
     fetchUser();
   }, []);
 
-  // Fetch details for the modal edit view
+  // Fetch details for the modal edit and create view
   useEffect(() => {
     if (task && mode === 'edit') {
       const flatTask = {
@@ -66,6 +68,16 @@ export default function TaskModal({ onSave, isAdmin }) {
       };
       setFormData(flatTask);
       setOriginalTask(flatTask);
+    }
+    if (mode === 'create') {
+      setFormData({
+        title: '',
+        due_date: '',
+        client_id: '',
+        type_id: '',
+        status_id: '',
+        description: '',
+      });
     }
   }, [task, mode]);
 
@@ -187,7 +199,7 @@ export default function TaskModal({ onSave, isAdmin }) {
           {/* Handle Edit */}
           {mode === 'edit' && (
             // TODO: Change sizing
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+            <div className="w-full sm:w-[60%]">
               <TaskInfoForm
                 mode={mode}
                 task={task}
@@ -206,8 +218,19 @@ export default function TaskModal({ onSave, isAdmin }) {
           )}
 
           {mode === 'create' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-              <h1>this is create part</h1>
+            <div className="w-full sm:w-[60%]">
+              <TaskInfoForm
+                mode={mode}
+                formData={formData}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    [e.target.name]: e.target.value,
+                  }))
+                }
+                taskTypes={taskTypes}
+                taskStatuses={taskStatuses}
+              />
             </div>
           )}
 
