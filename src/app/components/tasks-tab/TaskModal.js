@@ -16,7 +16,7 @@ import toast from 'react-hot-toast';
 import { searchClientsByName } from '@/src/services/supabase/client/clients';
 import debounce from 'lodash.debounce';
 
-export default function TaskModal({ onSave, isAdmin }) {
+export default function TaskModal({ isAdmin }) {
   const { isOpen, task, mode, closeTaskModal, setTaskModalMode } =
     useTaskModalStore();
 
@@ -73,16 +73,17 @@ export default function TaskModal({ onSave, isAdmin }) {
       setFormData(flatTask);
       setOriginalTask(flatTask);
     }
-    if (mode === 'create') {
+    // Precautious to make sure that we get userId on time for sure
+    if (mode === 'create' && userId) {
       setFormData({
         title: '',
         due_date: '',
         client_id: '',
+        client_name: '',
         type_id: '',
         status_id: '',
         description: '',
-        client_id: '',
-        client_name: '',
+        assigned_user_id: userId,
       });
       setClientSearchResults([]);
     }
@@ -173,6 +174,34 @@ export default function TaskModal({ onSave, isAdmin }) {
     }
   };
 
+  const handleCreateTask = async (e) => {
+    e.preventDefault();
+
+    const { title, due_date, client_id, type_id, status_id, description } =
+      formData;
+
+    // Validation
+    if (!title.trim()) return toast.error('Pavadinimas yra privalomas.');
+    if (title.length < 5)
+      return toast.error('Pavadinimas negali būti trumpesnis nei 5 simboliai.');
+    if (!due_date) return toast.error('Pasirinkite terminą.');
+    if (!client_id) return toast.error('Pasirinkite klientą.');
+    if (!type_id) return toast.error('Pasirinkite užduoties tipą.');
+    if (!status_id) return toast.error('Pasirinkite užduoties statusą.');
+
+    //  For testing
+    console.log('Creating new task:', formData);
+
+    toast.success('Užduotis sėkmingai sukurta!');
+
+    // Close Modal, refresh the list?
+    closeTaskModal();
+
+    // You can also trigger `onSave(formData)` if passed
+    const callback = useTaskModalStore.getState().afterSaveCallback;
+    if (callback) callback();
+  };
+
   const handleClientSearch = debounce(async (searchTerm) => {
     if (searchTerm.length < 3) {
       setClientSearchResults([]);
@@ -203,7 +232,10 @@ export default function TaskModal({ onSave, isAdmin }) {
         </div>
 
         {/* Handle View */}
-        <form onSubmit={handleSaveTask} className="space-y-6">
+        <form
+          onSubmit={mode === 'create' ? handleCreateTask : handleSaveTask}
+          className="space-y-6"
+        >
           {mode === 'view' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               <div className="flex flex-col gap-10">
