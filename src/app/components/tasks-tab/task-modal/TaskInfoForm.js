@@ -33,6 +33,8 @@ export default function TaskInfoForm({
   allUsers,
   taskTypes,
   taskStatuses,
+  onClientSearch,
+  clientOptions,
 }) {
   // Null check
   if ((mode === 'edit' || mode === 'create') && !formData) return null;
@@ -291,30 +293,76 @@ export default function TaskInfoForm({
         </div>
 
         {/* Client */}
-        <div className="flex items-center gap-1 mb-1">
+        <div className="flex items-center gap-1 mb-1 relative">
           <label
-            htmlFor="task_type_id"
+            htmlFor="client_name"
             className="text-sm font-semibold w-[100px]"
           >
             Klientas:
           </label>
-          <select
-            id="type_id"
-            name="type_id"
-            value={formData.type_id || ''}
-            onChange={onChange}
-            className="flex-1 border rounded-lg p-2 text-sm border-gray-300"
-            required
-          >
-            <option value="" disabled>
-              Pasirinkite
-            </option>
-            {taskTypes.map((type) => (
-              <option key={type.id} value={type.id}>
-                {type.name}
-              </option>
-            ))}
-          </select>
+          <div className="flex-1 relative">
+            <input
+              type="text"
+              id="client_name"
+              name="client_name"
+              value={formData.client_name || ''}
+              onChange={(e) => {
+                if (!formData.client_id) {
+                  onClientSearch(e.target.value);
+                  onChange({
+                    target: {
+                      name: 'client_name',
+                      value: e.target.value,
+                    },
+                  });
+                }
+              }}
+              disabled={!!formData.client_id}
+              placeholder="Ieškoti kliento..."
+              className={`w-full border rounded-lg p-2 text-sm border-gray-300 ${
+                formData.client_id ? 'bg-gray-100 cursor-not-allowed' : ''
+              }`}
+            />
+
+            {formData.client_id && (
+              <button
+                type="button"
+                onClick={() => {
+                  onChange({ target: { name: 'client_id', value: '' } });
+                  onChange({ target: { name: 'client_name', value: '' } });
+                }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 text-sm"
+              >
+                ✕
+              </button>
+            )}
+
+            {clientOptions?.length > 0 && (
+              <ul className="absolute z-10 bg-white border mt-1 rounded-md shadow max-h-40 overflow-y-auto w-full text-sm shadow-sm border-gray-300 rounded-lg">
+                {clientOptions.map((client) => (
+                  <li
+                    key={client.id}
+                    onClick={() => {
+                      onChange({
+                        target: { name: 'client_id', value: client.id },
+                      });
+                      onChange({
+                        target: {
+                          name: 'client_name',
+                          value: `${client.first_name} ${client.last_name}`,
+                        },
+                      });
+                      // Hide dropdown if user selects the client
+                      onClientSearch('');
+                    }}
+                    className="cursor-pointer hover:bg-gray-100 px-2 py-1"
+                  >
+                    {client.first_name} {client.last_name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
 
         {/* Due Date */}

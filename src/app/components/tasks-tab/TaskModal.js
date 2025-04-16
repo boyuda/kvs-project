@@ -13,8 +13,8 @@ import { useTaskModalStore } from '@/src/store/taskModalStore';
 import { getAllUsers } from '@/src/services/supabase/client/users';
 import { updateTask } from '@/src/services/supabase/client/tasks';
 import toast from 'react-hot-toast';
-
 import { searchClientsByName } from '@/src/services/supabase/client/clients';
+import debounce from 'lodash.debounce';
 
 export default function TaskModal({ onSave, isAdmin }) {
   const { isOpen, task, mode, closeTaskModal, setTaskModalMode } =
@@ -27,6 +27,8 @@ export default function TaskModal({ onSave, isAdmin }) {
   const [allUsers, setAllUsers] = useState([]);
   const [taskTypes, setTaskTypes] = useState([]);
   const [taskStatuses, setTaskStatuses] = useState([]);
+  const [clientSearchResults, setClientSearchResults] = useState([]);
+  const [clientSearchLoading, setClientSearchLoading] = useState(false);
 
   function getChangedFields(original, updated) {
     const changes = {};
@@ -56,6 +58,8 @@ export default function TaskModal({ onSave, isAdmin }) {
 
   // Fetch details for the modal edit and create view
   useEffect(() => {
+    if (!isOpen) return;
+
     if (task && mode === 'edit') {
       const flatTask = {
         id: task.id,
@@ -77,9 +81,12 @@ export default function TaskModal({ onSave, isAdmin }) {
         type_id: '',
         status_id: '',
         description: '',
+        client_id: '',
+        client_name: '',
       });
+      setClientSearchResults([]);
     }
-  }, [task, mode]);
+  }, [task, mode, isOpen]);
 
   const fetchComments = async () => {
     if (!task) return;
@@ -166,6 +173,22 @@ export default function TaskModal({ onSave, isAdmin }) {
     }
   };
 
+  const handleClientSearch = debounce(async (searchTerm) => {
+    if (searchTerm.length < 3) {
+      setClientSearchResults([]);
+      return;
+    }
+    setClientSearchLoading(true);
+    try {
+      const results = await searchClientsByName(searchTerm);
+      setClientSearchResults(results);
+    } catch (err) {
+      console.error('Search failed:', err);
+    } finally {
+      setClientSearchLoading(false);
+    }
+  }, 400);
+
   return (
     <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-30 flex items-center justify-center">
       <div className="bg-white rounded-lg p-6 w-full sm:max-w-2xl md:max-w-4xl 2xl:max-w-5xl mx-auto flex flex-col">
@@ -230,6 +253,8 @@ export default function TaskModal({ onSave, isAdmin }) {
                 }
                 taskTypes={taskTypes}
                 taskStatuses={taskStatuses}
+                onClientSearch={(value) => handleClientSearch(value)}
+                clientOptions={clientSearchResults}
               />
             </div>
           )}
