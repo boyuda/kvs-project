@@ -91,7 +91,6 @@ export default function TasksContainer({
     ) => {
       try {
         const updated = await getTasksForUserClient(all, page, size);
-        console.log(updated);
 
         setFilteredTasks(updated.tasks);
         setPagination((prev) => ({

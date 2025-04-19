@@ -3,12 +3,10 @@
 <!-- Tasks Page -->
 
 On Task Table if task is due date, color it red
-FIXME: Issue, when if modal window open and user clicks edit, after closing up the window, mode stays on edit. Need to hard refresh to fully reset the modal viewing mode.
 
 <!-- Clients Page -->
 
 On Client Table if contract expired, color it red
-FIXME: On client modal on notes section if text with no spaces it overflows the modal. (Marius Kazlauskas example)
 
 <!-- Reports Page -->
 
@@ -24,7 +22,10 @@ Add convertion to locale of the dates
 Make email field to be able accept longer emails
 Edit vadybinkas should be accessed only for the admin
 SUGGESTION: min={new Date().toISOString().split('T')[0]} apply to all the date pickers
+SUGGESTION: figure out the structure for the status, should it be passed on task creation?
 
 <!-- Done -->
 
 SUGGESTION: On Edit Mode on clicking "Atsaukti" return to the modal instead of closing it.
+FIXME: Issue, when if modal window open and user clicks edit, after closing up the window, mode stays on edit. Need to hard refresh to fully reset the modal viewing mode.
+FIXME: On client modal on notes section if text with no spaces it overflows the modal. (Marius Kazlauskas example)

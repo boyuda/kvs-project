@@ -187,3 +187,15 @@ export async function getTaskById(id) {
 
   return data;
 }
+
+// Insert task into Tasks table
+export const createTask = async (newTaskData) => {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('tasks')
+    .insert([newTaskData])
+    .select()
+    .single();
+
+  return { data, error };
+};

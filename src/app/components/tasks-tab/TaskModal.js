@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import TaskInfoForm from './task-modal/TaskInfoForm';
 import TaskCommentsSection from './task-modal/TaskCommentsSection';
 import {
+  createTask,
   getCommentsForTask,
   getTaskById,
   getTaskStatuses,
@@ -189,17 +190,31 @@ export default function TaskModal({ isAdmin }) {
     if (!type_id) return toast.error('Pasirinkite užduoties tipą.');
     if (!status_id) return toast.error('Pasirinkite užduoties statusą.');
 
-    //  For testing
-    console.log('Creating new task:', formData);
+    const newTask = {
+      title,
+      due_date,
+      client_id,
+      type_id,
+      status_id,
+      assigned_user_id: userId, // reuse the fetched user ID
+      description,
+    };
 
-    toast.success('Užduotis sėkmingai sukurta!');
+    try {
+      const { data, error } = await createTask(newTask);
+      if (error) throw error;
 
-    // Close Modal, refresh the list?
-    closeTaskModal();
+      toast.success('Užduotis sėkmingai sukurta!');
+      // Closing Task Modal
+      closeTaskModal();
 
-    // You can also trigger `onSave(formData)` if passed
-    const callback = useTaskModalStore.getState().afterSaveCallback;
-    if (callback) callback();
+      // Refresh the list
+      const callback = useTaskModalStore.getState().afterSaveCallback;
+      if (callback) callback();
+    } catch (error) {
+      console.error('Klaida: ', error);
+      toast.error('Nepavyko sukurti užduoties');
+    }
   };
 
   const handleClientSearch = debounce(async (searchTerm) => {
