@@ -3,7 +3,9 @@ import BarChartComponent from '@/src/app/components/BarChart';
 import CustomerTable from '@/src/app/components/CustomerTable';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import NewTaskButton from '../../components/overview-tab/NewTaskButton';
 
+// TODO: DELETE when mock data no longer needed
 const dashboardData = {
   tasks: {
     total: 50,
@@ -51,6 +53,7 @@ export default async function DashboardPage() {
               title="Sveikas atvykęs"
               data={dashboardData.sales}
               user={user.id}
+              button={<NewTaskButton />}
             />
             <DashboardCard
               type="tasks"

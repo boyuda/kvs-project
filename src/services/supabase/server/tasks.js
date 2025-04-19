@@ -81,3 +81,35 @@ export async function getTasksForUser(
 
   return { tasks, totalCount: count };
 }
+
+// Used in Dashboard component
+export async function getAssignedTasksSummary(userId) {
+  const supabase = await createClient();
+
+  // Get total tasks assigned
+  const { count: total, error: totalError } = await supabase
+    .from('tasks')
+    .select('id', { count: 'exact' })
+    .eq('assigned_user_id', userId);
+
+  if (totalError) {
+    console.error('Error fetching total tasks:', totalError);
+    return { total: 0, upcoming: 0 };
+  }
+
+  // Count tasks due today
+  const today = new Date().toISOString().split('T')[0];
+
+  const { count: upcoming, error: upcomingError } = await supabase
+    .from('tasks')
+    .select('id', { count: 'exact' })
+    .eq('assigned_user_id', userId)
+    .eq('due_date', today);
+
+  if (upcomingError) {
+    console.error('Error fetching todays tasks:', upcomingError);
+    return { total, upcoming: 0 };
+  }
+
+  return { total, upcoming };
+}

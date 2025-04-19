@@ -8,6 +8,7 @@ import {
   getExpiringContractsCount,
 } from '@/src/services/supabase/server/clients';
 import { getUserById } from '@/src/services/supabase/server/users';
+import { getAssignedTasksSummary } from '@/src/services/supabase/server/tasks';
 
 const ICONS = {
   tasks: ClipboardDocumentListIcon,
@@ -15,11 +16,18 @@ const ICONS = {
   sales: CurrencyEuroIcon,
 };
 
-export default async function DashboardCard({ title, data, type, user }) {
+export default async function DashboardCard({
+  title,
+  data,
+  type,
+  user,
+  button,
+}) {
   const Icon = ICONS[type];
   // Database calls
   const totalAssignedClients = await getTotalAssignedClientsToUser(user);
   const expiringContracts = await getExpiringContractsCount(user);
+  const tasksSummary = await getAssignedTasksSummary(user);
   const [{ name }] = await getUserById(user);
 
   return (
@@ -38,14 +46,37 @@ export default async function DashboardCard({ title, data, type, user }) {
           {type === 'tasks' && (
             <>
               <span className="text-sm">
-                Priskirta <strong>{data.total}</strong> užduočių.
+                {tasksSummary.total === 1 && (
+                  <>
+                    Priskirta <strong>1</strong> užduotis.
+                  </>
+                )}
+                {tasksSummary.total > 1 && tasksSummary.total < 10 && (
+                  <>
+                    Priskirtos <strong>{tasksSummary.total}</strong> užduotys.
+                  </>
+                )}
+                {tasksSummary.total >= 10 && (
+                  <>
+                    Priskirta <strong>{tasksSummary.total}</strong> užduočių.
+                  </>
+                )}
               </span>
               <span className="text-sm">
-                <strong>{data.upcoming}</strong> užduočių terminas baigiasi
-                šiandien.
+                {tasksSummary.upcoming === 1 ? (
+                  <>
+                    <strong>1</strong> užduoties terminas baigiasi šiandien.
+                  </>
+                ) : (
+                  <>
+                    <strong>{tasksSummary.upcoming}</strong> užduočių terminai
+                    baigiasi šiandien.
+                  </>
+                )}
               </span>
             </>
           )}
+
           {type === 'clients' && (
             <>
               <span className="text-sm">
@@ -83,12 +114,8 @@ export default async function DashboardCard({ title, data, type, user }) {
       )}
 
       {/* General Card Type with Button */}
-      {type === 'general' && (
-        <div className="flex justify-center items-center mt-4">
-          <button className="bg-blue-500 hover:bg-primaryhover text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md">
-            Nauja užduotis
-          </button>
-        </div>
+      {type === 'general' && button && (
+        <div className="flex justify-center items-center mt-4">{button}</div>
       )}
     </div>
   );
