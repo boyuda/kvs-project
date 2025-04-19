@@ -236,7 +236,7 @@ export default function TaskModal({ isAdmin }) {
   }, 400);
 
   return (
-    <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-30 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-30 flex justify-center items-start overflow-y-auto pt-10 pb-10">
       <div className="bg-white rounded-lg p-6 w-full sm:max-w-2xl md:max-w-4xl 2xl:max-w-5xl mx-auto flex flex-col">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">{getModalTitle()}</h2>
