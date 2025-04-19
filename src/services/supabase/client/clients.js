@@ -176,3 +176,20 @@ export const searchClientsByName = async (query) => {
   if (error) throw error;
   return data;
 };
+
+// Get clients services
+export async function getClientServicesByClientId(clientId) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('client_services')
+    .select('id, start_date, end_date, services(id, name)')
+    .eq('client_id', clientId);
+
+  if (error) {
+    console.error('Failed to fetch client services:', error);
+    return [];
+  }
+
+  return data;
+}

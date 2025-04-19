@@ -1,7 +1,25 @@
-// components/task-modal/ConditionalSalesFields.jsx
-export default function ConditionalSalesFields({ selectedType }) {
+export default function ConditionalSalesFields({
+  selectedType,
+  clientServices = [],
+  selectedServiceId,
+  setSelectedServiceId,
+  selectedTerm,
+  setSelectedTerm,
+}) {
   const isRenewal = selectedType === 'contract_renewal';
   const isNewService = selectedType === 'new_service';
+
+  const selectedService = clientServices.find(
+    (s) => s.id === selectedServiceId
+  );
+  // Calculate new term
+  const currentEndDate = selectedService?.end_date;
+  let newEndDate = '';
+  if (selectedService?.end_date && selectedTerm) {
+    const currentDate = new Date(selectedService.end_date);
+    currentDate.setMonth(currentDate.getMonth() + Number(selectedTerm));
+    newEndDate = currentDate.toISOString().split('T')[0];
+  }
 
   return (
     <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 shadow-sm">
@@ -9,54 +27,124 @@ export default function ConditionalSalesFields({ selectedType }) {
         {isRenewal ? 'Atnaujinama Paslauga' : 'Nauja Paslauga'}
       </h3>
 
-      {/* Single Entry */}
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-wrap gap-4 w-full">
-          {/* Service Type */}
-          <div className="flex-1 min-w-[120px]">
-            <label className="text-sm font-medium block mb-1">
-              Paslaugos tipas
-            </label>
-            <select className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none">
-              <option value="">Pasirinkite</option>
-              <option value="iptv">IPTV</option>
-              <option value="internet">Internetas</option>
-            </select>
+      {isRenewal && (
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap gap-4 w-full">
+            {/* Service */}
+            <div className="flex-1 min-w-[120px]">
+              <label className="text-sm font-medium block mb-1">Paslauga</label>
+              <select
+                className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+                value={selectedServiceId}
+                onChange={(e) => setSelectedServiceId(e.target.value)}
+              >
+                <option value="">Pasirinkite</option>
+                {clientServices.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.services.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Term */}
+            <div className="flex-1 min-w-[120px]">
+              <label className="text-sm font-medium block mb-1">
+                Nauja trukmė
+              </label>
+              <select
+                className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+                value={selectedTerm}
+                onChange={(e) => setSelectedTerm(e.target.value)}
+              >
+                <option value="">Pasirinkite</option>
+                <option value="6">6 mėn.</option>
+                <option value="12">12 mėn.</option>
+                <option value="18">18 mėn.</option>
+                <option value="24">24 mėn.</option>
+              </select>
+            </div>
+
+            {/* Amount */}
+            <div className="flex-1 min-w-[120px]">
+              <label className="text-sm font-medium block mb-1">
+                Įkainis/mėn. (€)
+              </label>
+              <input
+                type="number"
+                placeholder="Pvz. 10.99"
+                className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+              />
+            </div>
           </div>
 
-          {/* Term Duration */}
-          <div className="flex-1 min-w-[120px]">
-            <label className="text-sm font-medium block mb-1">
-              Sutarties trukmė
-            </label>
-            <select className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none">
-              <option value="">Pasirinkite</option>
-              <option value="6">6 mėn.</option>
-              <option value="12">12 mėn.</option>
-              <option value="18">18 mėn.</option>
-              <option value="24">24 mėn.</option>
-            </select>
-          </div>
+          {/* Date info */}
+          {selectedService && (
+            <div className="text-sm text-gray-700">
+              Dabartinis terminas iki: <strong>{currentEndDate}</strong>
+              <br />
+              Naujasis terminas baigsis: <strong>{newEndDate || '–'}</strong>
+            </div>
+          )}
 
-          {/* Amount Input */}
-          <div className="flex-1 min-w-[120px]">
-            <label className="text-sm font-medium block mb-1">Suma (€)</label>
-            <input
-              type="number"
-              placeholder="Pvz. 10.99"
-              className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
-            />
-          </div>
+          <p className="text-xs text-gray-500">
+            Pasirinkite paslaugą ir naują trukmę.{' '}
+            {selectedService
+              ? 'Išsaugojus užduotį, paslaugos terminas bus atnaujintas.'
+              : 'Pasirinkite paslaugą, kad matytumėte informaciją.'}
+          </p>
         </div>
+      )}
 
-        {/* Tip */}
-        <p className="text-xs text-gray-500  ">
-          Pasirinkite paslaugos tipą ir trukmę. Išsaugojus užduotį,
-          {isRenewal
-            ? ' turimos paslaugos terminas bus atnaujintas.'
-            : ' nauja paslauga bus pridėta klientui.'}
-        </p>
-      </div>
+      {isNewService && (
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap gap-4 w-full">
+            {/* Service Type */}
+            <div className="flex-1 min-w-[120px]">
+              <label className="text-sm font-medium block mb-1">
+                Paslaugos tipas
+              </label>
+              <select className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none">
+                <option value="">Pasirinkite</option>
+                <option value="iptv">IPTV</option>
+                <option value="internet">Internetas</option>
+              </select>
+            </div>
+
+            {/* Term Duration */}
+            <div className="flex-1 min-w-[120px]">
+              <label className="text-sm font-medium block mb-1">
+                Sutarties trukmė
+              </label>
+              <select className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none">
+                <option value="">Pasirinkite</option>
+                <option value="6">6 mėn.</option>
+                <option value="12">12 mėn.</option>
+                <option value="18">18 mėn.</option>
+                <option value="24">24 mėn.</option>
+              </select>
+            </div>
+
+            {/* Amount Input */}
+            <div className="flex-1 min-w-[120px]">
+              <label className="text-sm font-medium block mb-1">
+                Įkainis/mėn. (€)
+              </label>
+              <input
+                type="number"
+                placeholder="Pvz. 10.99"
+                className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+              />
+            </div>
+          </div>
+
+          {/* Tip */}
+          <p className="text-xs text-gray-500  ">
+            Pasirinkite paslaugos tipą ir trukmę. Išsaugojus užduotį, nauja
+            paslauga bus pridėta klientui.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

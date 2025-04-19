@@ -17,6 +17,7 @@ import toast from 'react-hot-toast';
 import { searchClientsByName } from '@/src/services/supabase/client/clients';
 import debounce from 'lodash.debounce';
 import ConditionalSalesFields from './task-modal/ConditionalSalesFields';
+import { getClientServicesByClientId } from '@/src/services/supabase/client/clients';
 
 export default function TaskModal({ isAdmin }) {
   const { isOpen, task, mode, closeTaskModal, setTaskModalMode } =
@@ -31,6 +32,9 @@ export default function TaskModal({ isAdmin }) {
   const [taskStatuses, setTaskStatuses] = useState([]);
   const [clientSearchResults, setClientSearchResults] = useState([]);
   const [clientSearchLoading, setClientSearchLoading] = useState(false);
+  const [clientServices, setClientServices] = useState([]);
+  const [selectedServiceId, setSelectedServiceId] = useState('');
+  const [selectedTerm, setSelectedTerm] = useState('');
 
   function getChangedFields(original, updated) {
     const changes = {};
@@ -41,6 +45,26 @@ export default function TaskModal({ isAdmin }) {
     }
     return changes;
   }
+
+  // Fetch client services
+  useEffect(() => {
+    const fetchClientServices = async () => {
+      if (task?.client_id?.id && task.task_types?.slug === 'contract_renewal') {
+        const services = await getClientServicesByClientId(task.client_id.id);
+        setClientServices(services);
+      }
+    };
+
+    fetchClientServices();
+  }, [task]);
+
+  // reset services in view mode if window is closed
+  useEffect(() => {
+    if (!isOpen && mode === 'view') {
+      setSelectedServiceId('');
+      setSelectedTerm('');
+    }
+  }, [isOpen, mode]);
 
   // Fetch comments of the task
   useEffect(() => {
@@ -219,6 +243,30 @@ export default function TaskModal({ isAdmin }) {
     }
   };
 
+  const handleCloseTask = () => {
+    if (task?.task_types?.slug === 'contract_renewal') {
+      const selectedService = clientServices.find(
+        (s) => s.id === selectedServiceId
+      );
+
+      let newEndDate = '';
+      if (selectedService?.end_date && selectedTerm) {
+        const currentDate = new Date(selectedService.end_date);
+        currentDate.setMonth(currentDate.getMonth() + Number(selectedTerm));
+        newEndDate = currentDate.toISOString().split('T')[0];
+      }
+
+      console.log('Sutarties pratęsimas:', {
+        selectedServiceId,
+        oldEndDate: selectedService?.end_date,
+        newTermMonths: selectedTerm,
+        newEndDate,
+      });
+    }
+
+    // (Later: handle other task types like 'new_service' here)
+  };
+
   const handleClientSearch = debounce(async (searchTerm) => {
     if (searchTerm.length < 3) {
       setClientSearchResults([]);
@@ -261,7 +309,14 @@ export default function TaskModal({ isAdmin }) {
                 {/* This will render depending on task type slug in the modal */}
                 {task?.task_types?.slug === 'contract_renewal' ||
                 task?.task_types?.slug === 'new_service' ? (
-                  <ConditionalSalesFields selectedType={task.task_types.slug} />
+                  <ConditionalSalesFields
+                    selectedType={task.task_types.slug}
+                    clientServices={clientServices}
+                    selectedServiceId={selectedServiceId}
+                    setSelectedServiceId={setSelectedServiceId}
+                    selectedTerm={selectedTerm}
+                    setSelectedTerm={setSelectedTerm}
+                  />
                 ) : null}
               </div>
 
@@ -321,8 +376,17 @@ export default function TaskModal({ isAdmin }) {
               <>
                 <button
                   type="button"
-                  onClick={() => console.log('Įvykdyta')}
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition"
+                  onClick={handleCloseTask}
+                  disabled={
+                    task?.task_types?.slug === 'contract_renewal' &&
+                    (!selectedServiceId || !selectedTerm)
+                  }
+                  className={`px-4 py-2 rounded-lg text-sm text-white transition ${
+                    task?.task_types?.slug === 'contract_renewal' &&
+                    (!selectedServiceId || !selectedTerm)
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-green-500 hover:bg-green-600'
+                  }`}
                 >
                   Uždaryti užduotį
                 </button>
