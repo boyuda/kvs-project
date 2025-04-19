@@ -175,6 +175,19 @@ export default function ClientModal({ onSave, isAdmin }) {
     }, 200);
   };
 
+  const handleNewTaskForClient = () => {
+    closeClientModal();
+    setTimeout(() => {
+      openTaskModal(
+        {
+          client_id: client.id,
+          client_name: `${client.first_name} ${client.last_name}`,
+        },
+        'create'
+      );
+    }, 200);
+  };
+
   const getModalTitle = () => {
     switch (mode) {
       case MODAL_MODES.VIEW:
@@ -224,7 +237,11 @@ export default function ClientModal({ onSave, isAdmin }) {
               </div>
 
               <div className="flex flex-col gap-10">
-                <TasksList tasks={tasks} onTaskClick={handleTaskClick} />
+                <TasksList
+                  tasks={tasks}
+                  onTaskClick={handleTaskClick}
+                  onNewTask={handleNewTaskForClient}
+                />
                 <Notes notes={formData.notes} isViewMode={mode === 'view'} />
               </div>
             </div>

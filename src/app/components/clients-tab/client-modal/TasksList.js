@@ -8,7 +8,11 @@ const statusColors = {
   cancelled: 'bg-gray-200 text-gray-800',
 };
 
-export default function TasksList({ tasks = [], onTaskClick = () => {} }) {
+export default function TasksList({
+  tasks = [],
+  onTaskClick = () => {},
+  onNewTask = () => {},
+}) {
   console.log(tasks);
   return (
     <div className="text-sm flex flex-col gap-3 text-texts">
@@ -18,7 +22,11 @@ export default function TasksList({ tasks = [], onTaskClick = () => {} }) {
           <ClipboardDocumentListIcon className="h-4 w-4 text-gray-500" />
           <h3 className="font-semibold text-gray-800">Užduotys</h3>
         </div>
-        <button className="font-semibold text-xl leading-none text-gray-600 hover:text-blue-500 transition">
+        <button
+          className="font-semibold text-xl leading-none text-gray-600 hover:text-blue-500 transition"
+          onClick={onNewTask}
+          type="button"
+        >
           +
         </button>
       </div>

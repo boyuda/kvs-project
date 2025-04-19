@@ -79,8 +79,9 @@ export default function TaskModal({ isAdmin }) {
       setFormData({
         title: '',
         due_date: '',
-        client_id: '',
-        client_name: '',
+        // If task being created from the client window, fetch client data and fill in the task client field automatically.
+        client_id: task?.client_id || '',
+        client_name: task?.client_name || '',
         type_id: '',
         status_id: '',
         description: '',
