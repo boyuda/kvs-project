@@ -193,3 +193,16 @@ export async function getClientServicesByClientId(clientId) {
 
   return data;
 }
+
+//Updat term for the service
+export async function updateClientService(serviceId, updates) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('client_services')
+    .update(updates)
+    .eq('id', serviceId)
+    .select();
+
+  return { data, error };
+}

@@ -13,7 +13,6 @@ export default function TasksList({
   onTaskClick = () => {},
   onNewTask = () => {},
 }) {
-  console.log(tasks);
   return (
     <div className="text-sm flex flex-col gap-3 text-texts">
       {/* Section Title with Icon */}

@@ -18,7 +18,9 @@ import { searchClientsByName } from '@/src/services/supabase/client/clients';
 import debounce from 'lodash.debounce';
 import ConditionalSalesFields from './task-modal/ConditionalSalesFields';
 import { getClientServicesByClientId } from '@/src/services/supabase/client/clients';
+import { updateClientService } from '@/src/services/supabase/client/clients';
 
+import { insertSale } from '@/src/services/supabase/client/sales';
 export default function TaskModal({ isAdmin }) {
   const { isOpen, task, mode, closeTaskModal, setTaskModalMode } =
     useTaskModalStore();
@@ -35,6 +37,7 @@ export default function TaskModal({ isAdmin }) {
   const [clientServices, setClientServices] = useState([]);
   const [selectedServiceId, setSelectedServiceId] = useState('');
   const [selectedTerm, setSelectedTerm] = useState('');
+  const [selectedAmount, setSelectedAmount] = useState('');
 
   function getChangedFields(original, updated) {
     const changes = {};
@@ -243,28 +246,76 @@ export default function TaskModal({ isAdmin }) {
     }
   };
 
-  const handleCloseTask = () => {
-    if (task?.task_types?.slug === 'contract_renewal') {
-      const selectedService = clientServices.find(
-        (s) => s.id === selectedServiceId
-      );
+  const handleCloseTask = async () => {
+    if (!task) return;
 
-      let newEndDate = '';
-      if (selectedService?.end_date && selectedTerm) {
-        const currentDate = new Date(selectedService.end_date);
-        currentDate.setMonth(currentDate.getMonth() + Number(selectedTerm));
-        newEndDate = currentDate.toISOString().split('T')[0];
-      }
-
-      console.log('Sutarties pratęsimas:', {
-        selectedServiceId,
-        oldEndDate: selectedService?.end_date,
-        newTermMonths: selectedTerm,
-        newEndDate,
-      });
+    const today = new Date().toISOString().split('T')[0];
+    const closedStatusId = await getClosedStatusId();
+    if (!closedStatusId) {
+      toast.error('Nepavyko gauti uždarymo statuso.');
+      return;
     }
 
-    // (Later: handle other task types like 'new_service' here)
+    try {
+      // Handle special task types
+      if (task.task_types?.slug === 'contract_renewal') {
+        const selectedService = clientServices.find(
+          (s) => s.id === selectedServiceId
+        );
+
+        // Calculate new end date
+        const currentDate = new Date(selectedService?.end_date);
+        currentDate.setMonth(currentDate.getMonth() + Number(selectedTerm));
+        const newEndDate = currentDate.toISOString().split('T')[0];
+
+        //Update client service
+        await updateClientService(selectedServiceId, {
+          start_date: today,
+          end_date: newEndDate,
+        });
+        // Checking
+        console.log('Inserting sale with:', {
+          task_id: task.id,
+          client_id: task.client_id.id,
+          service_id: selectedServiceId,
+          user_id: userId,
+          amount: parseFloat(selectedAmount),
+          sale_date: today,
+          term: parseInt(selectedTerm),
+          type: 'contract_renewal',
+        });
+
+        // Insert into sales table
+        await insertSale({
+          task_id: task.id,
+          client_id: task.client_id.id,
+          client_service_id: selectedServiceId,
+          user_id: userId,
+          amount: parseFloat(selectedAmount),
+          sale_date: today,
+          term: parseInt(selectedTerm),
+          type: 'contract_renewal',
+        });
+      }
+
+      // Later: handle `new_service` creation logic here
+
+      // Update task status + close_date
+      await updateTask(task.id, {
+        status_id: closedStatusId,
+        close_date: today,
+      });
+
+      toast.success('Užduotis sėkmingai uždaryta!');
+      closeTaskModal();
+
+      // Refresh
+      const callback = useTaskModalStore.getState().afterSaveCallback;
+      if (callback) callback();
+    } catch (error) {
+      console.error('Uždarymo klaida:', error);
+      toast.error('Nepavyko uždaryti užduoties.');
+    }
   };
 
   const handleClientSearch = debounce(async (searchTerm) => {
@@ -282,6 +333,12 @@ export default function TaskModal({ isAdmin }) {
       setClientSearchLoading(false);
     }
   }, 400);
+
+  async function getClosedStatusId() {
+    const statuses = await getTaskStatuses();
+    const closedStatus = statuses.find((s) => s.slug === 'closed');
+    return closedStatus?.id || null;
+  }
 
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-30 flex justify-center items-start overflow-y-auto pt-10 pb-10">
@@ -316,6 +373,8 @@ export default function TaskModal({ isAdmin }) {
                     setSelectedServiceId={setSelectedServiceId}
                     selectedTerm={selectedTerm}
                     setSelectedTerm={setSelectedTerm}
+                    selectedAmount={selectedAmount}
+                    setSelectedAmount={setSelectedAmount}
                   />
                 ) : null}
               </div>

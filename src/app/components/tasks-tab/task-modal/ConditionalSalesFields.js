@@ -5,6 +5,8 @@ export default function ConditionalSalesFields({
   setSelectedServiceId,
   selectedTerm,
   setSelectedTerm,
+  selectedAmount,
+  setSelectedAmount,
 }) {
   const isRenewal = selectedType === 'contract_renewal';
   const isNewService = selectedType === 'new_service';
@@ -74,6 +76,7 @@ export default function ConditionalSalesFields({
                 type="number"
                 placeholder="Pvz. 10.99"
                 className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+                onChange={(e) => setSelectedAmount(e.target.value)}
               />
             </div>
           </div>
