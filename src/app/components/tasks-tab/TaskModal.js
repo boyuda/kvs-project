@@ -180,6 +180,13 @@ export default function TaskModal({ isAdmin }) {
     }
   };
 
+  const refreshTaskData = async () => {
+    const updatedTask = await getTaskById(task.id);
+    if (updatedTask) {
+      useTaskModalStore.getState().openTaskModal(updatedTask, 'view');
+    }
+  };
+
   const handleSaveTask = async (e) => {
     e.preventDefault();
     if (!originalTask || !formData) return;
@@ -441,6 +448,9 @@ export default function TaskModal({ isAdmin }) {
                   taskId={task?.id}
                   userId={userId}
                   isReadOnly={isReadOnly}
+                  // Check for slug to change the status
+                  taskStatusSlug={task?.task_statuses?.slug}
+                  onTaskStatusChange={refreshTaskData}
                 />
               </div>
             </div>

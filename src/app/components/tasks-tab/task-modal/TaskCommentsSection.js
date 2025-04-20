@@ -2,6 +2,10 @@
 import { useState } from 'react';
 import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline';
 import { addCommentToTask } from '@/src/services/supabase/client/tasks';
+import {
+  updateTask,
+  getTaskStatuses,
+} from '@/src/services/supabase/client/tasks';
 import toast from 'react-hot-toast';
 
 export default function TaskCommentsSection({
@@ -10,6 +14,8 @@ export default function TaskCommentsSection({
   taskId,
   userId,
   isReadOnly,
+  taskStatusSlug,
+  onTaskStatusChange,
 }) {
   const [newComment, setNewComment] = useState('');
   // Loading state for the new comment to be added.
@@ -36,6 +42,19 @@ export default function TaskCommentsSection({
 
     try {
       setLoading(true);
+
+      // update status if it's currently atviras
+      if (taskStatusSlug === 'open') {
+        const statuses = await getTaskStatuses();
+        const inProgress = statuses.find((s) => s.slug === 'in_progress');
+        if (inProgress?.id) {
+          await updateTask(taskId, { status_id: inProgress.id });
+        }
+        // Refresh view
+        if (onTaskStatusChange) onTaskStatusChange();
+      }
+
+      // add comment
       await addCommentToTask(taskId, userId, newComment.trim());
       toast.success('Komentaras pridėtas!');
       setNewComment('');
