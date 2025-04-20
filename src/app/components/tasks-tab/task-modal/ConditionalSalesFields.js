@@ -108,10 +108,18 @@ export default function ConditionalSalesFields({
               <label className="text-sm font-medium block mb-1">
                 Paslaugos tipas
               </label>
-              <select className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none">
+              <select
+                className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+                value={selectedServiceId}
+                onChange={(e) => setSelectedServiceId(e.target.value)}
+              >
                 <option value="">Pasirinkite</option>
-                <option value="iptv">IPTV</option>
-                <option value="internet">Internetas</option>
+                <option value="a56aca47-70f1-480f-9029-e8ef82e7e11b">
+                  IPTV
+                </option>
+                <option value="532f4c0e-99cd-4c25-a78e-991dc19870eb">
+                  Internetas
+                </option>
               </select>
             </div>
 
@@ -120,7 +128,11 @@ export default function ConditionalSalesFields({
               <label className="text-sm font-medium block mb-1">
                 Sutarties trukmė
               </label>
-              <select className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none">
+              <select
+                className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+                value={selectedTerm}
+                onChange={(e) => setSelectedTerm(e.target.value)}
+              >
                 <option value="">Pasirinkite</option>
                 <option value="6">6 mėn.</option>
                 <option value="12">12 mėn.</option>
@@ -138,6 +150,8 @@ export default function ConditionalSalesFields({
                 type="number"
                 placeholder="Pvz. 10.99"
                 className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+                value={selectedAmount}
+                onChange={(e) => setSelectedAmount(e.target.value)}
               />
             </div>
           </div>

@@ -21,11 +21,10 @@ import { getClientServicesByClientId } from '@/src/services/supabase/client/clie
 import { updateClientService } from '@/src/services/supabase/client/clients';
 
 import { insertSale } from '@/src/services/supabase/client/sales';
+import { addService } from '@/src/services/supabase/client/clients';
 export default function TaskModal({ isAdmin }) {
   const { isOpen, task, mode, closeTaskModal, setTaskModalMode } =
     useTaskModalStore();
-
-  console.log(isAdmin);
 
   const [comments, setComments] = useState([]);
   const [userId, setUserId] = useState(null);
@@ -166,6 +165,7 @@ export default function TaskModal({ isAdmin }) {
   // If modal is closed, don't render anything
   if (!isOpen) return null;
   // Checking if isAdmin is undefined, to avoid visual bugs for rendering the components
+  // TODO: ISSUE NOW THIS CANT BE OPENED FROM CLIENT PAGE
   if (isAdmin === undefined) return null;
 
   const getModalTitle = () => {
@@ -265,7 +265,7 @@ export default function TaskModal({ isAdmin }) {
     }
 
     try {
-      // Handle special task types
+      // If its contract Renewal
       if (task.task_types?.slug === 'contract_renewal') {
         const selectedService = clientServices.find(
           (s) => s.id === selectedServiceId
@@ -307,6 +307,53 @@ export default function TaskModal({ isAdmin }) {
       }
 
       // Later: handle `new_service` creation logic here
+      if (task.task_types?.slug === 'new_service') {
+        // Calculate end date
+        const endDate = new Date();
+        endDate.setMonth(endDate.getMonth() + Number(selectedTerm));
+        const endDateFormatted = endDate.toISOString().split('T')[0];
+
+        console.log(selectedServiceId);
+        const newService = {
+          client_id: task.client_id.id,
+          service_id: selectedServiceId,
+          start_date: today, // reuse the calculated today
+          end_date: endDateFormatted,
+        };
+
+        const { data: insertedService, error: insertError } = await addService(
+          newService
+        );
+        if (insertError || !insertedService || insertedService.length === 0) {
+          throw insertError || new Error('Nepavyko pridėti naujos paslaugos.');
+        }
+
+        const clientServiceId = insertedService[0].id;
+
+        console.log('Inserting sale with:', {
+          task_id: task.id,
+          client_id: task.client_id.id,
+          service_id: selectedServiceId,
+          user_id: userId,
+          amount: parseFloat(selectedAmount),
+          sale_date: today,
+          term: parseInt(selectedTerm),
+          type: 'contract_renewal',
+        });
+
+        // Insert into sales
+        await insertSale({
+          task_id: task.id,
+          client_id: task.client_id.id,
+          service_id: selectedServiceId,
+          user_id: userId,
+          amount: parseFloat(selectedAmount),
+          sale_date: today,
+          term: parseInt(selectedTerm),
+          type: 'new_service',
+          client_service_id: clientServiceId,
+        });
+      }
 
       // Update task status + close_date
       await updateTask(task.id, {
