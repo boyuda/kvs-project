@@ -165,8 +165,8 @@ export default function TaskModal({ isAdmin }) {
   // If modal is closed, don't render anything
   if (!isOpen) return null;
   // Checking if isAdmin is undefined, to avoid visual bugs for rendering the components
-  // TODO: ISSUE NOW THIS CANT BE OPENED FROM CLIENT PAGE
-  // if (isAdmin === undefined) return null;
+  // Leaving this as a safety net.
+  if (isAdmin === undefined) return null;
 
   const getModalTitle = () => {
     switch (mode) {
@@ -215,8 +215,7 @@ export default function TaskModal({ isAdmin }) {
   const handleCreateTask = async (e) => {
     e.preventDefault();
 
-    const { title, due_date, client_id, type_id, status_id, description } =
-      formData;
+    const { title, due_date, client_id, type_id, description } = formData;
 
     // Validation
     if (!title.trim()) return toast.error('Pavadinimas yra privalomas.');
@@ -225,14 +224,13 @@ export default function TaskModal({ isAdmin }) {
     if (!due_date) return toast.error('Pasirinkite terminą.');
     if (!client_id) return toast.error('Pasirinkite klientą.');
     if (!type_id) return toast.error('Pasirinkite užduoties tipą.');
-    if (!status_id) return toast.error('Pasirinkite užduoties statusą.');
 
     const newTask = {
       title,
       due_date,
       client_id,
       type_id,
-      status_id,
+      status_id: 'be3848f2-486e-4544-a6b0-da80927c5bfd',
       assigned_user_id: userId, // reuse the fetched user ID
       description,
     };

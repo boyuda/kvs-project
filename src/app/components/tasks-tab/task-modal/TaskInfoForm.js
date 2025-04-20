@@ -411,7 +411,7 @@ export default function TaskInfoForm({
         </div>
 
         {/* Status */}
-        <div className="flex items-center gap-1 mb-1">
+        {/* <div className="flex items-center gap-1 mb-1">
           <label
             htmlFor="status_id"
             className="text-sm font-semibold w-[100px]"
@@ -435,7 +435,7 @@ export default function TaskInfoForm({
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         {/* Description */}
         <div className="text-sm flex flex-col gap-2 mt-4">
