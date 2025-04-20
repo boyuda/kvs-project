@@ -166,7 +166,7 @@ export default function TaskModal({ isAdmin }) {
   if (!isOpen) return null;
   // Checking if isAdmin is undefined, to avoid visual bugs for rendering the components
   // TODO: ISSUE NOW THIS CANT BE OPENED FROM CLIENT PAGE
-  if (isAdmin === undefined) return null;
+  // if (isAdmin === undefined) return null;
 
   const getModalTitle = () => {
     switch (mode) {

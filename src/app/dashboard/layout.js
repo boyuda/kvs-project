@@ -38,7 +38,7 @@ export default async function DashboardLayout({ children }) {
         <Navbar user={user.id} />
         {children}
         {/* Adding it here so it could be accesable from client page as well */}
-        <TaskModal />
+        <TaskModal isAdmin={userProfile.is_admin || false} />
       </div>
     </div>
   );
