@@ -25,6 +25,8 @@ export default function TaskModal({ isAdmin }) {
   const { isOpen, task, mode, closeTaskModal, setTaskModalMode } =
     useTaskModalStore();
 
+  console.log(isAdmin);
+
   const [comments, setComments] = useState([]);
   const [userId, setUserId] = useState(null);
   const [formData, setFormData] = useState(null);
@@ -38,6 +40,10 @@ export default function TaskModal({ isAdmin }) {
   const [selectedServiceId, setSelectedServiceId] = useState('');
   const [selectedTerm, setSelectedTerm] = useState('');
   const [selectedAmount, setSelectedAmount] = useState('');
+
+  // Conditional Rendering if task is closed
+  const isClosed = task?.task_statuses?.slug === 'closed';
+  const isReadOnly = isClosed && !isAdmin;
 
   function getChangedFields(original, updated) {
     const changes = {};
@@ -159,6 +165,8 @@ export default function TaskModal({ isAdmin }) {
 
   // If modal is closed, don't render anything
   if (!isOpen) return null;
+  // Checking if isAdmin is undefined, to avoid visual bugs for rendering the components
+  if (isAdmin === undefined) return null;
 
   const getModalTitle = () => {
     switch (mode) {
@@ -363,20 +371,22 @@ export default function TaskModal({ isAdmin }) {
               <div className="flex flex-col gap-10">
                 <TaskInfoForm mode="view" task={task} />
 
-                {/* This will render depending on task type slug in the modal */}
-                {task?.task_types?.slug === 'contract_renewal' ||
-                task?.task_types?.slug === 'new_service' ? (
-                  <ConditionalSalesFields
-                    selectedType={task.task_types.slug}
-                    clientServices={clientServices}
-                    selectedServiceId={selectedServiceId}
-                    setSelectedServiceId={setSelectedServiceId}
-                    selectedTerm={selectedTerm}
-                    setSelectedTerm={setSelectedTerm}
-                    selectedAmount={selectedAmount}
-                    setSelectedAmount={setSelectedAmount}
-                  />
-                ) : null}
+                {/* This will render depending on task type slug in the modal.*/}
+                {['contract_renewal', 'new_service'].includes(
+                  task?.task_types?.slug
+                ) &&
+                  (!isClosed || isAdmin) && (
+                    <ConditionalSalesFields
+                      selectedType={task.task_types.slug}
+                      clientServices={clientServices}
+                      selectedServiceId={selectedServiceId}
+                      setSelectedServiceId={setSelectedServiceId}
+                      selectedTerm={selectedTerm}
+                      setSelectedTerm={setSelectedTerm}
+                      selectedAmount={selectedAmount}
+                      setSelectedAmount={setSelectedAmount}
+                    />
+                  )}
               </div>
 
               <div className="flex flex-col gap-10">
@@ -385,6 +395,7 @@ export default function TaskModal({ isAdmin }) {
                   onRefresh={fetchComments}
                   taskId={task?.id}
                   userId={userId}
+                  isReadOnly={isReadOnly}
                 />
               </div>
             </div>
@@ -433,29 +444,34 @@ export default function TaskModal({ isAdmin }) {
           <div className="flex justify-end space-x-3">
             {mode === 'view' && (
               <>
-                <button
-                  type="button"
-                  onClick={handleCloseTask}
-                  disabled={
-                    task?.task_types?.slug === 'contract_renewal' &&
-                    (!selectedServiceId || !selectedTerm)
-                  }
-                  className={`px-4 py-2 rounded-lg text-sm text-white transition ${
-                    task?.task_types?.slug === 'contract_renewal' &&
-                    (!selectedServiceId || !selectedTerm)
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-green-500 hover:bg-green-600'
-                  }`}
-                >
-                  Uždaryti užduotį
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTaskModalMode('edit')}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
-                >
-                  Redaguoti
-                </button>{' '}
+                {/* If the task is closed and user is not an admin, edit and save buttons are hidden. */}
+                {!isReadOnly && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleCloseTask}
+                      disabled={
+                        task?.task_types?.slug === 'contract_renewal' &&
+                        (!selectedServiceId || !selectedTerm)
+                      }
+                      className={`px-4 py-2 rounded-lg text-sm text-white transition ${
+                        task?.task_types?.slug === 'contract_renewal' &&
+                        (!selectedServiceId || !selectedTerm)
+                          ? 'bg-gray-400 cursor-not-allowed'
+                          : 'bg-green-500 hover:bg-green-600'
+                      }`}
+                    >
+                      Uždaryti užduotį
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTaskModalMode('edit')}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
+                    >
+                      Redaguoti
+                    </button>
+                  </>
+                )}
               </>
             )}
             {mode !== 'view' && (

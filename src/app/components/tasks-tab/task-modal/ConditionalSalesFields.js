@@ -7,6 +7,7 @@ export default function ConditionalSalesFields({
   setSelectedTerm,
   selectedAmount,
   setSelectedAmount,
+  task,
 }) {
   const isRenewal = selectedType === 'contract_renewal';
   const isNewService = selectedType === 'new_service';

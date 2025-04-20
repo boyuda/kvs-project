@@ -9,6 +9,7 @@ export default function TaskCommentsSection({
   onRefresh,
   taskId,
   userId,
+  isReadOnly,
 }) {
   const [newComment, setNewComment] = useState('');
   // Loading state for the new comment to be added.
@@ -89,15 +90,18 @@ export default function TaskCommentsSection({
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Įrašykite komentarą..."
           className="w-full bg-gray-50 border border-gray-300 rounded-md p-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+          disabled={isReadOnly}
         />
         <div className="flex justify-end mt-2">
-          <button
-            className="bg-blue-500 text-white text-sm px-4 py-1.5 rounded-lg shadow hover:bg-blue-600 transition disabled:opacity-50"
-            disabled={loading}
-            onClick={handleAddComment}
-          >
-            {loading ? 'Pridedama...' : 'Pridėti'}
-          </button>
+          {!isReadOnly ? (
+            <button
+              className="bg-blue-500 text-white text-sm px-4 py-1.5 rounded-lg shadow hover:bg-blue-600 transition disabled:opacity-50"
+              disabled={loading}
+              onClick={handleAddComment}
+            >
+              {loading ? 'Pridedama...' : 'Pridėti'}
+            </button>
+          ) : null}
         </div>
       </div>
     </div>

@@ -23,6 +23,7 @@ Make email field to be able accept longer emails
 Edit vadybinkas should be accessed only for the admin
 SUGGESTION: min={new Date().toISOString().split('T')[0]} apply to all the date pickers
 SUGGESTION: figure out the structure for the status, should it be passed on task creation?
+TODO: On closed button remove service window on task and remove ability to edit task
 
 <!-- Done -->
 
