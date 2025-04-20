@@ -20,55 +20,69 @@ export default function ClientsTable({ clientsData, onClientClick }) {
           </tr>
         </thead>
         <tbody className="text-center">
-          {clientsData.map((client, index) => (
-            <tr
-              onClick={() => onClientClick(client)}
-              key={index}
-              className="border-b hover:bg-gray-50"
-            >
-              <td className="py-3 px-6">{client.id.substring(0, 8)}</td>
-              <td className="py-3 px-6">
-                {client.first_name} {client.last_name}
-              </td>
-              <td className="py-3 px-6">{client.email}</td>
-              <td className="py-3 px-6">{client.phone}</td>
-              <td className="py-3 px-6">
-                {client.street} {client.house_number}
-                {client.flat_number ? `-${client.flat_number}` : ''}
-              </td>
-              <td className="py-3 px-6">{client.city}</td>
-              <td className="py-3 px-6">
-                {client.client_services
-                  .filter((service) => service.is_active)
-                  .map((service, idx) => (
-                    <div key={idx} className="mb-1">
-                      {service.service_id ===
-                      '532f4c0e-99cd-4c25-a78e-991dc19870eb'
-                        ? 'Internetas'
-                        : 'IPTV'}
-                    </div>
-                  ))}
-              </td>
-              <td className="py-3 px-6">
-                {client.client_services
-                  .filter((service) => service.is_active)
-                  .map((service, idx) => (
-                    <div key={idx} className="mb-1">
-                      {service.start_date}
-                    </div>
-                  ))}
-              </td>
-              <td className="py-3 px-6">
-                {client.client_services
-                  .filter((service) => service.is_active)
-                  .map((service, idx) => (
-                    <div key={idx} className="mb-1">
-                      {service.end_date}
-                    </div>
-                  ))}
-              </td>
-            </tr>
-          ))}
+          {clientsData.map((client, index) => {
+            const services = client.client_services || [];
+            const activeServices = services.filter((s) => s.is_active);
+
+            return (
+              <tr
+                key={index}
+                onClick={() => onClientClick(client)}
+                className="border-b hover:bg-gray-50 cursor-pointer"
+              >
+                <td className="py-3 px-6">{client.id.substring(0, 8)}</td>
+                <td className="py-3 px-6">
+                  {client.first_name} {client.last_name}
+                </td>
+                <td className="py-3 px-6">{client.email}</td>
+                <td className="py-3 px-6">{client.phone}</td>
+                <td className="py-3 px-6">
+                  {client.street} {client.house_number}
+                  {client.flat_number ? `-${client.flat_number}` : ''}
+                </td>
+                <td className="py-3 px-6">{client.city}</td>
+
+                {/* Services */}
+                <td className="py-3 px-6">
+                  {activeServices.length > 0 ? (
+                    activeServices.map((s, idx) => (
+                      <div key={idx} className="mb-1">
+                        {s.services?.name || 'Nežinoma paslauga'}
+                      </div>
+                    ))
+                  ) : (
+                    <span className="text-red-500 font-bold">×</span> // red cross
+                  )}
+                </td>
+
+                {/* Start Dates */}
+                <td className="py-3 px-6">
+                  {activeServices.length > 0 ? (
+                    activeServices.map((s, idx) => (
+                      <div key={idx} className="mb-1">
+                        {s.start_date}
+                      </div>
+                    ))
+                  ) : (
+                    <span className="text-red-500 font-bold">–</span> // red dash
+                  )}
+                </td>
+
+                {/* End Dates */}
+                <td className="py-3 px-6">
+                  {activeServices.length > 0 ? (
+                    activeServices.map((s, idx) => (
+                      <div key={idx} className="mb-1">
+                        {s.end_date}
+                      </div>
+                    ))
+                  ) : (
+                    <span className="text-red-500 font-bold">–</span>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

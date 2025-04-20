@@ -25,7 +25,6 @@ export default function ClientsContainer({
   totalCount = 0,
   isAdmin,
 }) {
-  console.log(initialClientsData);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { openClientModal, client } = useClientModalStore();
