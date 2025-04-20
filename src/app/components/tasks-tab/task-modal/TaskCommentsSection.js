@@ -7,6 +7,7 @@ import {
   getTaskStatuses,
 } from '@/src/services/supabase/client/tasks';
 import toast from 'react-hot-toast';
+import { useTaskModalStore } from '@/src/store/taskModalStore';
 
 export default function TaskCommentsSection({
   comments = [],
@@ -52,6 +53,9 @@ export default function TaskCommentsSection({
         }
         // Refresh view
         if (onTaskStatusChange) onTaskStatusChange();
+        // Trigger refresh in TaskContainer.
+        const callback = useTaskModalStore.getState().afterSaveCallback;
+        if (callback) callback();
       }
 
       // add comment

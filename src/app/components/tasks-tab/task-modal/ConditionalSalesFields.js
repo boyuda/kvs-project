@@ -11,6 +11,7 @@ export default function ConditionalSalesFields({
 }) {
   const isRenewal = selectedType === 'contract_renewal';
   const isNewService = selectedType === 'new_service';
+  const isTermination = selectedType === 'contract_cancellation';
 
   const selectedService = clientServices.find(
     (s) => s.id === selectedServiceId
@@ -43,8 +44,9 @@ export default function ConditionalSalesFields({
               >
                 <option value="">Pasirinkite</option>
                 {clientServices.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.services.name}
+                  <option key={s.id} value={s.id} disabled={!s.is_active}>
+                    {s.services?.name || 'Nenurodyta paslauga'}
+                    {!s.is_active ? ' (Nutraukta)' : ''}
                   </option>
                 ))}
               </select>
@@ -160,6 +162,41 @@ export default function ConditionalSalesFields({
           <p className="text-xs text-gray-500  ">
             Pasirinkite paslaugos tipą ir trukmę. Išsaugojus užduotį, nauja
             paslauga bus pridėta klientui.
+          </p>
+        </div>
+      )}
+
+      {isTermination && (
+        <div className="flex flex-col gap-4">
+          <div>
+            <label className="text-sm font-medium block mb-1">
+              Paslauga, kurią norite nutraukti
+            </label>
+            <select
+              className="w-full p-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+              value={selectedServiceId}
+              onChange={(e) => setSelectedServiceId(e.target.value)}
+            >
+              <option value="">Pasirinkite</option>
+              {clientServices
+                .filter((s) => s.is_active) // Only show active ones
+                .map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.services?.name || 'Nenurodyta paslauga'}
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          {/* Optional info */}
+          {selectedServiceId && (
+            <div className="text-sm text-gray-700">
+              Paslauga bus nutraukta {new Date().toLocaleDateString('lt-LT')}.
+            </div>
+          )}
+
+          <p className="text-xs text-gray-500">
+            Pasirinkus ir išsaugojus, ši paslauga bus pažymėta kaip neaktyvi.
           </p>
         </div>
       )}

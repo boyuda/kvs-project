@@ -183,7 +183,9 @@ export async function getClientServicesByClientId(clientId) {
 
   const { data, error } = await supabase
     .from('client_services')
-    .select('id, start_date, end_date, services(id, name)')
+    .select(
+      'id, start_date, end_date, is_active, termination_date, services(id, name)'
+    )
     .eq('client_id', clientId);
 
   if (error) {

@@ -57,7 +57,12 @@ export default function TaskModal({ isAdmin }) {
   // Fetch client services
   useEffect(() => {
     const fetchClientServices = async () => {
-      if (task?.client_id?.id && task.task_types?.slug === 'contract_renewal') {
+      const isServiceRelatedType = [
+        'contract_renewal',
+        'contract_cancellation',
+      ].includes(task?.task_types?.slug);
+
+      if (task?.client_id?.id && isServiceRelatedType) {
         const services = await getClientServicesByClientId(task.client_id.id);
         setClientServices(services);
       }
@@ -311,7 +316,7 @@ export default function TaskModal({ isAdmin }) {
         });
       }
 
-      // Later: handle `new_service` creation logic here
+      // If it's new service
       if (task.task_types?.slug === 'new_service') {
         // Calculate end date
         const endDate = new Date();
@@ -358,6 +363,22 @@ export default function TaskModal({ isAdmin }) {
           type: 'new_service',
           client_service_id: clientServiceId,
         });
+      }
+
+      // If it's cancellation
+      if (task.task_types?.slug === 'contract_cancellation') {
+        if (!selectedServiceId) {
+          toast.error('Pasirinkite paslaugą, kurią norite nutraukti.');
+          return;
+        }
+
+        // Terminate the service
+        await updateClientService(selectedServiceId, {
+          is_active: false,
+          termination_date: today,
+        });
+
+        console.log('Service terminated:', selectedServiceId);
       }
 
       // Update task status + close_date
@@ -424,9 +445,11 @@ export default function TaskModal({ isAdmin }) {
                 <TaskInfoForm mode="view" task={task} />
 
                 {/* This will render depending on task type slug in the modal.*/}
-                {['contract_renewal', 'new_service'].includes(
-                  task?.task_types?.slug
-                ) &&
+                {[
+                  'contract_renewal',
+                  'new_service',
+                  'contract_cancellation',
+                ].includes(task?.task_types?.slug) &&
                   (!isClosed || isAdmin) && (
                     <ConditionalSalesFields
                       selectedType={task.task_types.slug}

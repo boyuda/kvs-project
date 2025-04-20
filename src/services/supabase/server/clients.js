@@ -42,7 +42,7 @@ export async function getClientsAndServicesForUser(
       `
       id, first_name, last_name, email, phone, street, house_number, flat_number, city, notes, assigned_user_id,
       client_services (
-        id, start_date, end_date, service_id,
+        id, start_date, end_date, service_id, is_active, termination_date,
         services ( id, name )
       )
     `

@@ -38,28 +38,34 @@ export default function ClientsTable({ clientsData, onClientClick }) {
               </td>
               <td className="py-3 px-6">{client.city}</td>
               <td className="py-3 px-6">
-                {client.client_services.map((service, idx) => (
-                  <div key={idx} className="mb-1">
-                    {service.service_id ===
-                    '532f4c0e-99cd-4c25-a78e-991dc19870eb'
-                      ? 'Internetas'
-                      : 'IPTV'}
-                  </div>
-                ))}
+                {client.client_services
+                  .filter((service) => service.is_active)
+                  .map((service, idx) => (
+                    <div key={idx} className="mb-1">
+                      {service.service_id ===
+                      '532f4c0e-99cd-4c25-a78e-991dc19870eb'
+                        ? 'Internetas'
+                        : 'IPTV'}
+                    </div>
+                  ))}
               </td>
               <td className="py-3 px-6">
-                {client.client_services.map((service, idx) => (
-                  <div key={idx} className="mb-1">
-                    {service.start_date}
-                  </div>
-                ))}
+                {client.client_services
+                  .filter((service) => service.is_active)
+                  .map((service, idx) => (
+                    <div key={idx} className="mb-1">
+                      {service.start_date}
+                    </div>
+                  ))}
               </td>
               <td className="py-3 px-6">
-                {client.client_services.map((service, idx) => (
-                  <div key={idx} className="mb-1">
-                    {service.end_date}
-                  </div>
-                ))}
+                {client.client_services
+                  .filter((service) => service.is_active)
+                  .map((service, idx) => (
+                    <div key={idx} className="mb-1">
+                      {service.end_date}
+                    </div>
+                  ))}
               </td>
             </tr>
           ))}
