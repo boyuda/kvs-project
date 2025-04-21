@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { getUserById } from '@/src/services/supabase/server/users';
+import ReportsContainer from '../../components/reports-tab/ReportsContainer';
 
 export const metadata = {
   title: 'Ataskaitos',
@@ -21,5 +22,10 @@ export default async function ReportsPage() {
   if (!userProfile.is_admin) {
     redirect('/dashboard');
   }
-  return <h1>Reports</h1>;
+  return (
+    <div>
+      <h1>Reports</h1>
+      <ReportsContainer />
+    </div>
+  );
 }
