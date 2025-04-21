@@ -1,5 +1,4 @@
 export default function SummaryCards({ filters }) {
-  console.log(filters.selectedUsers);
-  console.log(filters.dateRange);
+  console.log(filters);
   return <div>Summary Cards</div>;
 }

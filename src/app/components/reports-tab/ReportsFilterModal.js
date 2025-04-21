@@ -1,7 +1,7 @@
-'use client';
-
-import { useState } from 'react';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
+import { useState } from 'react';
+import FilterFormLeft from './filter-sections/FilterFormLeft';
+import FilterFormRight from './filter-sections/FilterFormRight';
 
 export default function ReportsFilterModal({
   isOpen,
@@ -11,6 +11,10 @@ export default function ReportsFilterModal({
 }) {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [dateRange, setDateRange] = useState({ from: '', to: '' });
+  const [exportOptions, setExportOptions] = useState({
+    clients: false,
+    onlyWithoutServices: false,
+  });
 
   const toggleUser = (id) => {
     setSelectedUsers((prev) =>
@@ -19,18 +23,16 @@ export default function ReportsFilterModal({
   };
 
   const applyFilters = () => {
-    // If no user is selected, select all and return to visi vadybinkai
     const finalSelectedUsers =
       selectedUsers.length === 0 ? users.map((u) => u.id) : selectedUsers;
 
-    const extraFilterApplied = finalSelectedUsers.length > 0 || dateRange.from;
+    const extraFilterApplied =
+      finalSelectedUsers.length > 0 || dateRange.from || exportOptions.clients;
 
     onApply({
       selectedUsers: finalSelectedUsers,
-      dateRange: {
-        ...dateRange,
-        label: 'custom',
-      },
+      dateRange: { ...dateRange, label: 'custom' },
+      exportOptions,
       extraFilterApplied,
     });
   };
@@ -38,62 +40,46 @@ export default function ReportsFilterModal({
   return (
     <Dialog open={isOpen} onClose={onClose} className="fixed inset-0 z-50">
       <div className="fixed inset-0 bg-black bg-opacity-25" />
-      <div className="fixed inset-0 flex items-center justify-center p-4">
-        <DialogPanel className="bg-white rounded-md p-6 w-full max-w-lg shadow-md">
-          <DialogTitle className="text-lg font-semibold mb-4">
-            Filtruoti ataskaitas
-          </DialogTitle>
-
-          <div className="mb-4">
-            <p className="font-medium mb-2">Pasirinkite vadybininkus:</p>
-            <div className="space-y-2 max-h-40 overflow-y-auto">
-              {users.map((user) => (
-                <label key={user.id} className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedUsers.includes(user.id)}
-                    onChange={() => toggleUser(user.id)}
-                  />
-                  {user.name} {user.last_name}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <p className="font-medium mb-2">Pasirinkite laikotarpį:</p>
-            <div className="flex gap-2">
-              <input
-                type="date"
-                value={dateRange.from}
-                onChange={(e) =>
-                  setDateRange({ ...dateRange, from: e.target.value })
-                }
-                className="border rounded px-2 py-1 w-full"
-              />
-              <input
-                type="date"
-                value={dateRange.to}
-                onChange={(e) =>
-                  setDateRange({ ...dateRange, to: e.target.value })
-                }
-                className="border rounded px-2 py-1 w-full"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-2">
+      <div className="fixed inset-0 flex items-center justify-center overflow-y-auto p-4">
+        <DialogPanel className="bg-white rounded-lg p-6 w-full sm:max-w-2xl md:max-w-4xl 2xl:max-w-5xl mx-auto flex flex-col">
+          <div className="flex justify-between items-center mb-4">
+            <DialogTitle className="text-xl font-semibold flex items-center gap-2">
+              Filtruoti ataskaitas
+            </DialogTitle>
             <button
               onClick={onClose}
-              className="px-4 py-2 border rounded text-gray-600"
+              className="text-gray-500 hover:text-gray-700 text-lg"
             >
-              Atšaukti
+              ✕
             </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <FilterFormLeft
+              users={users}
+              selectedUsers={selectedUsers}
+              toggleUser={toggleUser}
+              dateRange={dateRange}
+              setDateRange={setDateRange}
+            />
+            <FilterFormRight
+              exportOptions={exportOptions}
+              setExportOptions={setExportOptions}
+            />
+          </div>
+
+          <div className="flex justify-end space-x-3">
             <button
               onClick={applyFilters}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              className="bg-blue-500 hover:bg-primaryhover text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md"
             >
               Taikyti
+            </button>
+            <button
+              onClick={onClose}
+              className="border border-gray-300 px-4 py-2 rounded-lg text-sm hover:bg-gray-100 hover:text-gray-800 transition-colors"
+            >
+              Atšaukti
             </button>
           </div>
         </DialogPanel>

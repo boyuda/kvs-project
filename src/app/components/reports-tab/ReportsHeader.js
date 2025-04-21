@@ -12,6 +12,7 @@ export default function ReportsHeader({
   setFilters,
   onApplyFilters,
   users,
+  onExport,
 }) {
   const datePresets = [
     { label: 'Šiandien', range: [new Date(), new Date()] },
@@ -67,8 +68,7 @@ export default function ReportsHeader({
         </div>
 
         <div className="flex flex-wrap gap-3">
-          {/* User dropdown with icon */}
-          {/* User dropdown with icon */}
+          {/* User */}
           <div className="relative">
             <select
               onChange={handleUserChange}
@@ -82,7 +82,7 @@ export default function ReportsHeader({
               }
               className="appearance-none pl-10 pr-8 py-2 border border-gray-200 rounded-lg text-sm text-gray-700 bg-white hover:bg-gray-50 shadow-md"
             >
-              {/* Render correct label in dropdown */}
+              {/* Render Labels */}
               <option value="">
                 {filters.selectedUsers.length === 0 ||
                 filters.selectedUsers.length === users.length
@@ -108,14 +108,14 @@ export default function ReportsHeader({
             <UsersIcon className="h-4 w-4 text-gray-700 absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
           </div>
 
-          {/* Date dropdown with icon */}
+          {/* Date  */}
           <div className="relative">
             <select
               onChange={handleDateChange}
               value={filters.dateRange.label || 'Šiandien'}
               className="appearance-none pl-10 pr-8 py-2 border border-gray-200 rounded-lg text-sm text-gray-700 bg-white hover:bg-gray-50 shadow-md"
             >
-              {/* If it's a custom range, show it */}
+              {/* If it's a custom range, display it */}
               {filters.dateRange?.label === 'custom' && (
                 <option value="custom">{`${filters.dateRange.from} – ${filters.dateRange.to}`}</option>
               )}
@@ -147,7 +147,7 @@ export default function ReportsHeader({
                 ? 'bg-blue-600 hover:bg-blue-700'
                 : 'bg-gray-300 cursor-not-allowed'
             }`}
-            onClick={console.log('exported')}
+            onClick={onExport}
           >
             <ArrowDownTrayIcon className="h-4 w-4" />
             Eksportuoti
