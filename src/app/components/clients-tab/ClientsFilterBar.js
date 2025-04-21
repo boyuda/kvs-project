@@ -125,14 +125,14 @@ export default function ClientsFilterBar({
         placeholder="Kliento Vardas"
         value={searchName}
         onChange={(e) => setSearchName(e.target.value)}
-        className="border p-2 rounded-lg shadow-md text-sm"
+        className="border p-2 rounded-lg shadow-md text-sm hover:bg-gray-50"
       />
 
       {/* Filter by service */}
       <select
         value={selectedService}
         onChange={(e) => setSelectedService(e.target.value)}
-        className="border p-2 rounded-lg shadow-md text-sm bg-white"
+        className="border p-2 rounded-lg shadow-md text-sm bg-white hover:bg-gray-50"
       >
         <option value="">Turima paslauga</option>
         <option value="Internetas">Internetas</option>
@@ -144,7 +144,7 @@ export default function ClientsFilterBar({
         type="date"
         value={startDate}
         onChange={(e) => setStartDate(e.target.value)}
-        className="border p-2 rounded-lg shadow-md text-sm"
+        className="border p-2 rounded-lg shadow-md text-sm hover:bg-gray-50"
       />
 
       {/* Filter by service end date */}
@@ -152,14 +152,14 @@ export default function ClientsFilterBar({
         type="date"
         value={endDate}
         onChange={(e) => setEndDate(e.target.value)}
-        className="border p-2 rounded-lg shadow-md text-sm"
+        className="border p-2 rounded-lg shadow-md text-sm hover:bg-gray-50"
       />
 
       {/* Filter by city */}
       <select
         value={selectedCity}
         onChange={(e) => setSelectedCity(e.target.value)}
-        className="border p-2 rounded-lg shadow-md text-sm bg-white"
+        className="border p-2 rounded-lg shadow-md text-sm bg-white hover:bg-gray-50"
       >
         <option value="">Miestas</option>
         {getUniqueCities().map((city) => (
@@ -173,7 +173,7 @@ export default function ClientsFilterBar({
       <select
         value={currentPageSize}
         onChange={handlePageSizeChange}
-        className="border p-2 rounded-lg shadow-md text-sm bg-white"
+        className="border p-2 rounded-lg shadow-md text-sm bg-white hover:bg-gray-50"
       >
         <option value="5">5 klientai</option>
         <option value="10">10 klientų</option>
@@ -187,7 +187,7 @@ export default function ClientsFilterBar({
       <select
         value={showAll.toString()}
         onChange={handleShowAllChange}
-        className="border p-2 rounded-lg shadow-md text-sm bg-white"
+        className="border p-2 rounded-lg shadow-md text-sm bg-white hover:bg-gray-50"
       >
         <option value="false">Mano klientai</option>
         <option value="true">Visi klientai</option>

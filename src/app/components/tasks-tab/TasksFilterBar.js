@@ -138,7 +138,7 @@ function TasksFilterBar({
         placeholder="Kliento Vardas"
         value={searchName}
         onChange={(e) => setSearchName(e.target.value)}
-        className="border p-2 rounded-lg shadow-md text-sm"
+        className="border p-2 rounded-lg shadow-md text-sm hover:bg-gray-50"
       />
 
       {/* Filter by title */}
@@ -147,14 +147,14 @@ function TasksFilterBar({
         placeholder="Užduoties pavadinimas"
         value={searchTitle}
         onChange={(e) => setSearchTitle(e.target.value)}
-        className="border p-2 rounded-lg shadow-md text-sm"
+        className="border p-2 rounded-lg shadow-md text-sm hover:bg-gray-50"
       />
 
       {/* Filter by status */}
       <select
         value={selectedStatus}
         onChange={(e) => setSelectedStatus(e.target.value)}
-        className="border p-2 rounded-lg shadow-md text-sm bg-white"
+        className="border p-2 rounded-lg shadow-md text-sm bg-white hover:bg-gray-50"
       >
         <option value="">Statusas</option>
         {getUniqueStatuses().map((status) => (
@@ -168,7 +168,7 @@ function TasksFilterBar({
       <select
         value={selectedStatus}
         onChange={(e) => setSelectedType(e.target.value)}
-        className="border p-2 rounded-lg shadow-md text-sm bg-white"
+        className="border p-2 rounded-lg shadow-md text-sm bg-white hover:bg-gray-50"
       >
         <option value="">Tipas</option>
         {getUniqueTypes().map((type) => (
@@ -183,7 +183,7 @@ function TasksFilterBar({
         type="date"
         value={startDate}
         onChange={(e) => setStartDate(e.target.value)}
-        className="border p-2 rounded-lg shadow-md text-sm"
+        className="border p-2 rounded-lg shadow-md text-sm hover:bg-gray-50"
       />
 
       {/* Filter by task end date */}
@@ -191,14 +191,14 @@ function TasksFilterBar({
         type="date"
         value={endDate}
         onChange={(e) => setEndDate(e.target.value)}
-        className="border p-2 rounded-lg shadow-md text-sm"
+        className="border p-2 rounded-lg shadow-md text-sm hover:bg-gray-50"
       />
 
       {/* Tasks amount that being shown */}
       <select
         value={currentPageSize}
         onChange={handlePageSizeChange}
-        className="border p-2 rounded-lg shadow-md text-sm bg-white"
+        className="border p-2 rounded-lg shadow-md text-sm bg-white hover:bg-gray-50"
       >
         <option value="5">5 užduotys</option>
         <option value="10">10 užduočių</option>
@@ -212,7 +212,7 @@ function TasksFilterBar({
       <select
         value={showAll.toString()}
         onChange={handleShowAllChange}
-        className="border p-2 rounded-lg shadow-md text-sm bg-white"
+        className="border p-2 rounded-lg shadow-md text-sm bg-white hover:bg-gray-50"
       >
         <option value="false">Mano užduotys</option>
         <option value="true">Visos užduotys</option>

@@ -544,7 +544,7 @@ export default function TaskModal({ isAdmin }) {
                     <button
                       type="button"
                       onClick={() => setTaskModalMode('edit')}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
+                      className="w-24 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
                     >
                       Redaguoti
                     </button>
@@ -555,7 +555,7 @@ export default function TaskModal({ isAdmin }) {
             {mode !== 'view' && (
               <button
                 type="submit"
-                className="bg-blue-500 hover:bg-primaryhover text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md"
+                className="w-24 bg-blue-500 hover:bg-primaryhover text-white text-sm py-2 px-4 rounded-lg shadow-md"
               >
                 {mode === 'create' ? 'Sukurti' : 'Išsaugoti'}
               </button>
@@ -570,7 +570,7 @@ export default function TaskModal({ isAdmin }) {
                   closeTaskModal();
                 }
               }}
-              className="border border-gray-300 px-4 py-2 rounded-lg text-sm hover:bg-gray-100 hover:text-gray-800 transition-colors"
+              className="w-24 border border-gray-300 px-4 py-2 rounded-lg text-sm hover:bg-gray-100 hover:text-gray-800 transition-colors"
             >
               Atšaukti
             </button>

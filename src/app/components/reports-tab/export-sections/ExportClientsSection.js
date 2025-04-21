@@ -4,7 +4,7 @@ export default function ExportClientsSection({
 }) {
   return (
     <div>
-      <p className="font-medium mb-2">Eksportuoti klientus</p>
+      <p className="font-medium mb-2">Generuoti ataskaitą</p>
       <div className="space-y-2">
         <label className="flex items-center gap-2">
           <input

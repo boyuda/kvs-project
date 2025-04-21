@@ -80,7 +80,7 @@ export default function ReportsHeader({
                   ? filters.selectedUsers[0]
                   : 'multiple'
               }
-              className="appearance-none pl-10 pr-8 py-2 border border-gray-200 rounded-lg text-sm text-gray-700 bg-white hover:bg-gray-50 shadow-md"
+              className="appearance-none pl-10 pr-8 py-2 border border-gray-200 rounded-lg text-sm  bg-white hover:bg-gray-50 shadow-md"
             >
               {/* Render Labels */}
               <option value="">
@@ -105,7 +105,7 @@ export default function ReportsHeader({
                 </option>
               ))}
             </select>
-            <UsersIcon className="h-4 w-4 text-gray-700 absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
+            <UsersIcon className="h-4 w-4  absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
           </div>
 
           {/* Date  */}
@@ -113,7 +113,7 @@ export default function ReportsHeader({
             <select
               onChange={handleDateChange}
               value={filters.dateRange.label || 'Šiandien'}
-              className="appearance-none pl-10 pr-8 py-2 border border-gray-200 rounded-lg text-sm text-gray-700 bg-white hover:bg-gray-50 shadow-md"
+              className="appearance-none pl-10 pr-8 py-2 border border-gray-200 rounded-lg text-sm text-foreground bg-white hover:bg-gray-50 shadow-md"
             >
               {/* If it's a custom range, display it */}
               {filters.dateRange?.label === 'custom' && (
@@ -127,7 +127,7 @@ export default function ReportsHeader({
               ))}
             </select>
 
-            <CalendarDaysIcon className="h-4 w-4 text-gray-700 absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
+            <CalendarDaysIcon className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
           </div>
 
           {/* Filter Button */}
@@ -150,7 +150,7 @@ export default function ReportsHeader({
             onClick={onExport}
           >
             <ArrowDownTrayIcon className="h-4 w-4" />
-            Eksportuoti
+            Generuoti
           </button>
         </div>
       </div>
