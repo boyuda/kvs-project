@@ -1,5 +1,3 @@
-import { UserCircleIcon } from '@heroicons/react/24/outline';
-
 export default function FilterFormLeft({
   users,
   selectedUsers,
@@ -10,10 +8,6 @@ export default function FilterFormLeft({
   return (
     <div className="text-sm flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h3 className="font-semibold text-gray-800">
-          Pasirinkite vadybininkus
-        </h3>
-
         <div className="space-y-2 max-h-40 overflow-y-auto">
           {users.map((user) => (
             <label key={user.id} className="flex items-center gap-3">

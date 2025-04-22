@@ -4,11 +4,11 @@ export default function ExportClientsSection({
 }) {
   return (
     <div>
-      <p className="font-medium mb-2">Generuoti ataskaitą</p>
       <div className="space-y-2">
         <label className="flex items-center gap-2">
           <input
             type="checkbox"
+            className="h-4 w-4 text-blue-600 border-gray-300 rounded"
             checked={exportOptions.clients}
             onChange={(e) =>
               setExportOptions((prev) => ({
@@ -26,6 +26,7 @@ export default function ExportClientsSection({
             <input
               type="checkbox"
               checked={exportOptions.onlyWithoutServices}
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded"
               onChange={(e) =>
                 setExportOptions((prev) => ({
                   ...prev,

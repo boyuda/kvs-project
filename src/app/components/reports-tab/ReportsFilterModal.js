@@ -54,18 +54,28 @@ export default function ReportsFilterModal({
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <FilterFormLeft
-              users={users}
-              selectedUsers={selectedUsers}
-              toggleUser={toggleUser}
-              dateRange={dateRange}
-              setDateRange={setDateRange}
-            />
-            <FilterFormRight
-              exportOptions={exportOptions}
-              setExportOptions={setExportOptions}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_1.4fr] gap-10">
+            <div className="flex flex-col gap-2">
+              <h3 className="text-sm font-semibold text-gray-800 ">
+                Pasirinkite vadybininkus
+              </h3>
+              <FilterFormLeft
+                users={users}
+                selectedUsers={selectedUsers}
+                toggleUser={toggleUser}
+                dateRange={dateRange}
+                setDateRange={setDateRange}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-sm font-semibold text-gray-800 ">
+                Generuoti ataskaitą
+              </h3>
+              <FilterFormRight
+                exportOptions={exportOptions}
+                setExportOptions={setExportOptions}
+              />
+            </div>
           </div>
 
           <div className="flex justify-end space-x-3">
