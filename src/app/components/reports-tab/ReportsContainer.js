@@ -8,8 +8,12 @@ import ManagerComparison from './ManagerComparison';
 import SummaryCards from './SummaryCards';
 import ReportsCharts from './ReportsCharts';
 import LatestTasksTable from './LatestTasksTable';
-import { exportClients } from '@/src/services/supabase/client/reports';
+import {
+  exportClients,
+  exportTasks,
+} from '@/src/services/supabase/client/reports';
 import { exportToExcel } from '@/src/utils/exportToExcel';
+import toast from 'react-hot-toast';
 
 export default function ReportsContainer() {
   const [filters, setFilters] = useState({
@@ -75,30 +79,63 @@ export default function ReportsContainer() {
   const handleExport = async () => {
     if (!filters.exportOptions) return;
 
-    const exportData = {};
+    try {
+      const exportData = {};
 
-    if (filters.exportOptions.clients) {
-      const clientData = await exportClients(filters);
-      if (clientData && clientData.length > 0) {
-        exportData['Klientai'] = clientData.map((c) => ({
-          Vardas: c.first_name,
-          Pavardė: c.last_name,
-          Miestas: c.city,
-          'El. paštas': c.email,
-          Telefonas: c.phone,
-          Gatvė: c.street,
-          'Nam. nr.': c.house_number,
-          'Buto nr.': c.flat_number,
-          'Priskirtas vadybininkas': getFullName(c.assigned_user_id, allUsers),
-          Pastabos: c.notes,
-        }));
+      // TODO: Add similiar check for nulls as for tasks
+      // Clients selection
+      if (filters.exportOptions.clients) {
+        const clientData = await exportClients(filters);
+        if (clientData && clientData.length > 0) {
+          exportData['Klientai'] = clientData.map((c) => ({
+            Vardas: c.first_name,
+            Pavardė: c.last_name,
+            Miestas: c.city,
+            'El. paštas': c.email,
+            Telefonas: c.phone,
+            Gatvė: c.street,
+            'Nam. nr.': c.house_number,
+            'Buto nr.': c.flat_number,
+            'Priskirtas vadybininkas': getFullName(
+              c.assigned_user_id,
+              allUsers
+            ),
+            Pastabos: c.notes,
+          }));
+        }
       }
-    }
 
-    // Logic for other filters
+      // Tasks selection
+      if (filters.exportOptions.tasks) {
+        const taskData = await exportTasks(filters);
+        if (taskData.length > 0) {
+          exportData['Užduotys'] = taskData.map((t) => ({
+            Pavadinimas: t.title,
+            Aprašymas: t.description,
+            Vadybininkas: `${t.users?.name ?? ''} ${t.users?.last_name ?? ''}`,
+            Klientas: `${t.clients?.first_name ?? ''} ${
+              t.clients?.last_name ?? ''
+            }`,
+            Tipas: t.task_types?.name ?? '',
+            Statusas: t.task_statuses?.name ?? '',
+            'Sukūrimo data': t.created_at
+              ? new Date(t.created_at).toISOString().split('T')[0]
+              : '',
+            'Termino data': t.due_date ?? '',
+            'Uždarymo data': t.close_date ?? '',
+          }));
+        }
+      }
+      if (Object.keys(exportData).length === 0) {
+        toast.error('Nėra duomenų ataskaita!');
+        return;
+      }
 
-    if (Object.keys(exportData).length > 0) {
+      toast.success('Atsisiunčiama ataskaita!');
       exportToExcel(exportData);
+    } catch (error) {
+      console.error('Export error:', err);
+      toast.error('Įvyko klaida eksportuojant duomenis');
     }
   };
 

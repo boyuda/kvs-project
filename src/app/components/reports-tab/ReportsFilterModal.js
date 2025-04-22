@@ -14,6 +14,11 @@ export default function ReportsFilterModal({
   const [exportOptions, setExportOptions] = useState({
     clients: false,
     onlyWithoutServices: false,
+    tasks: false,
+    taskStatus: '',
+    taskType: '',
+    closeDateFrom: '',
+    closeDateTo: '',
   });
 
   const toggleUser = (id) => {
