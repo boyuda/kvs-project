@@ -127,7 +127,7 @@ export default function ReportsContainer() {
         }
       }
       if (Object.keys(exportData).length === 0) {
-        toast.error('Nėra duomenų ataskaita!');
+        toast.error('Nepavyko suformuoti ataskaitos!');
         return;
       }
 
