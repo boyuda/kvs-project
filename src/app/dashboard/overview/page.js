@@ -5,26 +5,6 @@ import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import NewTaskButton from '../../components/overview-tab/NewTaskButton';
 
-// TODO: DELETE when mock data no longer needed
-const dashboardData = {
-  tasks: {
-    total: 50,
-    completed: 40,
-    upcoming: 5,
-    progress: 80,
-  },
-  clients: {
-    total: 400,
-    completed: 25,
-    upcoming: 3,
-  },
-  sales: {
-    total: 20,
-    completed: 30,
-    progress: 85,
-  },
-};
-
 export const metadata = {
   title: 'Apžvalga',
 };
@@ -40,7 +20,6 @@ export default async function DashboardPage() {
   if (!user) {
     redirect('/auth/sign-in');
   }
-  console.log(user.id);
 
   return (
     <div className="flex flex-col gap-6 p-4 min-h-screen">
@@ -52,28 +31,24 @@ export default async function DashboardPage() {
             <DashboardCard
               type="general"
               title="Sveikas atvykęs"
-              data={dashboardData.sales}
               user={user.id}
               button={<NewTaskButton />}
             />
             <DashboardCard
               type="tasks"
               title="Užduočių apžvalga"
-              data={dashboardData.tasks}
               user={user.id}
             />
 
             <DashboardCard
               type="clients"
               title="Klientų apžvalga"
-              data={dashboardData.clients}
               user={user.id}
             />
 
             <DashboardCard
               type="sales"
               title="Mėnesio pardavimų apžvalga"
-              data={dashboardData.sales}
               user={user.id}
             />
           </div>

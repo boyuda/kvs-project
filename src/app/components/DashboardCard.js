@@ -9,6 +9,7 @@ import {
 } from '@/src/services/supabase/server/clients';
 import { getUserById } from '@/src/services/supabase/server/users';
 import { getAssignedTasksSummary } from '@/src/services/supabase/server/tasks';
+import { getMonthlySalesSummary } from '@/src/services/supabase/server/sales';
 
 const ICONS = {
   tasks: ClipboardDocumentListIcon,
@@ -28,6 +29,7 @@ export default async function DashboardCard({
   const totalAssignedClients = await getTotalAssignedClientsToUser(user);
   const expiringContracts = await getExpiringContractsCount(user);
   const tasksSummary = await getAssignedTasksSummary(user);
+  const salesSummary = await getMonthlySalesSummary(user);
   const [{ name }] = await getUserById(user);
 
   return (
@@ -39,80 +41,83 @@ export default async function DashboardCard({
         </span>
         {Icon && <Icon className="w-5 h-5 stroke-primary" />}
       </div>
-
       {/* Card Content */}
-      {data && (
-        <div className="text-texts flex flex-col font-normal px-2 mt-2 space-y-1">
-          {type === 'tasks' && (
-            <>
-              <span className="text-sm">
-                {tasksSummary.total === 1 && (
-                  <>
-                    Priskirta <strong>1</strong> užduotis.
-                  </>
-                )}
-                {tasksSummary.total > 1 && tasksSummary.total < 10 && (
-                  <>
-                    Priskirtos <strong>{tasksSummary.total}</strong> užduotys.
-                  </>
-                )}
-                {tasksSummary.total >= 10 && (
-                  <>
-                    Priskirta <strong>{tasksSummary.total}</strong> užduočių.
-                  </>
-                )}
-              </span>
-              <span className="text-sm">
-                {tasksSummary.upcoming === 1 ? (
-                  <>
-                    <strong>1</strong> užduoties terminas baigiasi šiandien.
-                  </>
-                ) : (
-                  <>
-                    <strong>{tasksSummary.upcoming}</strong> užduočių terminai
-                    baigiasi šiandien.
-                  </>
-                )}
-              </span>
-            </>
-          )}
+      <div className="text-texts flex flex-col font-normal px-2 mt-2 space-y-1">
+        {type === 'tasks' && (
+          <>
+            <span className="text-sm">
+              {tasksSummary.total === 1 && (
+                <>
+                  Priskirta <strong>1</strong> užduotis.
+                </>
+              )}
+              {tasksSummary.total > 1 && tasksSummary.total < 10 && (
+                <>
+                  Priskirtos <strong>{tasksSummary.total}</strong> užduotys.
+                </>
+              )}
+              {tasksSummary.total >= 10 && (
+                <>
+                  Priskirta <strong>{tasksSummary.total}</strong> užduočių.
+                </>
+              )}
+            </span>
+            <span className="text-sm">
+              {tasksSummary.upcoming === 1 ? (
+                <>
+                  <strong>1</strong> užduoties terminas baigiasi šiandien.
+                </>
+              ) : (
+                <>
+                  <strong>{tasksSummary.upcoming}</strong> užduočių terminai
+                  baigiasi šiandien.
+                </>
+              )}
+            </span>
+          </>
+        )}
 
-          {type === 'clients' && (
-            <>
-              <span className="text-sm">
-                Viso priskirta <strong>{totalAssignedClients.length}</strong>
-                {totalAssignedClients.length === 1 ? (
-                  <span> klientas</span>
-                ) : totalAssignedClients.length > 1 &&
-                  totalAssignedClients.length < 10 ? (
-                  <span> klientai</span>
-                ) : (
-                  <span> klientų</span>
-                )}
-              </span>
-              <span className="text-sm">
-                <strong>{expiringContracts}</strong>{' '}
-                {expiringContracts > 1
-                  ? 'klientų sutartys'
-                  : 'kliento sutartis'}{' '}
-                baigiasi šį mėnesį.
-              </span>
-            </>
-          )}
-          {type === 'sales' && (
-            <>
-              <span className="text-sm">
-                <strong>{data.total}</strong> sutarčių atnaujinta.
-              </span>
-              <span className="text-sm">
-                <strong>{data.completed}</strong> klientų užsakė naujas
-                paslaugas.
-              </span>
-            </>
-          )}
-        </div>
-      )}
-
+        {type === 'clients' && (
+          <>
+            <span className="text-sm">
+              Viso priskirta <strong>{totalAssignedClients.length}</strong>
+              {totalAssignedClients.length === 1 ? (
+                <span> klientas</span>
+              ) : totalAssignedClients.length > 1 &&
+                totalAssignedClients.length < 10 ? (
+                <span> klientai</span>
+              ) : (
+                <span> klientų</span>
+              )}
+            </span>
+            <span className="text-sm">
+              <strong>{expiringContracts}</strong>{' '}
+              {expiringContracts > 1 ? 'klientų sutartys' : 'kliento sutartis'}{' '}
+              baigiasi šį mėnesį.
+            </span>
+          </>
+        )}
+        {type === 'sales' && (
+          <>
+            <span className="text-sm">
+              <strong>{salesSummary.renewals}</strong>{' '}
+              {salesSummary.renewals === 1
+                ? 'sutartis atnaujinta.'
+                : salesSummary.renewals > 1 && salesSummary.renewals < 10
+                ? 'sutartys atnaujintos.'
+                : 'sutarčių atnaujinta.'}
+            </span>
+            <span className="text-sm">
+              <strong>{salesSummary.newServices}</strong>{' '}
+              {salesSummary.newServices === 1
+                ? 'nauja paslauga parduota.'
+                : salesSummary.newServices > 1 && salesSummary.newServices < 10
+                ? 'naujos paslaugos parduotos.'
+                : 'naujų paslaugų parduota.'}
+            </span>
+          </>
+        )}
+      </div>
       {/* General Card Type with Button */}
       {type === 'general' && button && (
         <div className="flex justify-center items-center mt-4">{button}</div>

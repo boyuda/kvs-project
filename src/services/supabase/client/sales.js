@@ -29,18 +29,18 @@ export async function getUserSalesByMonth(userId) {
   }
 
   const monthOrder = [
-    'Sausis',
-    'Vasaris',
-    'Kovas',
-    'Balandis',
-    'Gegužė',
-    'Birželis',
-    'Liepa',
-    'Rugpjūtis',
-    'Rugsėjis',
-    'Spalis',
-    'Lapkritis',
-    'Gruodis',
+    'sausis',
+    'vasaris',
+    'kovas',
+    'balandis',
+    'gegužė',
+    'birželis',
+    'liepa',
+    'rugpjūtis',
+    'rugsėjis',
+    'spalis',
+    'lapkritis',
+    'gruodis',
   ];
 
   // Initialize all months with 0s
@@ -68,5 +68,8 @@ export async function getUserSalesByMonth(userId) {
     }
   });
 
-  return monthOrder.map((m) => salesByMonth[m]);
+  return monthOrder.map((m) => ({
+    ...salesByMonth[m],
+    name: m.charAt(0).toUpperCase() + m.slice(1),
+  }));
 }

@@ -20,14 +20,13 @@ const BarChartComponent = ({ userId }) => {
       getUserSalesByMonth(userId).then(setSalesData);
     }
   }, [userId]);
-  console.log(salesData);
 
   return (
     <div className=" rounded-xl w-full h-full p-4 shadow-md border-2">
       {/* Title */}
       <div className="flex justify-center items-center">
         <h1 className="text-texts text-lg font-semibold">
-          Pardavimų rezultatai
+          Metų Pardavimų Rezultatai
         </h1>
       </div>
 
