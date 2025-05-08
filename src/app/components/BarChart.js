@@ -5,76 +5,23 @@ import {
   Bar,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from 'recharts';
 
-const salesData = [
-  {
-    name: 'Sausis',
-    sutarciu_pratesimai: 10,
-    naujos_paslaugos: 3,
-  },
-  {
-    name: 'Vasaris',
-    sutarciu_pratesimai: 15,
-    naujos_paslaugos: 2,
-  },
-  {
-    name: 'Kovas',
-    sutarciu_pratesimai: 13,
-    naujos_paslaugos: 4,
-  },
-  {
-    name: 'Balandis',
-    sutarciu_pratesimai: 10,
-    naujos_paslaugos: 8,
-  },
-  {
-    name: 'Gegužė',
-    sutarciu_pratesimai: 20,
-    naujos_paslaugos: 5,
-  },
-  {
-    name: 'Birželis',
-    sutarciu_pratesimai: 18,
-    naujos_paslaugos: 7,
-  },
-  {
-    name: 'Liepa',
-    sutarciu_pratesimai: 10,
-    naujos_paslaugos: 8,
-  },
-  {
-    name: 'Rugpjūtis',
-    sutarciu_pratesimai: 10,
-    naujos_paslaugos: 8,
-  },
-  {
-    name: 'Rugsėjis',
-    sutarciu_pratesimai: 10,
-    naujos_paslaugos: 8,
-  },
-  {
-    name: 'Spalis',
-    sutarciu_pratesimai: 10,
-    naujos_paslaugos: 8,
-  },
-  {
-    name: 'Lapkritis',
-    sutarciu_pratesimai: 10,
-    naujos_paslaugos: 8,
-  },
-  {
-    name: 'Gruodis',
-    sutarciu_pratesimai: 10,
-    naujos_paslaugos: 8,
-  },
-];
+import { useEffect, useState } from 'react';
+import { getUserSalesByMonth } from '@/src/services/supabase/client/sales';
 
-const BarChartComponent = () => {
+const BarChartComponent = ({ userId }) => {
+  const [salesData, setSalesData] = useState([]);
+
+  useEffect(() => {
+    if (userId) {
+      getUserSalesByMonth(userId).then(setSalesData);
+    }
+  }, [userId]);
+  console.log(salesData);
+
   return (
     <div className=" rounded-xl w-full h-full p-4 shadow-md border-2">
       {/* Title */}
@@ -101,7 +48,11 @@ const BarChartComponent = () => {
               tick={{ fontSize: 11, textAnchor: 'end' }}
               className="text-texts font-semibold"
             />
-            <YAxis className="text-texts font-semibold" />
+            <YAxis
+              className="text-texts font-semibold"
+              allowDecimals={false}
+              domain={[0, 'dataMax']}
+            />
             <Tooltip content={<CustomTooltip />} />
             <Bar
               dataKey="sutarciu_pratesimai"
@@ -113,7 +64,6 @@ const BarChartComponent = () => {
               fill="#10B981"
               name="Sudarytos naujos sutartys"
             />
-            {/* <Legend className="font-semibold" /> */}
           </BarChart>
         </ResponsiveContainer>
       </div>

@@ -40,6 +40,7 @@ export default async function DashboardPage() {
   if (!user) {
     redirect('/auth/sign-in');
   }
+  console.log(user.id);
 
   return (
     <div className="flex flex-col gap-6 p-4 min-h-screen">
@@ -71,7 +72,7 @@ export default async function DashboardPage() {
 
             <DashboardCard
               type="sales"
-              title="Pardavimų apžvalga"
+              title="Mėnesio pardavimų apžvalga"
               data={dashboardData.sales}
               user={user.id}
             />
@@ -80,7 +81,7 @@ export default async function DashboardPage() {
 
         {/* Right Panel - Chart */}
         <div className="w-full lg:w-2/4">
-          <BarChartComponent />
+          <BarChartComponent userId={user.id} />
         </div>
       </div>
 
