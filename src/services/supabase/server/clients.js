@@ -126,3 +126,39 @@ export async function getExpiringContractsCount(userId) {
   }
   return contracts.length;
 }
+
+export async function getExpiringContractsForUser(userId, limit = 10) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('client_services')
+    .select(
+      `
+      client_id,
+      end_date,
+      clients!inner (
+        first_name,
+        last_name,
+        assigned_user_id
+      ),
+      services (
+        name
+      )
+    `
+    )
+    .eq('clients.assigned_user_id', userId)
+    .order('end_date', { ascending: true })
+    .limit(limit);
+
+  if (error) {
+    console.error('Error fetching expiring contracts:', error);
+    return [];
+  }
+
+  return data.map((item) => ({
+    clientID: item.client_id.substring(0, 8),
+    name: `${item.clients.first_name} ${item.clients.last_name}`,
+    service: item.services.name,
+    contractEndDate: item.end_date,
+  }));
+}

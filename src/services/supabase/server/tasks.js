@@ -36,23 +36,6 @@ export async function getTasksForUser(
   // Calculate the offset for pagination
   const offset = (page - 1) * pageSize;
 
-  //
-  // Returns data in the following format, to avoid future sql calls
-  // id: 'b1be6a6d-0e1e-4844-8ee9-0ac943a60018',
-  // title: 'Domina paslaugos',
-  // description: 'Klientas nori įsigyti IPTV',
-  // due_date: '2025-04-30',
-  // created_at: '2025-04-08T15:17:47.510042+00:00',
-  // client_id: '42e0533f-d9c6-4d01-8ee1-d7fb3e715a2f',
-  // assigned_user_id: 'c3373a01-fbc4-46fb-b56b-25db10bd4ee3',
-  // status_id: 'be3848f2-486e-4544-a6b0-da80927c5bfd',
-  // type_id: '07fe0613-eaea-4159-bb27-40ebb706b7e0',
-  // clients: { last_name: 'Bartuševičiūtė', first_name: 'Agnė' },
-  // users: { name: 'Dmitrijus', last_name: 'Byckovas' },
-  // task_statuses: { name: 'Atviras', slug: 'open' },
-  // task_types: { name: 'Skambutis', slug: 'call' }
-  //
-  // Build the query dynamically
   let query = supabase
     .from('tasks')
     .select(
@@ -112,4 +95,39 @@ export async function getAssignedTasksSummary(userId) {
   }
 
   return { total, upcoming };
+}
+
+export async function getUpcomingTasksForUser(userId, limit = 10) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('tasks')
+    .select(
+      `
+    id,
+    due_date,
+    title,
+    clients ( id, first_name, last_name ),
+    task_statuses ( slug ),
+    task_types ( name )
+  `
+    )
+    .eq('assigned_user_id', userId)
+    .order('due_date', { ascending: true })
+    .limit(limit);
+
+  if (error) {
+    console.error('Error fetching upcoming tasks:', error);
+    return [];
+  }
+
+  // Filter out closed statuses
+  const filtered = data.filter((task) => task.task_statuses?.slug !== 'closed');
+
+  return filtered.map((task) => ({
+    clientID: task.clients?.id?.substring(0, 8),
+    name: `${task.clients?.first_name ?? ''} ${task.clients?.last_name ?? ''}`,
+    title: task.title,
+    dueDate: task.due_date,
+  }));
 }

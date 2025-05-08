@@ -82,12 +82,12 @@ export default async function DashboardCard({
             <span className="text-sm">
               Viso priskirta <strong>{totalAssignedClients.length}</strong>
               {totalAssignedClients.length === 1 ? (
-                <span> klientas</span>
+                <span> klientas.</span>
               ) : totalAssignedClients.length > 1 &&
                 totalAssignedClients.length < 10 ? (
-                <span> klientai</span>
+                <span> klientai.</span>
               ) : (
-                <span> klientų</span>
+                <span> klientų.</span>
               )}
             </span>
             <span className="text-sm">

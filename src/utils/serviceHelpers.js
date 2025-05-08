@@ -19,3 +19,17 @@ export const TASK_TYPES = [
 ];
 
 export const TASK_STATUSES = ['Uždaryta', 'Atviras', 'Atšaukta', 'Vykdomas'];
+
+export const CONTRACTS_TABLE_COLUMNS = [
+  { key: 'clientID', label: 'Kliento ID' },
+  { key: 'name', label: 'Kliento Vardas' },
+  { key: 'service', label: 'Turima paslauga' },
+  { key: 'contractEndDate', label: 'Sutarties pabaiga' },
+];
+
+export const TASKS_TABLE_COLUMNS = [
+  { key: 'clientID', label: 'Kliento ID' },
+  { key: 'name', label: 'Kliento Vardas' },
+  { key: 'title', label: 'Užduoties pavadinimas' },
+  { key: 'dueDate', label: 'Užduoties atlikimo data' },
+];
