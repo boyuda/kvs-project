@@ -1,4 +1,5 @@
 import SummaryCardItem from './SummaryCardItem';
+import Loading from './spiner';
 import {
   getNewTasksCount,
   getNewSalesCount,
@@ -43,7 +44,7 @@ export default function SummaryCards({ filters }) {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <SummaryCardItem
         label="Naujos užduotys"
-        value={taskCount ?? '...'}
+        value={taskCount !== null ? taskCount : <Loading />}
         sublabel={
           filters.dateRange.from === filters.dateRange.to
             ? `${filters.dateRange.from} dienos sukurtos užduotys`
@@ -54,7 +55,11 @@ export default function SummaryCards({ filters }) {
       <SummaryCardItem
         label="Naujos paslaugos / Sutarties atnaujinimai"
         value={
-          salesData ? `${salesData.newServices} / ${salesData.renewals}` : '...'
+          salesData ? (
+            `${salesData.newServices} / ${salesData.renewals}`
+          ) : (
+            <Loading />
+          )
         }
         sublabel={
           filters.dateRange.from === filters.dateRange.to
@@ -66,7 +71,9 @@ export default function SummaryCards({ filters }) {
 
       <SummaryCardItem
         label="Pardavimų suma (€)"
-        value={salesAmount !== null ? `${salesAmount.toFixed(2)} €` : '...'}
+        value={
+          salesAmount !== null ? `${salesAmount.toFixed(2)} €` : <Loading />
+        }
         sublabel={
           filters.dateRange.from === filters.dateRange.to
             ? `${filters.dateRange.from} dienos pardavimai`
@@ -77,7 +84,7 @@ export default function SummaryCards({ filters }) {
 
       <SummaryCardItem
         label="Uždarytos užduotys"
-        value={closedTaskCount ?? '...'}
+        value={closedTaskCount ?? <Loading />}
         sublabel={
           filters.dateRange.from === filters.dateRange.to
             ? `${filters.dateRange.from} dieną uždarytos užduotys`
