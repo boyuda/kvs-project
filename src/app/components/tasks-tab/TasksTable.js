@@ -34,7 +34,17 @@ export default function TasksTable({ tasksData, onTaskClick }) {
               <td className="py-3 px-6">{task.task_types.name}</td>
               <td className="py-3 px-6">{task.assigned_user_id.name}</td>
               <td className="py-3 px-6">{task.created_at.split('T')[0]}</td>
-              <td className="py-3 px-6">{task.due_date}</td>
+              <td className="py-3 px-6">
+                <span
+                  className={
+                    new Date(task.due_date) < new Date()
+                      ? 'text-danger animate-pulse font-semibold'
+                      : ''
+                  }
+                >
+                  {task.due_date}
+                </span>
+              </td>
             </tr>
           ))}
         </tbody>

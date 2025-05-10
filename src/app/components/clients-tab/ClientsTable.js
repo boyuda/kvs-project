@@ -51,7 +51,7 @@ export default function ClientsTable({ clientsData, onClientClick }) {
                       </div>
                     ))
                   ) : (
-                    <span className="text-red-500 font-bold">×</span> // red cross
+                    <span className="text-red-500 font-bold">×</span>
                   )}
                 </td>
 
@@ -64,18 +64,26 @@ export default function ClientsTable({ clientsData, onClientClick }) {
                       </div>
                     ))
                   ) : (
-                    <span className="text-red-500 font-bold">–</span> // red dash
+                    <span className="text-red-500 font-bold">–</span>
                   )}
                 </td>
 
                 {/* End Dates */}
                 <td className="py-3 px-6">
                   {activeServices.length > 0 ? (
-                    activeServices.map((s, idx) => (
-                      <div key={idx} className="mb-1">
-                        {s.end_date}
-                      </div>
-                    ))
+                    activeServices.map((s, idx) => {
+                      const isExpired = new Date(s.end_date) < new Date();
+                      return (
+                        <div
+                          key={idx}
+                          className={`mb-1 ${
+                            isExpired ? 'text-danger animate-pulse' : ''
+                          }`}
+                        >
+                          {s.end_date}
+                        </div>
+                      );
+                    })
                   ) : (
                     <span className="text-red-500 font-bold">–</span>
                   )}
