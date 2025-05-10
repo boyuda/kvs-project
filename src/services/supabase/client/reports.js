@@ -163,3 +163,73 @@ export async function getClosedTasksCount(filters) {
 
   return count || 0;
 }
+
+export async function getServiceDistribution() {
+  const supabase = createClient();
+
+  // Step 1: Get all clients
+  const { data: clients, error: clientError } = await supabase
+    .from('clients')
+    .select('id');
+
+  if (clientError) {
+    console.error('Error fetching clients:', clientError);
+    return null;
+  }
+
+  // Step 2: Get all active client services
+  const { data: services, error: serviceError } = await supabase
+    .from('client_services')
+    .select('client_id, services(name)')
+    .eq('is_active', true);
+
+  if (serviceError) {
+    console.error('Error fetching services:', serviceError);
+    return null;
+  }
+
+  const clientServiceMap = {};
+
+  // Step 3: Build map of services per client
+  services.forEach((entry) => {
+    const clientId = entry.client_id;
+    const serviceName = entry.services?.name?.toLowerCase();
+
+    if (!clientServiceMap[clientId]) {
+      clientServiceMap[clientId] = new Set();
+    }
+
+    if (serviceName) {
+      clientServiceMap[clientId].add(serviceName);
+    }
+  });
+
+  let internetOnly = 0;
+  let iptvOnly = 0;
+  let combined = 0;
+  let noServices = 0;
+
+  clients.forEach((client) => {
+    const services = clientServiceMap[client.id];
+
+    const hasInternet = services?.has('internetas');
+    const hasIPTV = services?.has('iptv');
+
+    if (!services || services.size === 0) {
+      noServices++;
+    } else if (hasInternet && hasIPTV) {
+      combined++;
+    } else if (hasInternet) {
+      internetOnly++;
+    } else if (hasIPTV) {
+      iptvOnly++;
+    }
+  });
+
+  return {
+    internet: internetOnly,
+    iptv: iptvOnly,
+    combined,
+    noServices,
+  };
+}

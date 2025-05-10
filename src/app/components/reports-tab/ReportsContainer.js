@@ -140,7 +140,7 @@ export default function ReportsContainer() {
   };
 
   return (
-    <div className="p-4">
+    <div className="flex flex-col gap-6 p-4 min-h-screen">
       <ReportsHeader
         filters={filters}
         setFilters={setFilters}
@@ -154,9 +154,10 @@ export default function ReportsContainer() {
         onApply={handleApplyFilters}
         users={allUsers}
       />
+
       <SummaryCards filters={filters} />
-      <ManagerComparison filters={filters} />
       <ReportsCharts filters={filters} />
+      <ManagerComparison filters={filters} />
       <LatestTasksTable filters={filters} />
     </div>
   );
