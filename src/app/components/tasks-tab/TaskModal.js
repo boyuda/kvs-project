@@ -302,17 +302,6 @@ export default function TaskModal({ isAdmin }) {
           start_date: today,
           end_date: newEndDate,
         });
-        // Checking
-        console.log('Inserting sale with:', {
-          task_id: task.id,
-          client_id: task.client_id.id,
-          service_id: selectedServiceId,
-          user_id: userId,
-          amount: parseFloat(selectedAmount),
-          sale_date: today,
-          term: parseInt(selectedTerm),
-          type: 'contract_renewal',
-        });
 
         // Insert into sales table
         await insertSale({
@@ -334,7 +323,6 @@ export default function TaskModal({ isAdmin }) {
         endDate.setMonth(endDate.getMonth() + Number(selectedTerm));
         const endDateFormatted = endDate.toISOString().split('T')[0];
 
-        console.log(selectedServiceId);
         const newService = {
           client_id: task.client_id.id,
           service_id: selectedServiceId,
@@ -350,17 +338,6 @@ export default function TaskModal({ isAdmin }) {
         }
 
         const clientServiceId = insertedService[0].id;
-
-        console.log('Inserting sale with:', {
-          task_id: task.id,
-          client_id: task.client_id.id,
-          service_id: selectedServiceId,
-          user_id: userId,
-          amount: parseFloat(selectedAmount),
-          sale_date: today,
-          term: parseInt(selectedTerm),
-          type: 'contract_renewal',
-        });
 
         // Insert into sales
         await insertSale({
@@ -388,8 +365,6 @@ export default function TaskModal({ isAdmin }) {
           is_active: false,
           termination_date: today,
         });
-
-        console.log('Service terminated:', selectedServiceId);
       }
 
       // Update task status + close_date

@@ -233,3 +233,92 @@ export async function getServiceDistribution() {
     noServices,
   };
 }
+
+export async function getMonthlySalesTrends() {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.rpc('get_monthly_sales');
+
+  if (error) {
+    console.error('Error fetching monthly sales:', error);
+    return [];
+  }
+
+  return data;
+}
+
+export async function getTaskStatusDistribution() {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('tasks')
+    .select('status_id, task_statuses(name, slug)', { count: 'exact' });
+
+  if (error) {
+    console.error('Error fetching task status distribution:', error);
+    return [];
+  }
+
+  const statusCount = {};
+  data.forEach((task) => {
+    const slug = task.task_statuses?.slug;
+    if (!slug) return;
+    if (!statusCount[slug]) {
+      statusCount[slug] = 1;
+    } else {
+      statusCount[slug]++;
+    }
+  });
+
+  return Object.entries(statusCount).map(([slug, count]) => ({
+    name:
+      slug === 'open'
+        ? 'Naujas'
+        : slug === 'in_progress'
+        ? 'Vykdomas'
+        : slug === 'closed'
+        ? 'Uždaryta'
+        : 'Atšaukta',
+    slug,
+    value: count,
+  }));
+}
+
+export async function getClientsByCity() {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.rpc('get_clients_by_city');
+
+  if (error) {
+    console.error('Error fetching clients by city:', error);
+    return [];
+  }
+
+  return data;
+}
+
+export async function getTaskResolutionTime() {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.rpc('get_task_completion_times');
+
+  if (error) {
+    console.error('Error fetching task resolution time:', error);
+    return [];
+  }
+  console.log(data);
+
+  return data;
+}
+
+export async function getManagerSalesSummary() {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc('get_manager_sales_summary');
+
+  if (error) {
+    console.error('Error fetching manager sales summary:', error);
+    return [];
+  }
+
+  return data;
+}

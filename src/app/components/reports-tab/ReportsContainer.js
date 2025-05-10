@@ -69,11 +69,6 @@ export default function ReportsContainer() {
     });
 
     setIsFilterOpen(false);
-    console.log('Applied filters:', {
-      selectedUsers: appliedFilters.selectedUsers,
-      dateRange: finalDateRange,
-      extraFilterApplied: appliedFilters.extraFilterApplied,
-    });
   };
 
   const handleExport = async () => {
@@ -156,7 +151,7 @@ export default function ReportsContainer() {
       />
 
       <SummaryCards filters={filters} />
-      <ReportsCharts filters={filters} />
+      <ReportsCharts />
       <ManagerComparison filters={filters} />
       <LatestTasksTable filters={filters} />
     </div>

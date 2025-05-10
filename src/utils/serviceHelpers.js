@@ -33,3 +33,5 @@ export const TASKS_TABLE_COLUMNS = [
   { key: 'title', label: 'Užduoties pavadinimas' },
   { key: 'dueDate', label: 'Užduoties atlikimo data' },
 ];
+
+export const COLORS = ['#3B82F6', '#10B981', '#E7BF29', '#DC2626', '#979DA9'];

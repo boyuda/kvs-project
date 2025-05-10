@@ -38,8 +38,6 @@ export default function SummaryCards({ filters }) {
     fetchStats();
   }, [filters]);
 
-  console.log(salesAmount);
-
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <SummaryCardItem
@@ -76,7 +74,7 @@ export default function SummaryCards({ filters }) {
         }
         sublabel={
           filters.dateRange.from === filters.dateRange.to
-            ? `${filters.dateRange.from} dienos pardavimai`
+            ? `${filters.dateRange.from} dienos pardavimų suma`
             : `Pardavimų suma tarp ${filters.dateRange.from} ir ${filters.dateRange.to}`
         }
         icon={<CurrencyEuroIcon className="w-5 h-5" />}
