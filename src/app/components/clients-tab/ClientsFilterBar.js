@@ -1,7 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import { lt } from 'date-fns/locale';
+import 'react-datepicker/dist/react-datepicker.css';
 
+registerLocale('lt', lt);
 export default function ClientsFilterBar({
   clientsData,
   setFilteredClients,
@@ -140,19 +144,23 @@ export default function ClientsFilterBar({
       </select>
 
       {/* Filter by service start date */}
-      <input
-        type="date"
-        value={startDate}
-        onChange={(e) => setStartDate(e.target.value)}
+      <DatePicker
+        selected={startDate}
+        onChange={(date) => setStartDate(date)}
+        dateFormat="yyyy-MM-dd"
+        locale="lt"
         className="border p-2 rounded-lg shadow-md text-sm hover:bg-gray-50"
+        placeholderText="Pasirinkite pradžios datą"
       />
 
       {/* Filter by service end date */}
-      <input
-        type="date"
-        value={endDate}
-        onChange={(e) => setEndDate(e.target.value)}
+      <DatePicker
+        selected={endDate}
+        onChange={(date) => setEndDate(date)}
+        dateFormat="yyyy-MM-dd"
+        locale="lt"
         className="border p-2 rounded-lg shadow-md text-sm hover:bg-gray-50"
+        placeholderText="Pasirinkite pabaigos datą"
       />
 
       {/* Filter by city */}
