@@ -1,6 +1,24 @@
-import { login, signup } from './actions';
+'use client';
+import { login } from './actions';
+import { useState, useTransition } from 'react';
+import toast from 'react-hot-toast';
 
 export default function SignIn() {
+  const [isPending, startTransition] = useTransition();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+
+    startTransition(async () => {
+      const result = await login(formData);
+      if (result?.error) {
+        toast.error(result.error);
+      }
+    });
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="w-full max-w-sm  rounded-2xl shadow-md border-2 bg-white ">
@@ -10,7 +28,7 @@ export default function SignIn() {
 
         <form
           className=" p-6 rounded-lg  flex flex-col gap-y-5"
-          id="login-form"
+          onSubmit={handleSubmit}
         >
           <div>
             <label
@@ -49,23 +67,12 @@ export default function SignIn() {
 
           <button
             type="submit"
-            // onClick={handleSubmit}
-            formAction={login}
+            disabled={isPending}
             className="w-full rounded-lg bg-primary px-4 py-2 text-white font-semibold hover:bg-primaryhover focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 "
           >
             Prisijungti
           </button>
         </form>
-        {/* Register button hidden for now */}
-        {/* <button
-          type="submit"
-          // onClick={handleSubmit}
-          formAction={signup}
-          form="login-form"
-          className="w-full rounded-lg bg-primary px-4 py-2 text-white font-semibold hover:bg-primaryhover focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 "
-        >
-          Registruotis
-        </button> */}
       </div>
     </div>
   );

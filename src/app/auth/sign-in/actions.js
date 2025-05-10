@@ -7,8 +7,6 @@ import { createClient } from '@/utils/supabase/server';
 export async function login(formData) {
   const supabase = await createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
   const data = {
     email: formData.get('email'),
     password: formData.get('password'),
@@ -17,36 +15,36 @@ export async function login(formData) {
   const { error } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
-    redirect('/error');
+    return { error: 'Neteisingas el. paštas arba slaptažodis!' };
   }
 
   revalidatePath('/', 'layout');
   redirect('/dashboard');
 }
 
-export async function signup(formData) {
-  const supabase = await createClient();
+// export async function signup(formData) {
+//   const supabase = await createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email'),
-    password: formData.get('password'),
-  };
+//   // type-casting here for convenience
+//   // in practice, you should validate your inputs
+//   const data = {
+//     email: formData.get('email'),
+//     password: formData.get('password'),
+//   };
 
-  const { error } = await supabase.auth.signUp(data);
+//   const { error } = await supabase.auth.signUp(data);
 
-  if (error) {
-    console.log(error);
-    redirect('/auth/sign-in');
-  }
+//   if (error) {
+//     console.log(error);
+//     redirect('/auth/sign-in');
+//   }
 
-  revalidatePath('/', 'layout');
-  redirect('/');
-}
+//   revalidatePath('/', 'layout');
+//   redirect('/');
+// }
 
 export async function logout() {
-  const supabase = await createClient(); // Ensure the client is properly awaited
-  await supabase.auth.signOut(); // Ensure the signOut process is awaited
+  const supabase = await createClient();
+  await supabase.auth.signOut();
   redirect('/auth/sign-in');
 }
