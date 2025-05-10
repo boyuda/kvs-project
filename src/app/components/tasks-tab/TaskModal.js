@@ -205,6 +205,17 @@ export default function TaskModal({ isAdmin }) {
     }
 
     try {
+      const closedStatusId = await getClosedStatusId();
+
+      // If task was closed but is now being reopened
+      if (
+        originalTask.status_id === closedStatusId &&
+        changes.status_id &&
+        changes.status_id !== closedStatusId
+      ) {
+        changes.close_date = null;
+      }
+
       const { error } = await updateTask(originalTask.id, changes);
       if (error) throw error;
 
@@ -212,7 +223,7 @@ export default function TaskModal({ isAdmin }) {
       if (updatedTask) {
         useTaskModalStore.getState().openTaskModal(updatedTask, 'view');
       }
-      // Trigger refresh in TaskContainer.
+
       const callback = useTaskModalStore.getState().afterSaveCallback;
       if (callback) callback();
 

@@ -97,3 +97,69 @@ export async function exportTasks(filters) {
 
   return data || [];
 }
+
+export async function getNewTasksCount(filters) {
+  const supabase = createClient();
+
+  const { from, to } = filters.dateRange;
+
+  const { count, error } = await supabase
+    .from('tasks')
+    .select('*', { count: 'exact', head: true })
+    .in('assigned_user_id', filters.selectedUsers)
+    .gte('created_at', from)
+    .lte('created_at', to);
+
+  return count || 0;
+}
+
+export async function getNewSalesCount(filters) {
+  const supabase = createClient();
+  const { from, to } = filters.dateRange;
+
+  const { data, error } = await supabase
+    .from('sales')
+    .select('type')
+    .in('user_id', filters.selectedUsers)
+    .gte('sale_date', from)
+    .lte('sale_date', to);
+
+  const newServices = data.filter((s) => s.type === 'new_service').length;
+  const renewals = data.filter((s) => s.type === 'contract_renewal').length;
+
+  return { newServices, renewals };
+}
+
+export async function getSalesAmountTotal(filters) {
+  const supabase = createClient();
+  const { from, to } = filters.dateRange;
+
+  const { data, error } = await supabase
+    .from('sales')
+    .select('amount')
+    .in('user_id', filters.selectedUsers)
+    .gte('sale_date', from)
+    .lte('sale_date', to);
+
+  if (error) {
+    console.error('Failed to fetch sales amount:', error);
+    return 0;
+  }
+
+  const total = data.reduce((sum, item) => sum + (item.amount || 0), 0);
+  return total;
+}
+
+export async function getClosedTasksCount(filters) {
+  const supabase = createClient();
+  const { from, to } = filters.dateRange;
+
+  const { count, error } = await supabase
+    .from('tasks')
+    .select('*', { count: 'exact', head: true })
+    .in('assigned_user_id', filters.selectedUsers)
+    .gte('close_date', from)
+    .lte('close_date', to);
+
+  return count || 0;
+}

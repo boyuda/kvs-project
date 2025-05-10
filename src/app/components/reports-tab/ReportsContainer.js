@@ -154,8 +154,8 @@ export default function ReportsContainer() {
         onApply={handleApplyFilters}
         users={allUsers}
       />
-      <ManagerComparison filters={filters} />
       <SummaryCards filters={filters} />
+      <ManagerComparison filters={filters} />
       <ReportsCharts filters={filters} />
       <LatestTasksTable filters={filters} />
     </div>
