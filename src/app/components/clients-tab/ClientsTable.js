@@ -77,7 +77,9 @@ export default function ClientsTable({ clientsData, onClientClick }) {
                         <div
                           key={idx}
                           className={`mb-1 ${
-                            isExpired ? 'text-danger animate-pulse' : ''
+                            isExpired
+                              ? 'text-danger animate-pulse font-semibold'
+                              : ''
                           }`}
                         >
                           {s.end_date}

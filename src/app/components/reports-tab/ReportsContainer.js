@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { getAllUsers } from '@/src/services/supabase/client/users';
 import ReportsHeader from './ReportsHeader';
 import ReportsFilterModal from './ReportsFilterModal';
-import ManagerComparison from './ManagerComparison';
 import SummaryCards from './SummaryCards';
 import ReportsCharts from './ReportsCharts';
 import LatestTasksTable from './LatestTasksTable';
@@ -14,6 +13,7 @@ import {
 } from '@/src/services/supabase/client/reports';
 import { exportToExcel } from '@/src/utils/exportToExcel';
 import toast from 'react-hot-toast';
+import { getLatestTasks } from '@/src/services/supabase/client/reports';
 
 export default function ReportsContainer() {
   const [filters, setFilters] = useState({
@@ -27,6 +27,7 @@ export default function ReportsContainer() {
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
+  const [latestTasks, setLatestTasks] = useState([]);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -41,6 +42,15 @@ export default function ReportsContainer() {
     }
 
     fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    async function fetchLatestTasks() {
+      const tasks = await getLatestTasks();
+      setLatestTasks(tasks);
+    }
+
+    fetchLatestTasks();
   }, []);
 
   function getFullName(userId, allUsers) {
@@ -152,8 +162,7 @@ export default function ReportsContainer() {
 
       <SummaryCards filters={filters} />
       <ReportsCharts />
-      <ManagerComparison filters={filters} />
-      <LatestTasksTable filters={filters} />
+      <LatestTasksTable tasks={latestTasks} />
     </div>
   );
 }

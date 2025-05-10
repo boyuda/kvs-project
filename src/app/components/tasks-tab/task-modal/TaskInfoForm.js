@@ -44,7 +44,6 @@ export default function TaskInfoForm({
   const statusColorClass =
     statusColors[statusSlug] || 'bg-gray-100 text-gray-800';
   const dotColorClass = statusDotColors[statusSlug] || 'bg-gray-400';
-
   // If View
   if (mode === 'view') {
     return (

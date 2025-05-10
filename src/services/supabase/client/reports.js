@@ -306,7 +306,6 @@ export async function getTaskResolutionTime() {
     console.error('Error fetching task resolution time:', error);
     return [];
   }
-  console.log(data);
 
   return data;
 }
@@ -318,6 +317,57 @@ export async function getManagerSalesSummary() {
   if (error) {
     console.error('Error fetching manager sales summary:', error);
     return [];
+  }
+
+  return data;
+}
+
+export async function getLatestTasks() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('tasks')
+    .select(
+      `
+      id,
+      title,
+      due_date,
+      users ( name, last_name ),
+      task_types ( name ),
+      task_statuses ( name, slug )
+    `
+    )
+    .order('created_at', { ascending: false })
+    .limit(5);
+
+  if (error) {
+    console.error('Error fetching latest tasks:', error);
+    return [];
+  }
+
+  return data;
+}
+
+export async function fetchTaskById(taskId) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('tasks')
+    .select(
+      `
+      *,
+      client_id:clients (id, first_name, last_name),
+      assigned_user_id:users (id, name, last_name),
+      task_types (id, name, slug),
+      task_statuses (id, name, slug)
+    `
+    )
+    .eq('id', taskId)
+    .single();
+
+  if (error) {
+    console.error('Failed to fetch task:', error);
+    return null;
   }
 
   return data;

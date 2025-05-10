@@ -23,7 +23,7 @@ const CustomerTable = ({ title, data, columns }) => {
                     <span
                       className={
                         new Date(row[col.key]) < new Date()
-                          ? 'text-danger  animate-pulse'
+                          ? 'text-danger  animate-pulse font-semibold'
                           : ''
                       }
                     >
