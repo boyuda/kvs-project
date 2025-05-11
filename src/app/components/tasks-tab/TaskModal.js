@@ -42,7 +42,8 @@ export default function TaskModal({ isAdmin }) {
 
   // Conditional Rendering if task is closed
   const isClosed = task?.task_statuses?.slug === 'closed';
-  const isReadOnly = isClosed && !isAdmin;
+  //   const isReadOnly = isClosed && !isAdmin;
+  const isReadOnly = isClosed;
 
   function getChangedFields(original, updated) {
     const changes = {};
@@ -436,7 +437,8 @@ export default function TaskModal({ isAdmin }) {
                   'new_service',
                   'contract_cancellation',
                 ].includes(task?.task_types?.slug) &&
-                  (!isClosed || isAdmin) && (
+                  // Can change to (!isClosed || isAdmin)
+                  !isClosed && (
                     <ConditionalSalesFields
                       selectedType={task.task_types.slug}
                       clientServices={clientServices}
@@ -527,14 +529,17 @@ export default function TaskModal({ isAdmin }) {
                     >
                       Uždaryti užduotį
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => setTaskModalMode('edit')}
-                      className="w-24 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
-                    >
-                      Redaguoti
-                    </button>
                   </>
+                )}
+                {/* Always show Edit if user is admin */}
+                {isAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => setTaskModalMode('edit')}
+                    className="w-24 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
+                  >
+                    Redaguoti
+                  </button>
                 )}
               </>
             )}
