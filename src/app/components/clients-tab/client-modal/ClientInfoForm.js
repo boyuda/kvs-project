@@ -17,7 +17,7 @@ export default function ClientInfoForm({
   const fields = [
     { label: 'Vardas:', name: 'first_name', type: 'text', maxLength: 20 },
     { label: 'Pavardė:', name: 'last_name', type: 'text', maxLength: 20 },
-    { label: 'El. Paštas:', name: 'email', type: 'email', maxLength: 20 },
+    { label: 'El. Paštas:', name: 'email', type: 'email', maxLength: 35 },
     { label: 'Telefonas:', name: 'phone', type: 'text', maxLength: 12 },
     { label: 'Gatvė', name: 'street', type: 'text', maxLength: 20 },
     { label: 'Namo Nr.', name: 'house_number', type: 'text', maxLength: 4 },
