@@ -1,5 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import { lt } from 'date-fns/locale';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function TasksFilterBar({
   tasksData,
@@ -178,20 +181,24 @@ function TasksFilterBar({
         ))}
       </select>
 
-      {/* Filter by task start date */}
-      <input
-        type="date"
-        value={startDate}
-        onChange={(e) => setStartDate(e.target.value)}
+      {/* Filter by service start date */}
+      <DatePicker
+        selected={startDate}
+        onChange={(date) => setStartDate(date)}
+        dateFormat="yyyy-MM-dd"
+        locale="lt"
         className="border p-2 rounded-lg shadow-md text-sm hover:bg-gray-50"
+        placeholderText="Pasirinkite pradžios datą"
       />
 
-      {/* Filter by task end date */}
-      <input
-        type="date"
-        value={endDate}
-        onChange={(e) => setEndDate(e.target.value)}
+      {/* Filter by service end date */}
+      <DatePicker
+        selected={endDate}
+        onChange={(date) => setEndDate(date)}
+        dateFormat="yyyy-MM-dd"
+        locale="lt"
         className="border p-2 rounded-lg shadow-md text-sm hover:bg-gray-50"
+        placeholderText="Pasirinkite pabaigos datą"
       />
 
       {/* Tasks amount that being shown */}
