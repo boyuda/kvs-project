@@ -10,10 +10,12 @@
 
 <!-- Overall suggestions -->
 
-Edit vadybinkas should be accessed only for the admin
 SUGGESTION: min={new Date().toISOString().split('T')[0]} apply to all the date pickers
 
 SUGGESTION: try adding px-4 py-2 to filter bar inputs for design
+
+FIXME: If contract cancellation task, header displays Nauja paslauga text instead of sutarties nutraukimas
+FIXME: Ikainis cant be empty on new service/renewal task types. Check contract renewals - if nothing is selected, close task not available. basically we can do the same logic on new service
 
 <!-- Done -->
 
@@ -28,3 +30,4 @@ Make email field to be able accept longer emails
 Add convertion to locale of the dates
 SUGGESTION: figure out the structure for the status, should it be passed on task creation?
 TODO: On closed button remove service window on task and remove ability to edit task
+Edit vadybinkas should be accessed only for the admin
