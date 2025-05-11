@@ -139,30 +139,36 @@ export default function ServicesForm({
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="font-semibold text-sm">Turimos Paslaugos</h3>
-        {!isViewMode && (
-          <button
-            type="button"
-            onClick={onAddService}
-            className="bg-blue-500 hover:bg-primaryhover text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md"
-          >
-            {services.length === 0
-              ? 'Pridėti paslaugą'
-              : 'Pridėti kitą paslaugą'}
-          </button>
-        )}
-      </div>
+      {(isViewMode || isAdmin) && (
+        <>
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-semibold text-sm">Turimos Paslaugos</h3>
+            {!isViewMode && isAdmin && (
+              <button
+                type="button"
+                onClick={onAddService}
+                className="bg-blue-500 hover:bg-primaryhover text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md"
+              >
+                {services.length === 0
+                  ? 'Pridėti paslaugą'
+                  : 'Pridėti kitą paslaugą'}
+              </button>
+            )}
+          </div>
 
-      {services.length === 0 ? (
-        <div className="text-center py-4 border border-dashed rounded-lg text-texts text-sm font-semibold">
-          Klientas neturi jokių paslaugų.{' '}
-          {!isViewMode && 'Pridėkite paslaugą paspaudę mygtuką aukščiau.'}
-        </div>
-      ) : isViewMode ? (
-        renderReadOnlyView()
-      ) : (
-        renderEditView()
+          {services.length === 0 ? (
+            <div className="text-center py-4 border border-dashed rounded-lg text-texts text-sm font-semibold">
+              Klientas neturi jokių paslaugų.{' '}
+              {!isViewMode &&
+                isAdmin &&
+                'Pridėkite paslaugą paspaudę mygtuką aukščiau.'}
+            </div>
+          ) : isViewMode ? (
+            renderReadOnlyView()
+          ) : isAdmin ? (
+            renderEditView()
+          ) : null}
+        </>
       )}
     </div>
   );
