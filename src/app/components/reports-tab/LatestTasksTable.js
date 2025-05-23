@@ -9,7 +9,6 @@ const statusColors = {
 
 export default function LatestTasksTable({ tasks }) {
   const handleTaskClick = (task) => {
-    console.log(task);
     setTimeout(() => {
       openTaskModal(task, 'view');
     }, 100);

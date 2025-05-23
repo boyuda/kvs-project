@@ -7,13 +7,6 @@
   --foreground: theme(colors.foreground);
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: theme(colors.background-dark);
-    --foreground: theme(colors.foreground-dark);
-  }
-} */
-
 body {
   color: var(--foreground);
   background: var(--background);

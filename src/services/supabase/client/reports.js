@@ -167,7 +167,7 @@ export async function getClosedTasksCount(filters) {
 export async function getServiceDistribution() {
   const supabase = createClient();
 
-  // Step 1: Get all clients
+  // Get all clients
   const { data: clients, error: clientError } = await supabase
     .from('clients')
     .select('id');
@@ -177,7 +177,7 @@ export async function getServiceDistribution() {
     return null;
   }
 
-  // Step 2: Get all active client services
+  // SGet all active client services
   const { data: services, error: serviceError } = await supabase
     .from('client_services')
     .select('client_id, services(name)')
@@ -190,7 +190,7 @@ export async function getServiceDistribution() {
 
   const clientServiceMap = {};
 
-  // Step 3: Build map of services per client
+  // Build map of services per client
   services.forEach((entry) => {
     const clientId = entry.client_id;
     const serviceName = entry.services?.name?.toLowerCase();

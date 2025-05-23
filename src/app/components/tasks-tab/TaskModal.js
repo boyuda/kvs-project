@@ -529,17 +529,10 @@ export default function TaskModal({ isAdmin }) {
                     >
                       Uždaryti užduotį
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => setTaskModalMode('edit')}
-                      className="w-24 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
-                    >
-                      Redaguoti
-                    </button>
                   </>
                 )}
                 {/* Always show Edit if user is admin */}
-                {isAdmin && (
+                {(isAdmin || !isReadOnly) && (
                   <button
                     type="button"
                     onClick={() => setTaskModalMode('edit')}
